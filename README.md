@@ -54,8 +54,8 @@
 
 ## 5. ACTION FLOW
 
-<img width="614" alt="스크린샷 2022-09-14 오후 6 18 04" src="https://user-images.githubusercontent.com/84136919/190114621-d24043ea-848a-4b6d-befa-ca21ceed67fa.png">
 
 
+<img width="615" alt="스크린샷 2022-09-14 오후 6 20 07" src="https://user-images.githubusercontent.com/84136919/190116487-edbf95bf-c592-43f0-bc24-0fee5e933400.png">
 
 
