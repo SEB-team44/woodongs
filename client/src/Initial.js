@@ -2,11 +2,11 @@ import React from "react";
 import Login from "./pages/Login";
 import { Link } from "react-router-dom";
 
-const Main = () => {
+const Initial = () => {
   return (
     <>
       <div className="logo">
-        <Link to={"/Login"}>
+        <Link to={"/login"}>
           <img src={require("../src/img/logo.png")} />
         </Link>
       </div>
@@ -14,4 +14,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default Initial;
