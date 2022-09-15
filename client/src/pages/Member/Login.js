@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Main from "./Main/Main";
+import Main from "../Main/Main";
 import { FacebookLoginButton } from "react-social-login-buttons";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as Links } from "react-router-dom";

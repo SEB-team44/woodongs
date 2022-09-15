@@ -1,7 +1,5 @@
 import React from "react";
-import Login from "./pages/Login";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 
 const Initial = () => {
   return (
