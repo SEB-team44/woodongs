@@ -1,0 +1,6 @@
+springdoc:
+  swagger-ui:
+    path: /api.html
+  version: v0.0.1
+  paths-to-match:
+    - /**
