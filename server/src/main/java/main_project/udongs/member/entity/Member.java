@@ -2,6 +2,7 @@ package main_project.udongs.member.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.sql.ResultSet;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Member {
 
@@ -29,14 +31,14 @@ public class Member {
     private String password;
 
     // 위도
-    @Column
-    private BigDecimal latitude;
+   // @Column
+  //  private BigDecimal latitude;
 
     // 경도
-    @Column
-    private BigDecimal longitude;
+   // @Column
+    //private BigDecimal longitude;
 
-    @Column(columnDefinition = "varchar(10) default 'USER'")
+    @Column
     private String grade;
 
 }

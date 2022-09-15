@@ -39,6 +39,7 @@ public class MemberDto {
         //private BigDecimal longitude;
 
         //회원 가입시 기본 등급 = USER
+        private String grade;
     }
 
     //회원 정보 수정

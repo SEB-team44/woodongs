@@ -28,7 +28,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberMapper memberMapper;
+    private final MemberMapper mapper;
     private final MemberService memberService;
 
 
@@ -39,12 +39,13 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
         log.debug("post member");
+        requestBody.setGrade("USER");
 
-        Member member = memberMapper.memberPostToMember(requestBody);
+        Member member = mapper.memberPostToMember(requestBody);
         Member createdMember = memberService.createMember(member);
-        MemberDto.Response response = memberMapper.memberToMemberResponse(createdMember);
+        MemberDto.Response response = mapper.memberToMemberResponse(createdMember);
 
-        return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.CREATED);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.CREATED);
     }
 
 
