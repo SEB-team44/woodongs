@@ -1,6 +1,7 @@
 package main_project.udongs.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,25 +9,84 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import main_project.udongs.dto.SingleResponseDto;
+import main_project.udongs.member.dto.MemberDto;
+import main_project.udongs.member.entity.Member;
+import main_project.udongs.member.mapper.MemberMapper;
+import main_project.udongs.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "member controller", description = "회원 관련 API")
+import javax.validation.Valid;
+
+@Tag(name = "Member", description = "회원 관련 API")
+@Slf4j
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
 
-    @Operation(summary = "get member", description = "단일 회원 조회")
+    private final MemberMapper mapper;
+    private final MemberService memberService;
+
+
+    @Operation(summary = "회원 등록")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseEntity.class)))) })
-    @GetMapping("/{member-id}")
-    public ResponseEntity getMember(@PathVariable Long memberid) {
-        return new ResponseEntity("hello world!", HttpStatus.OK);
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Response.class))))})
+    @PostMapping("/signup")
+    public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
+        log.debug("post member");
+        requestBody.setGrade("USER");
+
+        Member member = mapper.memberPostToMember(requestBody);
+        Member createdMember = memberService.createMember(member);
+        MemberDto.Response response = mapper.memberToMemberResponse(createdMember);
+
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.CREATED);
     }
+
+
+    @Operation(summary = "단일 회원 조회")
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
+    @GetMapping("/{member-id}")
+    public ResponseEntity getMember(@PathVariable Long memberId) {
+        log.debug("get member");
+
+        return new ResponseEntity("getmember", HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "전체 회원 조회")
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
+    @GetMapping()
+    public ResponseEntity getMembers() {
+        log.debug("get members");
+
+        return new ResponseEntity("getmembers", HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "회원 정보 수정")
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
+    @PatchMapping("/{member-id}")
+    public ResponseEntity patchMember(@PathVariable Long memberId) {
+        log.debug("patch member");
+
+        return new ResponseEntity("patchmember", HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "회원 탈퇴")
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
+    @DeleteMapping("/{member-id}")
+    public ResponseEntity deleteMember(@PathVariable Long memberId) {
+        log.debug("delete member");
+
+        return new ResponseEntity("Deletion completed", HttpStatus.OK);
+    }
+
+
 }
