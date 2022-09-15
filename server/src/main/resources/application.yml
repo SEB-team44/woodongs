@@ -4,3 +4,17 @@ springdoc:
   version: v0.0.1
   paths-to-match:
     - /**
+
+# ?? ??
+spring:
+  output:
+    ansi:
+      enabled: always
+
+#Sl4fj ????
+logging:
+  level:
+    root: info
+    main_project:
+      udongs: debug
+
