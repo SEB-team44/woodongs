@@ -11,7 +11,7 @@ const StyledNav = styled.div`
   .nav-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     height: 63.5px;
     padding-left: 10px;
   }
