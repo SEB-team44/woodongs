@@ -14,7 +14,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column
     private String email;
@@ -36,7 +36,7 @@ public class Member {
     @Column
     private BigDecimal longitude;
 
-    @Column
+    @Column(columnDefinition = "varchar(10) default 'USER'")
     private String grade;
 
 }

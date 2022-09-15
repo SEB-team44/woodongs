@@ -1,6 +1,7 @@
 package main_project.udongs.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,9 +10,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import main_project.udongs.dto.SingleResponseDto;
+import main_project.udongs.member.dto.MemberDto;
+import main_project.udongs.member.entity.Member;
+import main_project.udongs.member.mapper.MemberMapper;
+import main_project.udongs.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Tag(name = "Member", description = "회원 관련 API")
 @Slf4j
@@ -20,14 +28,23 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MemberController {
 
+    private final MemberMapper memberMapper;
+    private final MemberService memberService;
+
 
     @Operation(summary = "회원 등록")
-    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
-    @PostMapping()
-    public ResponseEntity postMember() {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Response.class))))})
+    @PostMapping("/signup")
+    public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
         log.debug("post member");
 
-        return new ResponseEntity("postmember", HttpStatus.OK);
+        Member member = memberMapper.memberPostToMember(requestBody);
+        Member createdMember = memberService.createMember(member);
+        MemberDto.Response response = memberMapper.memberToMemberResponse(createdMember);
+
+        return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.CREATED);
     }
 
 
