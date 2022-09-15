@@ -75,7 +75,7 @@ const StyledMain = styled.div`
     font-size: 1.5rem;
   }
 `;
-
+//test
 const Main = () => {
   return (
     <>
@@ -104,6 +104,7 @@ const Main = () => {
                     <li>#JS</li>
                     <li>#React</li>
                     <li>#CSS</li>
+                    
                   </ol>
                 </div>
                 <div className="">
