@@ -21,7 +21,7 @@ public class MemberDto {
     public static class Post {
 
         @NotBlank(message = "이름은 공백이 아니어야 합니다.")
-        private String member_name;
+        private String memberName;
 
         @NotBlank(message = "이메일은 공백이 아니어야 합니다.")
         @Email
@@ -33,13 +33,13 @@ public class MemberDto {
         @NotBlank
         @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$",
                 message = "휴대폰 번호는 010으로 시작하는 11자리 숫자와 '-'로 구성되어야 합니다.")
-        private String phone_number;
+        private String phoneNumber;
 
         //private BigDecimal latitude;
         //private BigDecimal longitude;
 
         //회원 가입시 기본 등급 = USER
-        private String grade;
+        //private String grade;
     }
 
     //회원 정보 수정
@@ -50,12 +50,12 @@ public class MemberDto {
         private long memberId;
 
         @NotBlank(message = "회원 이름은 공백이 아니어야 합니다")
-        private String member_name;
+        private String memberName;
 
         @NotBlank
         @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$",
                 message = "휴대폰 번호는 010으로 시작하는 11자리 숫자와 '-'로 구성되어야 합니다.")
-        private String phone_number;
+        private String phoneNumber;
 
 
         public void setMemberId(long memberId) {
@@ -67,10 +67,10 @@ public class MemberDto {
     @Getter
     @Builder
     public static class Response {
-        private long memberId;
-        private String member_name;
+        private Long memberId;
+        private String memberName;
         private String email;
-        private String phone_number;
+        private String phoneNumber;
         private String grade;
     }
 

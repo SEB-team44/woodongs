@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import main_project.udongs.dto.SingleResponseDto;
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.mapper.MemberMapper;
@@ -39,13 +38,12 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
         log.debug("post member");
-        requestBody.setGrade("USER");
 
         Member member = mapper.memberPostToMember(requestBody);
         Member createdMember = memberService.createMember(member);
         MemberDto.Response response = mapper.memberToMemberResponse(createdMember);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 

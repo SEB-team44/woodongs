@@ -24,6 +24,7 @@ public class MemberService {
     @Transactional
     public Member createMember(Member member) {
         Member savedMember = memberRepository.save(member);
+        savedMember.setGrade("USER"); //기본 가입시 USER
         return  savedMember;
     }
 

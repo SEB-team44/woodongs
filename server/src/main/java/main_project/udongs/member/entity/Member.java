@@ -16,16 +16,16 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long MemberId;
 
     @Column
     private String email;
 
     @Column
-    private String member_name;
+    private String memberName;
 
     @Column
-    private String phone_number;
+    private String phoneNumber;
 
     @Column
     private String password;
