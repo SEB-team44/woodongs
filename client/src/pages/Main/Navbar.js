@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const StyledNav = styled.div`
   .header-container {
@@ -75,7 +76,9 @@ const Navbar = () => {
               </div>
               <div className="info-box">
                 <div className="new-study-btn">
-                  <button>스터디 생성</button>
+                  <Link to="/AddStudy">
+                    <button>스터디 생성</button>
+                  </Link>
                 </div>
                 <div className="alert-btn">
                   <button>종</button>
