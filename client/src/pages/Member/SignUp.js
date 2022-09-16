@@ -1,13 +1,3 @@
-// import React from "react";
-
-// const SignUp = () => {
-//   return (
-//     <>
-//       <div></div>
-//     </>
-//   );
-// };
-// export default SignUp;
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";

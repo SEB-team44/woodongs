@@ -12,7 +12,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Main from "../Main/Main";
+import SignUp from "../Member/SignUp";
+
 import { FacebookLoginButton } from "react-social-login-buttons";
+import { GoogleLoginButton } from "react-social-login-buttons";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as Links } from "react-router-dom";
 
@@ -36,7 +39,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignIn() {
+export default function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -94,14 +97,16 @@ export default function SignIn() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Login
-            </Button>
+            <Links to="/main">
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Login
+              </Button>
+            </Links>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -114,14 +119,12 @@ export default function SignIn() {
                 </Link>
               </Grid>
             </Grid>
+            <div className="social_login">
+              <FacebookLoginButton onClick={() => alert("Hello")} />
+              <GoogleLoginButton onClick={() => alert("Hello")} />
+            </div>
           </Box>
         </Box>
-        <>
-          <div className="logincontainer"></div>
-          <Links to="/main">
-            <button>메인으로 이동</button>
-          </Links>
-        </>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
