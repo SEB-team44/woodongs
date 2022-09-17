@@ -1,6 +1,8 @@
-import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Popper from "@mui/material/Popper";
 
 const StyledNav = styled.div`
   .header-container {
@@ -52,6 +54,14 @@ const StyledNav = styled.div`
 `;
 
 const Navbar = () => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popper" : undefined;
   return (
     <>
       <StyledNav>
@@ -66,7 +76,6 @@ const Navbar = () => {
 
             <ol className="tap-box">
               <li>내 주변 스터디</li>
-              <li>내 그룹</li>
               <li>전체 게시판</li>
             </ol>
 
@@ -83,8 +92,31 @@ const Navbar = () => {
                 <div className="alert-btn">
                   <button>종</button>
                 </div>
+                <div className="group-btn">
+                  <div>
+                    <button
+                      aria-describedby={id}
+                      type="button"
+                      onClick={handleClick}
+                    >
+                      내 그룹
+                    </button>
+                    <Popper id={id} open={open} anchorEl={anchorEl}>
+                      <Box
+                        sx={{ border: 1, p: 1, bgcolor: "background.paper" }}
+                      >
+                        <Link to="/MyGroup">
+                          <button>1번스터디</button>
+                          <button>2번스터디</button>
+                        </Link>
+                      </Box>
+                    </Popper>
+                  </div>
+                </div>
                 <div className="my-info-btn">
-                  <button>my info</button>
+                  <Link to="/MyPage">
+                    <button>my info</button>
+                  </Link>
                 </div>
               </div>
             </section>

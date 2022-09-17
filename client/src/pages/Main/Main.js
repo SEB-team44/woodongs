@@ -8,7 +8,7 @@ import Footer from "./Footer";
 
 const StyledMain = styled.div`
   .main-container {
-    position:absolute;
+    position: absolute;
     display: flex;
     flex-direction: column;
     width: 100vw;
@@ -32,7 +32,7 @@ const StyledMain = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    background-color: #F1F4F7;
+    background-color: #f1f4f7;
     /* justify-content: */
     /* margin-left: 10%; */
   }
@@ -150,7 +150,7 @@ const Main = () => {
           </section>
 
           <section className="main-footer-container">
-            <Footer/>
+            <Footer />
           </section>
         </section>
       </StyledMain>
