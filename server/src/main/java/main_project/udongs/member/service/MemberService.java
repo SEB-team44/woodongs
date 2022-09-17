@@ -28,13 +28,16 @@ public class MemberService {
         return  savedMember;
     }
 
+    @Transactional
     public Member getMember(Long memberId) {
         return findVerifiedMember(memberId);
     }
 
-    public Member patchMember(Long memberId) {
+    @Transactional
+    public Member updateMember(Member member) {
 
-        return null;
+        Member findMember = findVerifiedMember(member.getMemberId());
+        return memberRepository.save(findMember);
     }
 
     public Member getMembers() {
