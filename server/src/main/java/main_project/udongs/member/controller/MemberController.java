@@ -53,7 +53,8 @@ public class MemberController {
     public ResponseEntity getMember(@PathVariable Long memberId) {
         log.debug("get member");
 
-        return new ResponseEntity("getmember", HttpStatus.OK);
+        MemberDto.Response response = mapper.memberToMemberResponse(memberService.getMember(memberId));
+        return new ResponseEntity(response, HttpStatus.OK);
     }
 
 
@@ -70,10 +71,14 @@ public class MemberController {
     @Operation(summary = "회원 정보 수정")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @PatchMapping("/{member-id}")
-    public ResponseEntity patchMember(@PathVariable Long memberId) {
+    public ResponseEntity patchMember(@PathVariable Long memberId,
+                                      @RequestBody MemberDto.Patch requestBody) {
         log.debug("patch member");
 
-        return new ResponseEntity("patchmember", HttpStatus.OK);
+        requestBody.setMemberId(memberId);
+        Member member = memberService.updateMember(mapper.memberPatchToMember(requestBody));
+
+        return new ResponseEntity(mapper.memberToMemberResponse(member), HttpStatus.OK);
     }
 
 
