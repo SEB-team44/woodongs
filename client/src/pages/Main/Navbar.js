@@ -68,10 +68,12 @@ const Navbar = () => {
         <header className="header-container">
           <nav className="nav-container">
             <section className="logo-box">
-              <img
-                className="logo-img"
-                src={require("../../../src/img/logo.png")}
-              />
+              <Link to="/Main">
+                <img
+                  className="logo-img"
+                  src={require("../../../src/img/logo.png")}
+                />
+              </Link>
             </section>
 
             <ol className="tap-box">
