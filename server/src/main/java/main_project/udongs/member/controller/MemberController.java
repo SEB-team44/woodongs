@@ -88,7 +88,9 @@ public class MemberController {
     public ResponseEntity deleteMember(@PathVariable Long memberId) {
         log.debug("delete member");
 
-        return new ResponseEntity("Deletion completed", HttpStatus.OK);
+        memberService.deleteMember(memberId);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 
