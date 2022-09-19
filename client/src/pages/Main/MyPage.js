@@ -2,8 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import Navbar from "./Navbar";
 import Button from "@mui/material/Button";
+
+import { Link } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
+
 
 const MyPageStyled = styled.div`
   .mypage_content {
@@ -58,6 +62,11 @@ const MyPage = () => {
                 <div className="introduce">소개 : 열심히하겠습니다!</div>
               </div>
             </div>
+            <Link to="/Login">
+              <Button className="submit-button" variant="contained">
+                LogOut
+              </Button>
+            </Link>
           </div>
         </div>
       </MyPageStyled>

@@ -118,6 +118,14 @@ export default function SignUp() {
                   label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox value="allowExtraEmails" color="primary" />
+                  }
+                  label="I want to consent to provide location information. it is only used to help you searching studies nearby"
+                />
+              </Grid>
             </Grid>
             <Button
               type="submit"

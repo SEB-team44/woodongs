@@ -29,6 +29,9 @@ const AddStudyStyled = styled.div`
     width: 500px;
     line-height: 50px;
   }
+  textarea{
+    resize: none;
+  }
 `;
 const CATEGORY_LIST = [
   { id: 0, data: "기획 & PO" },

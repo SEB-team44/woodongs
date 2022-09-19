@@ -11,8 +11,8 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Main from "../Main/Main";
-import SignUp from "../Member/SignUp";
+// import Main from "../Main/Main";
+// import SignUp from "../Member/SignUp";
 
 import { FacebookLoginButton } from "react-social-login-buttons";
 import { GoogleLoginButton } from "react-social-login-buttons";

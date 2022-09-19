@@ -89,7 +89,7 @@ const Main = () => {
   // cardList를 요청
   useEffect(() => {
     const getCardList = async () => {
-      fetch("http://localhost:3001/main")
+      fetch("http://localhost:3001/card")
         .then((res) => {
           if (!res.ok) {
             throw Error("could not fetch the data for that resource");
@@ -122,7 +122,7 @@ const Main = () => {
             <main className="cardlists-box">
               {cardList.map((el, idx) => {
                 return (
-                  <article className="cardlist" id={idx}>
+                  <article className="cardlist" key={idx}>
                     <div className="cardimg-box">
                       <img
                         className="cardimg"
