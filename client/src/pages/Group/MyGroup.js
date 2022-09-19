@@ -35,7 +35,7 @@ const MyGroup = () => {
         <div className="my-group-container">
           <ChatSideBar />
           <div className="my-group__inner">
-            <div className="my-group__title">채팅방dddddddddd</div>
+            <div className="my-group__title">채팅방</div>
             <ChatMessage />
           </div>
         </div>

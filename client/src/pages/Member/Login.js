@@ -11,8 +11,11 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-// import Main from "../Main/Main";
-// import SignUp from "../Member/SignUp";
+
+import Main from "../Main/Main";
+import SignUp from "../Member/SignUp";
+import GoogleButton from "./GoogleButton";
+
 
 import { FacebookLoginButton } from "react-social-login-buttons";
 import { GoogleLoginButton } from "react-social-login-buttons";
@@ -121,7 +124,8 @@ export default function Login() {
             </Grid>
             <div className="social_login">
               <FacebookLoginButton onClick={() => alert("Hello")} />
-              <GoogleLoginButton onClick={() => alert("Hello")} />
+              <GoogleButton/>
+              {/* <GoogleLoginButton onClick={() => alert("Hello")} /> */}
             </div>
           </Box>
         </Box>
