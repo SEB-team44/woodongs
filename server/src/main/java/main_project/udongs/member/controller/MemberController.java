@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import main_project.udongs.geoip.GeoIP;
+import main_project.udongs.geoip.GeoIPService;
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.mapper.MemberMapper;
@@ -29,6 +31,7 @@ public class MemberController {
 
     private final MemberMapper mapper;
     private final MemberService memberService;
+    private final GeoIPService geoIPService;
 
 
     @Operation(summary = "회원 등록")
@@ -36,8 +39,15 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Response.class))))})
     @PostMapping("/signup")
-    public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
+    public ResponseEntity postMember(@Valid @RequestParam(value="ipAddress", required=true) String ipAddress,
+                                     @RequestBody MemberDto.Post requestBody) throws Exception{
         log.debug("post member");
+
+        GeoIPService locationService = new GeoIPService();
+        GeoIP location = locationService.getLocation(ipAddress);
+
+        requestBody.setLatitude(location.getLatitude());
+        requestBody.setLongitude(location.getLongitude());
 
         Member member = mapper.memberPostToMember(requestBody);
         Member createdMember = memberService.createMember(member);
