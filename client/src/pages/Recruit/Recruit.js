@@ -2,8 +2,10 @@ import React from "react";
 import Navbar from "../Main/Navbar";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+import Footer from "../Main/Footer";
+import Button from "@mui/material/Button";
 
-const StyledRecruit = styled.div`
+const StyledRecruit = styled.section`
   .recruit-container {
     position: absolute;
     display: flex;
@@ -28,7 +30,8 @@ const StyledRecruit = styled.div`
     border: solid 1px black;
     align-items: center;
     text-align: center;
-    height: 300px;
+    height: 200px;
+    padding: 150px;
   }
   .recruit-main-box {
     display: flex;
@@ -46,6 +49,7 @@ const StyledRecruit = styled.div`
   .my-info {
     display: flex;
     flex-direction: row;
+    justify-content: center;
   }
   .recruit-comment-box {
     border: 1px solid black;
@@ -55,8 +59,11 @@ const StyledRecruit = styled.div`
   .inputbox-textarea {
     width: 70%;
   }
-  .recruit-comment{
+  .recruit-comment {
     margin-bottom: 20px;
+  }
+  textarea {
+    resize: none;
   }
 `;
 
@@ -66,7 +73,7 @@ const Recruit = () => {
   const [inputComment, setInputComment] = useState("");
   const [getcondition, setgetcontition] = useState(true);
 
-  //카드 리스트와 댓글 리스트를 첫 랜더링 때 받아오자  
+  //카드 리스트와 댓글 리스트를 첫 랜더링 때 받아오자
   useEffect(() => {
     const getCardList = async () => {
       fetch("http://localhost:3001/keyword")
@@ -104,44 +111,41 @@ const Recruit = () => {
 
   // 댓글 입력을 누르면, 그 내용을 post요청
   const postCommentData = () => {
-      let reqPost = {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: "김영하",
-          content: inputComment,
-        }),
-      }
-      fetch('http://localhost:3001/comment', reqPost)
-      .then(res => res.json())
-      
-      //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
-      setgetcontition(!getcondition);
-      setInputComment('');
-  }
+    let reqPost = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: "김영하",
+        content: inputComment,
+      }),
+    };
+    fetch("http://localhost:3001/comment", reqPost).then((res) => res.json());
 
-
+    //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
+    setgetcontition(!getcondition);
+    setInputComment("");
+  };
 
   const handleSumit = (e) => {
-      e.preventDefault();
-      postCommentData()
-      e.target.value = null
-  }
+    e.preventDefault();
+    postCommentData();
+    e.target.value = null;
+  };
 
   const handleChangeInput = (e) => {
     setInputComment(e.target.value);
-  }
+  };
 
-  //삭제 버튼 클릭시, 들어온 id값에 맞는 부분 삭제 요청 보냄 
+  //삭제 버튼 클릭시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handeDeleteComment = (id) => {
-    fetch('http://localhost:3001/comment' + `/${id}`, {
-      method: "DELETE"
-    })
+    fetch("http://localhost:3001/comment/" + `${id}`, {
+      method: "DELETE",
+    });
 
     setgetcontition(!getcondition);
-  }
+  };
   return (
     <>
       <StyledRecruit>
@@ -229,7 +233,9 @@ const Recruit = () => {
                   <p>웹 개발 스터디</p>
                 </article>
                 <article>
-                  <button>신청하기</button>
+                  <Button className="submit-button" variant="contained">
+                    신청하기
+                  </Button>
                 </article>
               </aside>
             </section>
@@ -241,24 +247,32 @@ const Recruit = () => {
                   onChange={(e) => handleChangeInput(e)}
                   value={inputComment}
                 />
-                <button onClick = {e => handleSumit(e)}>입력</button>
+                <Button onClick={(e) => handleSumit(e)}>입력</Button>
               </div>
               <div className="recruit-commentbox">
                 {comment.map((el, idx) => {
                   return (
                     <>
-                      <div id={el.id} className="recruit-comment">
+                      <div key={el.id} className="recruit-comment">
                         <div className="recruit-comment-name">{el.name}</div>
                         <div className="recruit-comment-content">
                           {el.content}
                         </div>
-                        <div className="recruit-comment-delete-btn" onClick={() => handeDeleteComment(el.id)} >X</div>
+                        <div
+                          className="recruit-comment-delete-btn"
+                          onClick={() => handeDeleteComment(el.id)}
+                        >
+                          X
+                        </div>
                       </div>
                     </>
                   );
                 })}
               </div>
             </section>
+          </section>
+          <section className="footer-box">
+            <Footer />
           </section>
         </section>
       </StyledRecruit>

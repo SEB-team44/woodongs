@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const StyledNav = styled.div`
   .nav-container {
@@ -56,7 +57,10 @@ const StyledNav = styled.div`
     padding-left: 20px;
   }
 
-  
+  .avatarimg {
+    width: 25px;
+    height: 25px;
+  }
 `;
 
 const Notice = () => {
@@ -73,9 +77,12 @@ const Notice = () => {
               <ol className="profile-box">
                 <li>13 Apr, 2022</li>
                 <li>
-                  <button>
-                    profile
-                  </button>
+                <Link to="/MyPage">
+                    <img
+                      className="avatarimg"
+                      src={require("../../../src/img/avatar.png")}
+                    />
+                  </Link>
                 </li>
                 <li>kim-young-ha</li>
               </ol>

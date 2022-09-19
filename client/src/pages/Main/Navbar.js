@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Popper from "@mui/material/Popper";
+import Button from "@mui/material/Button";
 
 const StyledNav = styled.div`
   .header-container {
@@ -49,7 +50,24 @@ const StyledNav = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    text-align: center;
     padding-left: 20px;
+  }
+
+  .info-box > * {
+    margin-left: 20px;
+  }
+
+  .myinfo-img {
+    height: 25px;
+    width: 25px;
+  }
+  textarea {
+    resize: none;
+  }
+  .avatarimg {
+    width: 25px;
+    height: 25px;
   }
 `;
 
@@ -68,15 +86,21 @@ const Navbar = () => {
         <header className="header-container">
           <nav className="nav-container">
             <section className="logo-box">
-              <img
-                className="logo-img"
-                src={require("../../../src/img/logo.png")}
-              />
+              <Link to="/main">
+                <img
+                  className="logo-img"
+                  src={require("../../../src/img/logo.png")}
+                />
+              </Link>
             </section>
 
             <ol className="tap-box">
-              <li>내 주변 스터디</li>
-              <li>전체 게시판</li>
+              <Link to="/main">
+                <li>내 주변 스터디</li>
+              </Link>
+              <Link to="/FreeBoard">
+                <li>전체 게시판</li>
+              </Link>
             </ol>
 
             <section className="other-box">
@@ -86,11 +110,22 @@ const Navbar = () => {
               <div className="info-box">
                 <div className="new-study-btn">
                   <Link to="/AddStudy">
-                    <button>스터디 생성</button>
+                    <Button className="submit-button" variant="contained">
+                      스터디 생성
+                    </Button>
                   </Link>
                 </div>
-                <div className="alert-btn">
-                  <button>종</button>
+                <div className="alert-img">
+                  <img
+                    className="myinfo-img myinfo-ball-img"
+                    src={require("../../../src/img/ball.png")}
+                  />
+                </div>
+                <div className="group-img">
+                  <img
+                    className="myinfo-img myinfo-group-img"
+                    src={require("../../../src/img/group.png")}
+                  />
                 </div>
                 <div className="group-btn">
                   <div>
@@ -115,7 +150,10 @@ const Navbar = () => {
                 </div>
                 <div className="my-info-btn">
                   <Link to="/MyPage">
-                    <button>my info</button>
+                    <img
+                      className="avatarimg"
+                      src={require("../../../src/img/avatar.png")}
+                    />
                   </Link>
                 </div>
               </div>
