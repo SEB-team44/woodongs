@@ -7,10 +7,15 @@ import SignUp from "./pages/Member/SignUp";
 import Recruit from "./pages/Recruit/Recruit";
 import AddStudy from "./pages/AddStudy";
 import MyPage from "./pages/Main/MyPage";
-import MyGroup from "./pages/MyGroup";
+
 import FreeBoard from "./pages/FreeBoard/FreeBoard";
 import AddBoard from "./pages/FreeBoard/AddBoard";
 import SingleBoard from "./pages/FreeBoard/SingleBoard";
+
+import MyGroup from "./pages/Group/MyGroup";
+import ChatMessage from "./pages/Group/ChatMessage";
+import ChatSideBar from "./pages/Group/ChatSideBar";
+
 
 function App() {
   return (
@@ -25,9 +30,14 @@ function App() {
           <Route path="/AddStudy" element={<AddStudy />} />
           <Route path="/MyPage" element={<MyPage />} />
           <Route path="/MyGroup" element={<MyGroup />} />
+
           <Route path="/FreeBoard" element={<FreeBoard/>} />
           <Route path="/AddBoard" element={<AddBoard/>} /> 
           <Route path="/SingleBoard/:id" element={<SingleBoard/>} /> 
+
+          <Route path="/ChatMessage" element={<ChatMessage />} />
+          <Route path="/ChatSideBar" element={<ChatSideBar />} />
+
         </Routes>
       </BrowserRouter>
     </>

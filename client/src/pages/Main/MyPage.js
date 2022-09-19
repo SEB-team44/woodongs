@@ -2,7 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import Navbar from "./Navbar";
 import Button from "@mui/material/Button";
+
 import { Link } from "react-router-dom";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
+
 
 const MyPageStyled = styled.div`
   .mypage_content {
@@ -42,7 +47,9 @@ const MyPage = () => {
                   <button>번호인증</button>
                 </div>
                 <div className="mypage_update">
-                  <button>수정버튼</button>
+                  <Button>
+                    <FontAwesomeIcon icon={faPen} />
+                  </Button>
                 </div>
               </div>
               <div className="name">최진영</div>

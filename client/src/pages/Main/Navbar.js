@@ -87,6 +87,7 @@ const Navbar = () => {
           <nav className="nav-container">
             <section className="logo-box">
               <Link to="/main">
+
                 <img
                   className="logo-img"
                   src={require("../../../src/img/logo.png")}
