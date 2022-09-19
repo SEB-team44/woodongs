@@ -50,7 +50,7 @@ public class MemberController {
     @Operation(summary = "단일 회원 조회")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @GetMapping("/{member-id}")
-    public ResponseEntity getMember(@PathVariable Long memberId) {
+    public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
         log.debug("get member");
 
         MemberDto.Response response = mapper.memberToMemberResponse(memberService.getMember(memberId));
@@ -71,11 +71,11 @@ public class MemberController {
     @Operation(summary = "회원 정보 수정")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @PatchMapping("/{member-id}")
-    public ResponseEntity patchMember(@PathVariable Long memberId,
+    public ResponseEntity patchMember(@PathVariable("member-id") Long memberId,
                                       @RequestBody MemberDto.Patch requestBody) {
         log.debug("patch member");
-
         requestBody.setMemberId(memberId);
+
         Member member = memberService.updateMember(mapper.memberPatchToMember(requestBody));
 
         return new ResponseEntity(mapper.memberToMemberResponse(member), HttpStatus.OK);
@@ -85,7 +85,7 @@ public class MemberController {
     @Operation(summary = "회원 탈퇴")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @DeleteMapping("/{member-id}")
-    public ResponseEntity deleteMember(@PathVariable Long memberId) {
+    public ResponseEntity deleteMember(@PathVariable("member-id") Long memberId) {
         log.debug("delete member");
 
         memberService.deleteMember(memberId);
