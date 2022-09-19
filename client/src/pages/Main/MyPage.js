@@ -7,6 +7,9 @@ import { Link } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { Avatar } from "antd";
+
+import { useState, useRef } from "react";
 
 
 const MyPageStyled = styled.div`
@@ -29,6 +32,27 @@ const MyPageStyled = styled.div`
 `;
 
 const MyPage = () => {
+  const [file, setFile] = useState();
+  const [Image, setImage] = useState("../src/img/avatar.png");
+  const fileInput = useRef(null);
+  const onChange = (e) => {
+    if (e.target.files[0]) {
+      setFile(e.target.files[0]);
+    } else {
+      //업로드 취소할 시
+      setImage("../src/img/avatar.png");
+      return;
+    }
+    //화면에 프로필 사진 표시
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setImage(reader.result);
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
   return (
     <>
       <MyPageStyled>
@@ -37,9 +61,29 @@ const MyPage = () => {
           <div className="mypage_content">
             <div className="mypage_upcontent">
               <div className="mypage_photo">
+                <Avatar
+                  className="avatarimg"
+                  src={Image}
+                  style={{ margin: "20px" }}
+                  size="small"
+                  onClick={() => {
+                    fileInput.current.click();
+                  }}
+                />
                 <img
                   className="avatarimg"
                   src={require("../../../src/img/avatar.png")}
+                  onClick={() => {
+                    fileInput.current.click();
+                  }}
+                />
+                <input
+                  type="file"
+                  style={{ display: "none" }} //파일업로드 숨김
+                  accept="image/jpg,impge/png,image/jpeg"
+                  name="profile_img"
+                  onChange={onChange}
+                  ref={fileInput}
                 />
               </div>
               <div className="mypage_button">
