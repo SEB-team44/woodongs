@@ -16,7 +16,6 @@ import MyGroup from "./pages/Group/MyGroup";
 import ChatMessage from "./pages/Group/ChatMessage";
 import ChatSideBar from "./pages/Group/ChatSideBar";
 
-
 function App() {
   return (
     <>
@@ -31,13 +30,12 @@ function App() {
           <Route path="/MyPage" element={<MyPage />} />
           <Route path="/MyGroup" element={<MyGroup />} />
 
-          <Route path="/FreeBoard" element={<FreeBoard/>} />
-          <Route path="/AddBoard" element={<AddBoard/>} /> 
-          <Route path="/SingleBoard/:id" element={<SingleBoard/>} /> 
+          <Route path="/FreeBoard" element={<FreeBoard />} />
+          <Route path="/AddBoard" element={<AddBoard />} />
+          <Route path="/SingleBoard/:id" element={<SingleBoard />} />
 
           <Route path="/ChatMessage" element={<ChatMessage />} />
           <Route path="/ChatSideBar" element={<ChatSideBar />} />
-
         </Routes>
       </BrowserRouter>
     </>

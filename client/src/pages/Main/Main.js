@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Navbar from "./Navbar";
 import Notice from "./Notice";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
 
@@ -83,8 +83,43 @@ const StyledMain = styled.div`
   }
 `;
 
-const Main = () => {
+const Main = ({ list, totall }) => {
   const [cardList, setCardList] = useState([]);
+
+  const obsRef = useRef(null); //observer Element
+  // const [list, setList] = useState(() => list); //post List
+  const [page, setPage] = useState(1); //현재 페이지
+  const [load, setLoad] = useState(false); //로딩 스피너
+  const preventRef = useRef(true); //옵저버 중복 실행 방지
+  const endRef = useRef(false); //모든 글 로드 확인
+
+  useEffect(() => {
+    //옵저버 생성
+    const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
+    if (obsRef.current) observer.observe(obsRef.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    getPost();
+  }, [page]);
+
+  const obsHandler = (entries) => {
+    //옵저버 콜백함수
+    const target = entries[0];
+    if (!endRef.current && target.isIntersecting && preventRef.current) {
+      //옵저버 중복실행방지
+      preventRef.current = false; //옵저버 중복실행 방지
+      setPage((prev) => prev + 1); //페이지 값 증가
+    }
+  };
+
+  const getPost = useCallback(async () => {
+    //글 불러오기
+    setLoad(true); //로딩 시작
+  });
 
   // cardList를 요청
   useEffect(() => {
@@ -142,6 +177,8 @@ const Main = () => {
                     </div>
                     <div className="">
                       <a>모집완료 0/3</a>
+                      {/* <div ref={observer} />
+                      <>{isLoading && <Loading />}</> */}
                     </div>
                   </article>
                 );
