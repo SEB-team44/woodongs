@@ -11,8 +11,10 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Main from "../Main/Main";
-import SignUp from "../Member/SignUp";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+// import GoogleButton from "./GoogleButton";
 
 import { FacebookLoginButton } from "react-social-login-buttons";
 import { GoogleLoginButton } from "react-social-login-buttons";
@@ -36,18 +38,74 @@ function Copyright(props) {
     </Typography>
   );
 }
+//위도, 경도 받아오는거//
+navigator.geolocation.getCurrentPosition(function (pos) {
+  console.log(pos);
+  let latitude = pos.coords.latitude;
+  let longitude = pos.coords.longitude;
+  alert("현재 위치는 : " + latitude + ", " + longitude);
+});
 
 const theme = createTheme();
 
 export default function Login() {
+  let navigate = useNavigate();
+  const [getemail , setEmail] = useState("");
+  const [getpassword, setPassword] = useState("");
+
+
+ 
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    // setEmail((prev) => {return prev = data.get("email")});
+    // setPassword(data.get("password"));
+    setEmail(data.get("email"));
+    setPassword(data.get("password"));
+    const reqOAuthPost = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        email: data.get("email"),
+        password: data.get("password"),
+        // phoneNumber: data.get("PhoneNumber"),
+      }),
+    };
+
+    fetch("http://14.6.86.98:8080/member/signin",reqOAuthPost)
+    .then((response) => {
+      if (response.ok) {
+        const refresh_token = response.headers.get("Refresh");
+        sessionStorage.setItem("refresh_token", refresh_token);
+        console.log(refresh_token);
+      }
+      return response
+    })
+    .then((response)=>{
+      const access_token = response.headers.get("Authorization");
+      sessionStorage.setItem("access_token", access_token);
+      console.log(access_token);
+    })
+    .then((res) => {
+      console.log(res)
+      navigate("/main");
+    })
+    .catch((error) => {
+      alert(error);
+      console.log(error)
+    })
   };
+
+
+  const handleGoogle = (event) => {
+    return window.location.assign(`14.6.86.98:8080/oauth2/authorization/google/`+`${getemail}`)
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -69,7 +127,7 @@ export default function Login() {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={(e) => handleSubmit(e)}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -88,7 +146,7 @@ export default function Login() {
               required
               fullWidth
               name="password"
-              label="Password"
+              label="password"
               type="password"
               id="password"
               autoComplete="current-password"
@@ -97,7 +155,7 @@ export default function Login() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Links to="/main">
+            {/* <Links to="/main"> */}
               <Button
                 type="submit"
                 fullWidth
@@ -106,7 +164,7 @@ export default function Login() {
               >
                 Login
               </Button>
-            </Links>
+            {/* </Links> */}
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -121,8 +179,13 @@ export default function Login() {
             </Grid>
             <div className="social_login">
               <FacebookLoginButton onClick={() => alert("Hello")} />
-              <GoogleLoginButton onClick={() => alert("Hello")} />
+
+              {/* <GoogleButton/> */}
+              <GoogleLoginButton onClick={handleGoogle} />
+              <Links to="/main"> <button>sdfsdf</button></Links>
             </div>
+           
+           
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />

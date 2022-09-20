@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Navbar from "./Main/Navbar";
+import Navbar from "../Main/Navbar";
 import Checkbox from "@mui/material/Checkbox";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -28,6 +28,9 @@ const AddStudyStyled = styled.div`
     display: inline-block;
     width: 500px;
     line-height: 50px;
+  }
+  textarea{
+    resize: none;
   }
 `;
 const CATEGORY_LIST = [
@@ -66,20 +69,7 @@ const AddStudy = () => {
               <FormControlLabel control={<Checkbox />} label="기타" />
             </FormGroup>
           </div>
-          <h2>*지역</h2>
 
-          <select className="region">
-            <option value="region">서울특별시</option>
-            <option value="region">경기도</option>
-            <option value="region">강원도</option>
-            <option value="region">충청북도</option>
-            <option value="region">충청남도</option>
-            <option value="region">전라북도</option>
-            <option value="region">전라남도</option>
-            <option value="region">경상북도</option>
-            <option value="region">경상남도</option>
-            <option value="region">제주도</option>
-          </select>
           <h2>*모집인원</h2>
           <h4>❗️3~4명을 추천합니다. (최대 9명, 추후변경가능)</h4>
           <input type="text" placeholder="숫자만 적어주세요. " size="20" />
