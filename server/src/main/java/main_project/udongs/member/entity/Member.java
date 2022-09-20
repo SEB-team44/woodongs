@@ -30,7 +30,7 @@ public class Member {
     @Column
     private String password;
 
-
+    @Column
     private String city;
     
     /*// 위도
