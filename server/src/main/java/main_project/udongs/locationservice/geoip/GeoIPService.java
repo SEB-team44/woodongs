@@ -19,8 +19,8 @@ public class GeoIPService {
     private DatabaseReader dbReader;
 
     public GeoIPService() throws IOException {
-        File database = new File("src/main/java/main_project/udongs/locationservice/geoip/GeoLite2-City_20220916/GeoLite2-City.mmdb");
-        dbReader = new DatabaseReader.Builder(database).build();
+        //File database = new File("src/main/java/main_project/udongs/locationservice/geoip/GeoLite2-City_20220916/GeoLite2-City.mmdb");
+        //dbReader = new DatabaseReader.Builder(database).build();
     }
 
     @Transactional

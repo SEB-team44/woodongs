@@ -34,7 +34,6 @@ public class MemberController {
 
     private final MemberMapper mapper;
     private final MemberService memberService;
-    private final GeoIPService geoIPService;
     private final LocationService locationService;
     private final AwsS3Upload s3Upload;
     private final PasswordEncoder passwordEncoder;
