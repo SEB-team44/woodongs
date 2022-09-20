@@ -16,7 +16,6 @@ import Main from "../Main/Main";
 import SignUp from "../Member/SignUp";
 import GoogleButton from "./GoogleButton";
 
-
 import { FacebookLoginButton } from "react-social-login-buttons";
 import { GoogleLoginButton } from "react-social-login-buttons";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -39,6 +38,13 @@ function Copyright(props) {
     </Typography>
   );
 }
+//위도, 경도 받아오는거//
+navigator.geolocation.getCurrentPosition(function (pos) {
+  console.log(pos);
+  let latitude = pos.coords.latitude;
+  let longitude = pos.coords.longitude;
+  alert("현재 위치는 : " + latitude + ", " + longitude);
+});
 
 const theme = createTheme();
 
@@ -124,7 +130,7 @@ export default function Login() {
             </Grid>
             <div className="social_login">
               <FacebookLoginButton onClick={() => alert("Hello")} />
-              <GoogleButton/>
+              <GoogleButton />
               {/* <GoogleLoginButton onClick={() => alert("Hello")} /> */}
             </div>
           </Box>

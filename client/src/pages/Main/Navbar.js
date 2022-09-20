@@ -11,7 +11,6 @@ const StyledNav = styled.div`
     width: 100%;
     border: solid black 1px;
   }
-
   .nav-container {
     display: flex;
     flex-direction: row;
@@ -19,11 +18,9 @@ const StyledNav = styled.div`
     height: 63.5px;
     padding-left: 10px;
   }
-
   .logo-img {
     height: 60px;
   }
-
   .tap-box {
     display: flex;
     flex-direction: row;
@@ -38,14 +35,12 @@ const StyledNav = styled.div`
     list-style: none;
     padding-right: 20px;
   }
-
   .other-box {
     display: flex;
     flex-direction: row;
     align-items: center;
     padding-right: 10px;
   }
-
   .info-box {
     display: flex;
     flex-direction: row;
@@ -53,11 +48,9 @@ const StyledNav = styled.div`
     text-align: center;
     padding-left: 20px;
   }
-
   .info-box > * {
     margin-left: 20px;
   }
-
   .myinfo-img {
     height: 25px;
     width: 25px;
@@ -87,7 +80,6 @@ const Navbar = () => {
           <nav className="nav-container">
             <section className="logo-box">
               <Link to="/main">
-
                 <img
                   className="logo-img"
                   src={require("../../../src/img/logo.png")}
