@@ -1,7 +1,6 @@
 package main_project.udongs.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,6 +15,7 @@ import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.mapper.MemberMapper;
 import main_project.udongs.member.service.MemberService;
+import main_project.udongs.oauth2.oauth.entity.RoleType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +58,7 @@ public class MemberController {
         requestBody.setCity(location.getCity());
 
         Member member = mapper.memberPostToMember(requestBody);
+        member.setRoleType(RoleType.USER);
         Member createdMember = memberService.createMember(member);
         MemberDto.Response response = mapper.memberToMemberResponse(createdMember);
 
@@ -112,6 +113,15 @@ public class MemberController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+
+//    @GetMapping
+//    public ApiResponse getUser() {
+//        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//
+//        Member user = userService.getUser(principal.   );
+//        log.info("user : {}" + user.toString());
+//        return ApiResponse.success("user", user);
+//    }
 
 
 }
