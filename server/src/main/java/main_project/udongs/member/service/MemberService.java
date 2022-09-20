@@ -49,6 +49,16 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
+    @Transactional
+    public Member uploadImage(Member member, String s3ImageUrl) {
+
+        Member findMember = findVerifiedMember(member.getMemberId());
+
+            findMember.setS3ImageUrl(s3ImageUrl);
+            return memberRepository.save(findMember);
+
+    }
+
     public Member getMembers() {
         return null;
     }

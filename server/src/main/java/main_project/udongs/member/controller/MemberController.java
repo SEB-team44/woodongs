@@ -16,12 +16,15 @@ import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.mapper.MemberMapper;
 import main_project.udongs.member.service.MemberService;
+import main_project.udongs.s3upload.AwsS3Upload;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Tag(name = "Member", description = "회원 관련 API")
 @Slf4j
@@ -34,7 +37,7 @@ public class MemberController {
     private final MemberService memberService;
     private final GeoIPService geoIPService;
     private final LocationService locationService;
-
+    private final AwsS3Upload s3Upload;
 
 
     /*
@@ -59,7 +62,7 @@ public class MemberController {
     }
 
 
-    @Operation(summary = "단일 회원 조회")
+    @Operation(summary = "단일 회원 조회 / 마이페이지")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @GetMapping("/{member-id}")
     public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
@@ -69,16 +72,19 @@ public class MemberController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-
-    // 사용자 입장에서 전체 회원 조회는 할 일이 없으므로
-    /*@Operation(summary = "전체 회원 조회")
+    @Operation(summary = "마이페이지 회원사진 업로드")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
-    @GetMapping()
-    public ResponseEntity getMembers() {
-        log.debug("get members");
+    @PostMapping("/{member-id}/imageupload")
+    public ResponseEntity<Object> uploadImage(@PathVariable("member-id") long memberId,
+                                              @RequestParam("images") MultipartFile multipartFile) throws IOException {
+        log.debug("upload image");
 
-        return new ResponseEntity("getmembers", HttpStatus.OK);
-    }*/
+        String savedImagePath = s3Upload.upload(multipartFile);
+
+        Member imageupdated = memberService.uploadImage(memberService.getMember(memberId), savedImagePath);
+
+        return new ResponseEntity<>(imageupdated, HttpStatus.OK);
+    }
 
 
     @Operation(summary = "회원 정보 수정")
@@ -105,6 +111,22 @@ public class MemberController {
         return new ResponseEntity(HttpStatus.OK);
     }
 }
+
+
+
+
+// 사용자 입장에서 전체 회원 조회는 할 일이 없으므로
+/*
+    @Operation(summary = "전체 회원 조회")
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
+    @GetMapping()
+    public ResponseEntity getMembers() {
+        log.debug("get members");
+
+        return new ResponseEntity("getmembers", HttpStatus.OK);
+    }
+*/
+
 
 // geoIP사용 당시의 코드 (Deprecated)
 /*

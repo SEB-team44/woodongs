@@ -89,6 +89,8 @@ public class MemberDto {
         private String grade;
 
         private String city;
+
+        private String S3ImageUrl;
 //        private String state;
 //        private String latitude;
 //        private String longitude;

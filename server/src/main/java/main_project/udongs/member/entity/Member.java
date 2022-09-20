@@ -32,6 +32,9 @@ public class Member {
 
     @Column
     private String city;
+
+    @Column
+    private String s3ImageUrl;
     
     /*// 위도
     @Column
@@ -43,5 +46,7 @@ public class Member {
 
     @Column
     private String grade;
+
+
 
 }
