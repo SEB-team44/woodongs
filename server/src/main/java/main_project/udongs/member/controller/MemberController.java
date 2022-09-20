@@ -1,7 +1,6 @@
 package main_project.udongs.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,10 +18,10 @@ import main_project.udongs.member.service.MemberService;
 import main_project.udongs.s3upload.AwsS3Upload;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 
@@ -45,15 +44,18 @@ public class MemberController {
      * 경도 / 위도 는 프론트에서 받아올 예정
      * 나중에 로그인 시 위치정보 받아오는 것으로 변경
      */
+     
     @Operation(summary = "회원 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Response.class))))})
     @PostMapping("/signup")
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) throws Exception {
         log.debug("post member");
 
+        //경도 / 위도 는 프론트에서 받아올 예정
         String s = locationService.coordToAddr("126.76903412977279", "37.51018419688551");
         requestBody.setCity(s);
-
+        requestBody.setPassword(passwordEncoder.encode(requestBody.getPassword()));
+        
         Member member = mapper.memberPostToMember(requestBody);
         Member createdMember = memberService.createMember(member);
         MemberDto.Response response = mapper.memberToMemberResponse(createdMember);
@@ -111,6 +113,15 @@ public class MemberController {
         return new ResponseEntity(HttpStatus.OK);
     }
 }
+
+//    @GetMapping
+//    public ApiResponse getUser() {
+//        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//
+//        Member user = userService.getUser(principal.   );
+//        log.info("user : {}" + user.toString());
+//        return ApiResponse.success("user", user);
+//    }
 
 
 

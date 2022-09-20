@@ -5,11 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.math.BigDecimal;
 
 
 public class MemberDto {
@@ -31,7 +29,7 @@ public class MemberDto {
         @NotBlank(message = "비밀번호는 공백이 아니어야 합니다.")
         private String password;
 
-        @NotBlank
+//        @NotBlank
         @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$",
                 message = "휴대폰 번호는 010으로 시작하는 11자리 숫자와 '-'로 구성되어야 합니다.")
         private String phoneNumber;
@@ -86,7 +84,7 @@ public class MemberDto {
         private String memberName;
         private String email;
         private String phoneNumber;
-        private String grade;
+//        private String grade;
 
         private String city;
 

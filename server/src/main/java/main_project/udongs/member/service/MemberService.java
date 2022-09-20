@@ -1,17 +1,12 @@
 package main_project.udongs.member.service;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.repository.MemberRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -23,8 +18,9 @@ public class MemberService {
 
     @Transactional
     public Member createMember(Member member) {
+        verifyExistsEmail(member.getEmail());
         Member savedMember = memberRepository.save(member);
-        savedMember.setGrade("USER"); //기본 가입시 USER
+//        savedMember.setGrade("USER"); //기본 가입시 USER
         return  savedMember;
     }
 
@@ -79,5 +75,11 @@ public class MemberService {
                 optionalMember.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
         return findMember;
+    }
+
+    private void verifyExistsEmail(String email) {
+        Member member = memberRepository.findByEmail(email);
+        if (member != null)
+            throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
     }
 }
