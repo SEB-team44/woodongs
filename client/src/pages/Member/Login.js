@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { FacebookLoginButton } from "react-social-login-buttons";
 import { GoogleLoginButton } from "react-social-login-buttons";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-// import { Link as Links } from "react-router-dom";
+import { Link as Links } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -182,7 +182,10 @@ export default function Login() {
 
               {/* <GoogleButton/> */}
               <GoogleLoginButton onClick={handleGoogle} />
+              <Links to="/main"> <button>sdfsdf</button></Links>
             </div>
+           
+           
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
