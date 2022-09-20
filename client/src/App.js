@@ -5,7 +5,7 @@ import Main from "./pages/Main/Main";
 import Login from "./pages/Member/Login";
 import SignUp from "./pages/Member/SignUp";
 import Recruit from "./pages/Recruit/Recruit";
-import AddStudy from "./pages/AddStudy";
+import AddStudy from "./pages/Recruit/AddStudy";
 import MyPage from "./pages/Main/MyPage";
 
 import FreeBoard from "./pages/FreeBoard/FreeBoard";

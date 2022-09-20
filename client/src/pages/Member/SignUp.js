@@ -12,6 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useState } from "react";
 
 function Copyright(props) {
   return (
@@ -34,13 +35,50 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
+  const [myip , setMyip] = useState("");
+
+
+  // 내 아이피 주소 가져오기 
+  const getIP = async() => {
+    const ipData = await fetch('https://geolocation-db.com/json/');
+    const locationIp = await ipData.json();
+    setMyip(locationIp.IPv4)
+  }
+  getIP();
+
+  // 정보들을 입력하고 제출버튼 누르면, 데이터들 post
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const reqPost = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        memberName: data.get("firstName") + data.get("lastName"),
+        email: data.get("email"),
+        password: data.get("password"),
+        // phoneNumber: data.get("PhoneNumber"),
+      }),
+    };
+    // 'http://14.6.86.98:8080/member/signup' 지훈님
+    // `http://59.16.126.210:8080/member/signup?ipAddress=${myip}` 대한님
+    fetch('http://14.6.86.98:8080/member/signup', reqPost)
+    .then((response) => {
+      console.log(response.headers.get("Authorization"))
+      return response.json()
+    })
+    // .then((response) => {
+    //   // if (response.ok) {
+    //   //   const token = response.headers.get("authorization");
+    //   //   localStorage.setItem("token", token);
+    //   // }
+    // })
+    .catch((err) => alert(err.message));
   };
 
   return (
@@ -111,6 +149,17 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="PhoneNumber"
+                  label="PhoneNumber"
+                  // type="PhoneNumber"
+                  id="PhoneNumber"
+                  autoComplete="new-PhoneNumber"
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <FormControlLabel
                   control={
                     <Checkbox value="allowExtraEmails" color="primary" />
@@ -123,7 +172,7 @@ export default function SignUp() {
                   control={
                     <Checkbox value="allowExtraEmails" color="primary" />
                   }
-                  label="I want to consent to provide location information. it is only used to help you searching studies nearby"
+                  label="I consent to provide location information to find studies in my area."
                 />
               </Grid>
             </Grid>

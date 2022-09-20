@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Navbar from "./Main/Navbar";
+import Navbar from "../Main/Navbar";
 import Checkbox from "@mui/material/Checkbox";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
