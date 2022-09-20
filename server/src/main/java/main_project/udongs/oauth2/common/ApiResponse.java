@@ -49,4 +49,12 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> notExpiredTokenYet() {
         return new ApiResponse(new ApiResponseHeader(FAILED, NOT_EXPIRED_TOKEN_YET), null);
     }
+
+    public static ApiResponse success(String accessToken, String token, String refreshToken, String token1) {
+        Map<String, String> map = new HashMap<>();
+        map.put(accessToken, token);
+        map.put(refreshToken, token1);
+
+        return new ApiResponse(new ApiResponseHeader(SUCCESS, SUCCESS_MESSAGE), map);
+    }
 }

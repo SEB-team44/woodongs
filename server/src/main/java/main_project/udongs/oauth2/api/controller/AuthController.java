@@ -82,7 +82,7 @@ public class AuthController {
 //        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
 //        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
-        return ApiResponse.success("token", accessToken.getToken());
+        return ApiResponse.success("accessToken", accessToken.getToken(), "refreshToken", refreshToken.getToken());
     }
 
     @GetMapping("/refresh")

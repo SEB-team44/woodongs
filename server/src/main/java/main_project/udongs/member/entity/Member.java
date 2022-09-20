@@ -33,7 +33,7 @@ public class Member {
     @Column
     private String password;
 
-    private String state;
+
     private String city;
 
     @Column(name = "EMAIL_VERIFIED_YN", length = 1)
@@ -64,7 +64,6 @@ public class Member {
     @NotNull
     private LocalDateTime modifiedAt;
 
-    // 위도
     @Column
     private String latitude;
 
@@ -72,8 +71,6 @@ public class Member {
     @Column
     private String longitude;
 
-//    @Column
-//    private String grade;
 
     public Member(
             @NotNull @Size(max = 100) String memberName,
