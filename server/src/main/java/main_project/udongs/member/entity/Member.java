@@ -33,7 +33,12 @@ public class Member {
     @Column
     private String password;
 
+    @Column
     private String city;
+
+    @Column
+    private String s3ImageUrl;
+    
 
     @Column(name = "EMAIL_VERIFIED_YN", length = 1)
     @NotNull
@@ -62,14 +67,7 @@ public class Member {
     @Column(name = "MODIFIED_AT")
     @NotNull
     private LocalDateTime modifiedAt;
-
-    @Column
-    private String latitude;
-
-    // 경도
-    @Column
-    private String longitude;
-
+    
 
     public Member(
             @NotNull @Size(max = 100) String memberName,
@@ -91,5 +89,7 @@ public class Member {
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
+
+
 
 }
