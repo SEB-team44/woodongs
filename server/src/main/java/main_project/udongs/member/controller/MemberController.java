@@ -1,7 +1,6 @@
 package main_project.udongs.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,9 +17,9 @@ import main_project.udongs.member.mapper.MemberMapper;
 import main_project.udongs.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Tag(name = "Member", description = "회원 관련 API")
@@ -34,6 +33,7 @@ public class MemberController {
     private final MemberService memberService;
     private final GeoIPService geoIPService;
     private final LocationService locationService;
+    private final PasswordEncoder passwordEncoder;
 
 
     //지훈님과 합칠때 수정 예정
@@ -61,6 +61,7 @@ public class MemberController {
         requestBody.setCity(location.getCity());
 
         Member member = mapper.memberPostToMember(requestBody);
+        member.setRoleType(RoleType.USER);
         Member createdMember = memberService.createMember(member);
         MemberDto.Response response = mapper.memberToMemberResponse(createdMember);
 
@@ -74,9 +75,9 @@ public class MemberController {
         log.debug("post member");
 
         //경도 / 위도 는 프론트에서 받아올 예정
-        String s = locationService.coordToAddr("126.76903412977279", "37.51018419688551");
-        requestBody.setCity(s);
-
+//        String s = locationService.coordToAddr("126.76903412977279", "37.51018419688551");
+//        requestBody.setCity(s);
+        requestBody.setPassword(passwordEncoder.encode(requestBody.getPassword()));
         Member member = mapper.memberPostToMember(requestBody);
         Member createdMember = memberService.createMember(member);
         MemberDto.Response response = mapper.memberToMemberResponse(createdMember);
@@ -130,6 +131,15 @@ public class MemberController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+
+//    @GetMapping
+//    public ApiResponse getUser() {
+//        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//
+//        Member user = userService.getUser(principal.   );
+//        log.info("user : {}" + user.toString());
+//        return ApiResponse.success("user", user);
+//    }
 
 
 }
