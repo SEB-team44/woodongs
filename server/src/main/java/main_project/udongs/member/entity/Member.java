@@ -21,6 +21,8 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
+
+
     @Column
     private String email;
 

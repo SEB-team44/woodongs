@@ -68,7 +68,7 @@ public class AuthController {
         );
 
         // userId refresh token 으로 DB 확인
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(email);
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByEmail(email);
         if (userRefreshToken == null) {
             // 없는 경우 새로 등록
             userRefreshToken = new UserRefreshToken(email, refreshToken.getToken());
