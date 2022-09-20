@@ -68,16 +68,10 @@ export default function SignUp() {
     // 'http://14.6.86.98:8080/member/signup' 지훈님
     // `http://59.16.126.210:8080/member/signup?ipAddress=${myip}` 대한님
     fetch('http://14.6.86.98:8080/member/signup', reqPost)
+    .then((response) => response.json())
     .then((response) => {
-      console.log(response.headers.get("Authorization"))
-      return response.json()
+      console.log(response)
     })
-    // .then((response) => {
-    //   // if (response.ok) {
-    //   //   const token = response.headers.get("authorization");
-    //   //   localStorage.setItem("token", token);
-    //   // }
-    // })
     .catch((err) => alert(err.message));
   };
 

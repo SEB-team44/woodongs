@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import queryString from 'query-string';
 
 // import GoogleButton from "./GoogleButton";
 
@@ -46,23 +47,22 @@ navigator.geolocation.getCurrentPosition(function (pos) {
   alert("현재 위치는 : " + latitude + ", " + longitude);
 });
 
+// 카카오 인증 url 
+const KAKAOPATH = "http://14.6.86.98:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/main"
+
 const theme = createTheme();
 
 export default function Login() {
   let navigate = useNavigate();
   const [getemail , setEmail] = useState("");
   const [getpassword, setPassword] = useState("");
-
-
+  const [refresh, setRefresh] = useState(null);
+  const [access, setAccess] = useState(null);
  
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // setEmail((prev) => {return prev = data.get("email")});
-    // setPassword(data.get("password"));
-    setEmail(data.get("email"));
-    setPassword(data.get("password"));
+
     const reqOAuthPost = {
       method: "POST",
       headers: {
@@ -78,34 +78,29 @@ export default function Login() {
       }),
     };
 
-    fetch("http://14.6.86.98:8080/member/signin",reqOAuthPost)
+
+    fetch("http://14.6.86.98:8080/login",reqOAuthPost)
     .then((response) => {
       if (response.ok) {
-        const refresh_token = response.headers.get("Refresh");
-        sessionStorage.setItem("refresh_token", refresh_token);
-        console.log(refresh_token);
+        return response.json()
       }
-      return response
     })
     .then((response)=>{
-      const access_token = response.headers.get("Authorization");
-      sessionStorage.setItem("access_token", access_token);
-      console.log(access_token);
+      const access_token = sessionStorage.setItem("access_token", response.body.accessToken);
+      const refresh_token = sessionStorage.setItem("refresh_token", response.body.refreshToken);
+      if(access_token !== null && refresh_token !== null){
+        navigate("/main")
+      }
     })
     .then((res) => {
       console.log(res)
-      navigate("/main");
+     ;
     })
     .catch((error) => {
       alert(error);
       console.log(error)
     })
   };
-
-
-  const handleGoogle = (event) => {
-    return window.location.assign(`14.6.86.98:8080/oauth2/authorization/google/`+`${getemail}`)
-  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -181,7 +176,9 @@ export default function Login() {
               <FacebookLoginButton onClick={() => alert("Hello")} />
 
               {/* <GoogleButton/> */}
-              <GoogleLoginButton onClick={handleGoogle} />
+              <a className="btn btn-block social-btn google" href={KAKAOPATH}>
+              <GoogleLoginButton  />
+              </a>
               <Links to="/main"> <button>sdfsdf</button></Links>
             </div>
            
