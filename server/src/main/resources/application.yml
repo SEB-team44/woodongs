@@ -15,6 +15,25 @@ spring:
       path: /h2
   datasource:
     url: jdbc:h2:mem:test
+
+
+#AWS Configurations
+cloud:
+  aws:
+    s3:
+      bucket: mainproject-bucket
+    credentials:
+      access-key: AKIATS2YEWM5CISHWPBM
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+  output:
+    ansi:
+      enabled: always
+
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -86,9 +105,6 @@ app:
     authorizedRedirectUris:
       - http://localhost:3000/oauth/redirect
 
-#  output:
-#    ansi:
-#      enabled: always
 
 #Sl4fj
 logging:
