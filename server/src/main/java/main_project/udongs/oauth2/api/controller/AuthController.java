@@ -100,7 +100,7 @@ public class AuthController {
             return ApiResponse.notExpiredTokenYet();
         }
 
-        String userId = claims.getSubject();
+        String email = claims.getSubject();
         RoleType roleType = RoleType.of(claims.get("role", String.class));
 
         // refresh token
@@ -110,9 +110,9 @@ public class AuthController {
         if (!authRefreshToken.validate()) {
             return ApiResponse.invalidRefreshToken();
         }
-        log.info(userId, refreshToken);
+        log.info(email, refreshToken);
         // userId refresh token 으로 DB 확인
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId, refreshToken);
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByEmailAndRefreshToken(email, refreshToken);
         log.info("userRefreshToken : " + userRefreshToken);
         if (userRefreshToken == null) {
             return ApiResponse.invalidRefreshToken();
@@ -120,7 +120,7 @@ public class AuthController {
 
         Date now = new Date();
         AuthToken newAccessToken = tokenProvider.createAuthToken(
-                userId,
+                email,
                 roleType.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );

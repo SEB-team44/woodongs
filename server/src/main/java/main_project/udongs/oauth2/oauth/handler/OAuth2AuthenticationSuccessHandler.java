@@ -74,7 +74,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         Date now = new Date();
         AuthToken accessToken = tokenProvider.createAuthToken(
-                userInfo.getId(),
+                userInfo.getEmail(),
                 roleType.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );

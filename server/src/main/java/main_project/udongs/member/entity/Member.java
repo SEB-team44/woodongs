@@ -21,8 +21,6 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-
-
     @Column
     private String email;
 
@@ -34,7 +32,6 @@ public class Member {
 
     @Column
     private String password;
-
 
     private String city;
 

@@ -23,7 +23,7 @@ public class UserRefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long refreshTokenSeq;
 
-    @Column(name = "USER_EMAIL", length = 64, unique = true)
+    @Column(name = "EMAIL", length = 64, unique = true)
     @NotNull
     @Size(max = 64)
     private String email;

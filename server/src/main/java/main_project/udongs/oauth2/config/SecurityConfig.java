@@ -1,5 +1,6 @@
 package main_project.udongs.oauth2.config;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import main_project.udongs.oauth2.api.repository.UserRefreshTokenRepository;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
@@ -29,7 +30,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 @Configuration
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsProperties corsProperties;
