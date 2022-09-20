@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -35,8 +36,16 @@ public class MemberDto {
                 message = "휴대폰 번호는 010으로 시작하는 11자리 숫자와 '-'로 구성되어야 합니다.")
         private String phoneNumber;
 
-        //private BigDecimal latitude;
-        //private BigDecimal longitude;
+        private String state;
+        private String city;
+
+        // 위도
+        @Column
+        private String latitude;
+
+        // 경도
+        @Column
+        private String longitude;
 
         //회원 가입시 기본 등급 = USER
         //private String grade;
@@ -57,9 +66,12 @@ public class MemberDto {
                 message = "휴대폰 번호는 010으로 시작하는 11자리 숫자와 '-'로 구성되어야 합니다.")
         private String phoneNumber;
 
+        @NotBlank(message = "비밀번호는 공백이 아니어야 합니다.")
+        private String password;
+
         //비밀번호 변경기능도 추가?
 
-        public void setMemberId(long memberId) {
+        public void setMemberId(long memberId){
             this.memberId = memberId;
         }
     }
@@ -73,6 +85,10 @@ public class MemberDto {
         private String email;
         private String phoneNumber;
         private String grade;
+        private String state;
+        private String city;
+        private String latitude;
+        private String longitude;
     }
 
 }
