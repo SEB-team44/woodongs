@@ -30,16 +30,16 @@ public class Member {
     @Column
     private String password;
 
-    private String state;
+
     private String city;
     
-    // 위도
+    /*// 위도
     @Column
     private String latitude;
 
     // 경도
     @Column
-    private String longitude;
+    private String longitude;*/
 
     @Column
     private String grade;

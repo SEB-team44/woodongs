@@ -1,4 +1,4 @@
-package main_project.udongs.geoip;
+package main_project.udongs.locationservice.geoip;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

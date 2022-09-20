@@ -36,8 +36,11 @@ public class MemberDto {
                 message = "휴대폰 번호는 010으로 시작하는 11자리 숫자와 '-'로 구성되어야 합니다.")
         private String phoneNumber;
 
-        private String state;
         private String city;
+
+
+        /*
+        private String state;
 
         // 위도
         @Column
@@ -45,10 +48,9 @@ public class MemberDto {
 
         // 경도
         @Column
-        private String longitude;
+        private String longitude;*/
 
         //회원 가입시 기본 등급 = USER
-        //private String grade;
     }
 
     //회원 정보 수정
@@ -85,10 +87,11 @@ public class MemberDto {
         private String email;
         private String phoneNumber;
         private String grade;
-        private String state;
+
         private String city;
-        private String latitude;
-        private String longitude;
+//        private String state;
+//        private String latitude;
+//        private String longitude;
     }
 
 }
