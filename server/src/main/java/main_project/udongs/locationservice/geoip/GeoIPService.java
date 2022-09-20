@@ -1,4 +1,4 @@
-package main_project.udongs.geoip;
+package main_project.udongs.locationservice.geoip;
 
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
@@ -19,7 +19,7 @@ public class GeoIPService {
     private DatabaseReader dbReader;
 
     public GeoIPService() throws IOException {
-        File database = new File("src/main/java/main_project/udongs/geoip/GeoLite2-City_20220916/GeoLite2-City.mmdb");
+        File database = new File("src/main/java/main_project/udongs/locationservice/geoip/GeoLite2-City_20220916/GeoLite2-City.mmdb");
         dbReader = new DatabaseReader.Builder(database).build();
     }
 
