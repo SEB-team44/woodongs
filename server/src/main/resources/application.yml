@@ -1,3 +1,8 @@
+#spring:
+#  profiles:
+#    include: sensitive
+
+
 springdoc:
   swagger-ui:
     path: /api.html
@@ -11,4 +16,3 @@ logging:
     root: info
     main_project:
       udongs: debug
-

@@ -3,6 +3,7 @@ package main_project.udongs.member.service;
 import lombok.AllArgsConstructor;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
+import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
@@ -30,28 +31,46 @@ public class MemberService {
     }
 
     @Transactional
-    public Member updateMember(Member member) {
-
-        Member findMember = findVerifiedMember(member.getMemberId());
-
-        // 이름, 폰번호, 비번 만 변경
-        Optional.ofNullable(member.getMemberName())
-                .ifPresent(findMember::setMemberName);
-        Optional.ofNullable(member.getPhoneNumber())
-                .ifPresent(findMember::setPhoneNumber);
-        Optional.ofNullable(member.getPassword())
-                .ifPresent(findMember::setPassword);
-
-        return memberRepository.save(findMember);
+    public Member getMember(String email) {
+        return findVerifiedMember(email);
     }
 
     @Transactional
-    public Member uploadImage(Member member, String s3ImageUrl) {
+    public Member updateMember(Member member, MemberDto.Patch patch) {
 
-        Member findMember = findVerifiedMember(member.getMemberId());
 
-            findMember.setS3ImageUrl(s3ImageUrl);
-            return memberRepository.save(findMember);
+        // 이름, 폰번호, 비번 만 변경
+        Optional.ofNullable(patch.getMemberName())
+                .ifPresent(member::setMemberName);
+        Optional.ofNullable(patch.getPhoneNumber())
+                .ifPresent(member::setPhoneNumber);
+        Optional.ofNullable(patch.getPassword())
+                .ifPresent(member::setPassword);
+
+        return memberRepository.save(member);
+    }
+
+    @Transactional
+    public Member updateLocation(Member member, MemberDto.Location location) {
+
+        // 위도, 경도, 지역 만 변경
+        Optional.ofNullable(location.getLongitude())
+                .ifPresent(member::setLongitude);
+        Optional.ofNullable(location.getLatitude())
+                .ifPresent(member::setLatitude);
+        Optional.ofNullable(location.getCity())
+                .ifPresent(member::setCity);
+
+        return memberRepository.save(member);
+    }
+
+    @Transactional
+    public Member uploadImage(Member member, String profileImageUrl) {
+//
+//        Member findMember = findVerifiedMember(member.getMemberId());
+
+            member.setProfileImageUrl(profileImageUrl);
+            return memberRepository.save(member);
 
     }
 
@@ -74,6 +93,15 @@ public class MemberService {
         Member findMember =
                 optionalMember.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        return findMember;
+    }
+
+    @Transactional(readOnly = true)
+    public Member findVerifiedMember(String email) {
+        Member findMember = memberRepository.findByEmail(email);
+        if (findMember == null) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
         return findMember;
     }
 

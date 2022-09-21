@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import main_project.udongs.locationservice.LocationService;
-import main_project.udongs.locationservice.geoip.GeoIPService;
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.mapper.MemberMapper;
@@ -18,6 +17,8 @@ import main_project.udongs.member.service.MemberService;
 import main_project.udongs.s3upload.AwsS3Upload;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,7 +46,10 @@ public class MemberController {
      * 경도 / 위도 는 프론트에서 받아올 예정
      * 나중에 로그인 시 위치정보 받아오는 것으로 변경
      */
-     
+
+
+
+
     @Operation(summary = "회원 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Response.class))))})
     @PostMapping("/signup")
@@ -66,30 +70,47 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // JWT를 사용하기 때문에 후에 주소를 /member로 받아와서 토큰안의 멤버 정보를 사용해서 할것
-    // member-id를 사용하지 않아도 될듯
-    @Operation(summary = "단일 회원 조회 / 마이페이지")
-    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
-    @GetMapping("/{member-id}")
-    public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
-        log.debug("get member");
 
-        MemberDto.Response response = mapper.memberToMemberResponse(memberService.getMember(memberId));
-        return new ResponseEntity(response, HttpStatus.OK);
+
+    //경도, 위도 프론트에서 받기
+    @Operation(summary = "회원 위치 등록")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Location.class))))})
+    @PostMapping("/locate")
+    public ResponseEntity locate(@RequestBody MemberDto.Location requestBody) throws Exception {
+        log.debug("locate member");
+        requestBody.setCity(locationService.coordToAddr(requestBody.getLongitude(), requestBody.getLatitude()));
+        memberService.updateLocation(getMember(), requestBody);
+
+        return ResponseEntity.ok("위치정보 갱신 성공");
     }
 
-    // JWT를 사용하기 때문에 후에 주소를 /member로 받아와서 토큰안의 멤버 정보를 사용해서 할것
-    // member-id를 사용하지 않아도 될듯
+    @GetMapping("/me")
+    public main_project.udongs.oauth2.common.ApiResponse returnMember() {
+        Member member = getMember();
+        log.info("member : {}" + member.toString());
+        return main_project.udongs.oauth2.common.ApiResponse.success("member", member);
+    }
+
+
+//    @Operation(summary = "단일 회원 조회 / 마이페이지")
+//    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
+//    @GetMapping("/{member-id}")
+//    public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
+//        log.debug("get member");
+//
+//        MemberDto.Response response = mapper.memberToMemberResponse(memberService.getMember(memberId));
+//        return new ResponseEntity(response, HttpStatus.OK);
+//    }
+
     @Operation(summary = "마이페이지 회원사진 업로드")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
-    @PostMapping("/{member-id}/imageupload")
-    public ResponseEntity<Object> uploadImage(@PathVariable("member-id") long memberId,
-                                              @RequestParam("images") MultipartFile multipartFile) throws IOException {
+    @PostMapping("/imageupload")
+    public ResponseEntity<Object> uploadImage(@RequestParam("images") MultipartFile multipartFile) throws IOException {
         log.debug("upload image");
 
         String savedImagePath = s3Upload.upload(multipartFile);
 
-        Member imageupdated = memberService.uploadImage(memberService.getMember(memberId), savedImagePath);
+        Member imageupdated = memberService.uploadImage(getMember(), savedImagePath);
 
         return new ResponseEntity<>(imageupdated, HttpStatus.OK);
     }
@@ -99,13 +120,16 @@ public class MemberController {
     // member-id를 사용하지 않아도 될듯
     @Operation(summary = "회원 정보 수정")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
-    @PatchMapping("/{member-id}")
-    public ResponseEntity patchMember(@PathVariable("member-id") Long memberId, @RequestBody MemberDto.Patch requestBody) {
+    @PatchMapping("")
+    public ResponseEntity patchMember(@RequestBody MemberDto.Patch requestBody) {
         log.debug("patch member");
+
         requestBody.setMemberId(memberId);
 
         Member updatedMember = mapper.memberPatchToMember(requestBody);
         updatedMember.setModifiedAt(LocalDateTime.now());
+        updatedMember.setPassword(passwordEncoder.encode(requestBody.getPassword()));
+
         Member member = memberService.updateMember(updatedMember);
 
         return new ResponseEntity(mapper.memberToMemberResponse(member), HttpStatus.OK);
@@ -116,13 +140,18 @@ public class MemberController {
     // member-id를 사용하지 않아도 될듯
     @Operation(summary = "회원 탈퇴")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
-    @DeleteMapping("/{member-id}")
-    public ResponseEntity deleteMember(@PathVariable("member-id") Long memberId) {
+    @DeleteMapping("")
+    public ResponseEntity deleteMember() {
         log.debug("delete member");
 
-        memberService.deleteMember(memberId);
+        memberService.deleteMember(getMember().getMemberId());
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    public Member getMember() {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return memberService.getMember(principal.getUsername());
     }
 }
 

@@ -37,6 +37,8 @@ public class MemberDto {
 
         private String city;
 
+        private String profileImageUrl;
+
 
         /*
         private String state;
@@ -54,10 +56,9 @@ public class MemberDto {
 
     //회원 정보 수정
     @Getter
+    @Setter
     @AllArgsConstructor
     public static class Patch {
-
-        private long memberId;
 
         @NotBlank(message = "회원 이름은 공백이 아니어야 합니다")
         private String memberName;
@@ -72,9 +73,6 @@ public class MemberDto {
 
         //비밀번호 변경기능도 추가?
 
-        public void setMemberId(long memberId){
-            this.memberId = memberId;
-        }
     }
 
     @AllArgsConstructor
@@ -96,6 +94,14 @@ public class MemberDto {
 //        private String state;
 //        private String latitude;
 //        private String longitude;
+    }
+
+    @Getter
+    @Setter
+    public static class Location {
+        private String longitude;
+        private String latitude;
+        private String city;
     }
 
 }

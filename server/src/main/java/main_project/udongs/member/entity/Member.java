@@ -1,8 +1,6 @@
 package main_project.udongs.member.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
 import main_project.udongs.study.entity.Study;
@@ -18,6 +16,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Member {
 
     @Id
@@ -39,9 +39,15 @@ public class Member {
     @Column
     private String city;
 
+// profileImageUrl이랑 겹쳐서 주석처리
+//    @Column
+//    private String s3ImageUrl;
+
     @Column
-    private String s3ImageUrl;
-    
+    private String longitude;
+
+    @Column
+    private String latitude;
 
     //email 인증 되었는지?? (현재 큰 역할은 X)
     @Column(name = "EMAIL_VERIFIED_YN", length = 1)
