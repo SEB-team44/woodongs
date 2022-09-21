@@ -4,6 +4,8 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Popper from "@mui/material/Popper";
 import Button from "@mui/material/Button";
+import { UserLogin } from "../../UserContext";
+import { useContext } from "react";
 
 const StyledNav = styled.div`
   .header-container {
@@ -66,6 +68,7 @@ const StyledNav = styled.div`
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const { isLogin } = useContext(UserLogin);
 
   const handleClick = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -88,9 +91,16 @@ const Navbar = () => {
             </section>
 
             <ol className="tap-box">
-              <Link to="/main">
-                <li>내 주변 스터디</li>
-              </Link>
+              {isLogin ? (
+                <Link to="/main">
+                  <li>내 주변 스터디</li>
+                </Link>
+              ) : (
+                <Link to="/main">
+                  <li>스터디 목록</li>
+                </Link>
+              )}
+
               <Link to="/FreeBoard">
                 <li>전체 게시판</li>
               </Link>
@@ -100,56 +110,62 @@ const Navbar = () => {
               <div className="search-box">
                 <textarea></textarea>
               </div>
-              <div className="info-box">
-                <div className="new-study-btn">
-                  <Link to="/AddStudy">
-                    <Button className="submit-button" variant="contained">
-                      스터디 생성
-                    </Button>
-                  </Link>
-                </div>
-                <div className="alert-img">
-                  <img
-                    className="myinfo-img myinfo-ball-img"
-                    src={require("../../../src/img/ball.png")}
-                  />
-                </div>
-                <div className="group-img">
-                  <img
-                    className="myinfo-img myinfo-group-img"
-                    src={require("../../../src/img/group.png")}
-                  />
-                </div>
-                <div className="group-btn">
-                  <div>
-                    <button
-                      aria-describedby={id}
-                      type="button"
-                      onClick={handleClick}
-                    >
-                      내 그룹
-                    </button>
-                    <Popper id={id} open={open} anchorEl={anchorEl}>
-                      <Box
-                        sx={{ border: 1, p: 1, bgcolor: "background.paper" }}
+              {isLogin ? (
+                <div className="info-box">
+                  <div className="new-study-btn">
+                    <Link to="/AddStudy">
+                      <Button className="submit-button" variant="contained">
+                        스터디 생성
+                      </Button>
+                    </Link>
+                  </div>
+                  <div className="alert-img">
+                    <img
+                      className="myinfo-img myinfo-ball-img"
+                      src={require("../../../src/img/ball.png")}
+                    />
+                  </div>
+                  <div className="group-img">
+                    <img
+                      className="myinfo-img myinfo-group-img"
+                      src={require("../../../src/img/group.png")}
+                    />
+                  </div>
+                  <div className="group-btn">
+                    <div>
+                      <button
+                        aria-describedby={id}
+                        type="button"
+                        onClick={handleClick}
                       >
-                        <Link to="/MyGroup">
-                          <button>1번스터디</button>
-                          <button>2번스터디</button>
-                        </Link>
-                      </Box>
-                    </Popper>
+                        내 그룹
+                      </button>
+                      <Popper id={id} open={open} anchorEl={anchorEl}>
+                        <Box
+                          sx={{ border: 1, p: 1, bgcolor: "background.paper" }}
+                        >
+                          <Link to="/MyGroup">
+                            <button>1번스터디</button>
+                            <button>2번스터디</button>
+                          </Link>
+                        </Box>
+                      </Popper>
+                    </div>
+                  </div>
+                  <div className="my-info-btn">
+                    <Link to="/MyPage">
+                      <img
+                        className="avatarimg"
+                        src={require("../../../src/img/avatar.png")}
+                      />
+                    </Link>
                   </div>
                 </div>
-                <div className="my-info-btn">
-                  <Link to="/MyPage">
-                    <img
-                      className="avatarimg"
-                      src={require("../../../src/img/avatar.png")}
-                    />
-                  </Link>
-                </div>
-              </div>
+              ) : (
+                <Link to="/Login">
+                  <Button>로그인</Button>
+                </Link>
+              )}
             </section>
           </nav>
         </header>

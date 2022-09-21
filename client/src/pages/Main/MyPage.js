@@ -9,8 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "antd";
 
-import { useState, useRef } from "react";
-
+import { useState, useRef, useContext } from "react";
+import { UserLogin } from "../../UserContext";
 
 const MyPageStyled = styled.div`
   .mypage_content {
@@ -32,6 +32,7 @@ const MyPageStyled = styled.div`
 `;
 
 const MyPage = () => {
+  const {setIslogin} = useContext(UserLogin);
   const [file, setFile] = useState();
   const [Image, setImage] = useState("../src/img/avatar.png");
   const fileInput = useRef(null);
@@ -107,7 +108,7 @@ const MyPage = () => {
               </div>
             </div>
             <Link to="/Login">
-              <Button className="submit-button" variant="contained">
+              <Button onClick={()=> setIslogin(false)} className="submit-button" variant="contained">
                 LogOut
               </Button>
             </Link>
