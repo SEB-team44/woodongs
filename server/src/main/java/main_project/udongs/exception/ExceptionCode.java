@@ -9,6 +9,8 @@ public enum ExceptionCode {
         QUESTION_NOT_FOUND(404, "Question not found"),
         ANSWER_NOT_FOUND(404, "Answer not found"),
         TAG_NOT_FOUND(404, "tag not found"),
+        STUDY_NOT_FOUND(404, "Study not found"),
+        STUDY_EXISTS(409, "Study already exists"),
         MEMBER_EXISTS(409, "Member exists"),
         EMAIL_EXISTS(409, "Email already exists"),
         TAG_EXISTS(409, "Tag exists"),

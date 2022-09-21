@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 
 
 public class MemberDto {
@@ -89,6 +90,9 @@ public class MemberDto {
         private String city;
 
         private String S3ImageUrl;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+
 //        private String state;
 //        private String latitude;
 //        private String longitude;
