@@ -3,9 +3,10 @@ import Navbar from "../Main/Navbar";
 import Footer from "../Main/Footer";
 import Notice from "../Main/Notice";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
+import { UserLogin } from "../../UserContext";
 
 const StyledFreeBoard = styled.section`
   .freeborad-container {
@@ -65,6 +66,7 @@ const StyledFreeBoard = styled.section`
 `;
 
 const FreeBoard = () => {
+  const { isLogin } = useContext(UserLogin);
   const [boardList, setBoardList] = useState([]);
 
   // cardList를 요청
@@ -108,22 +110,30 @@ const FreeBoard = () => {
                   <p>검색</p>
                 </div>
                 <div>
-                  <Link to="/AddBoard">
-                    <Button className="submit-button" varient="outlined">
-                      글쓰기
-                    </Button>
-                  </Link>
+                  {isLogin ? (
+                    <Link to="/AddBoard">
+                      <Button className="submit-button" varient="outlined">
+                        글쓰기
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link to="/Login">
+                      <Button className="submit-button" varient="outlined">
+                        로그인 후 글쓰기
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </section>
 
               <article className="post-box">
                 <div className="post-list">
-                  {boardList.map((el,idx) => {
+                  {boardList.map((el, idx) => {
                     return (
                       <>
                         <div key={idx} className="post">
                           <div>{`#[${el.tag}]`}</div>
-                          <Link to={"/SingleBoard/"+`${el.id}`}>
+                          <Link to={"/SingleBoard/" + `${el.id}`}>
                             <h1>{el.title}</h1>
                           </Link>
                           <body>{el.body}</body>

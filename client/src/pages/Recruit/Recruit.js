@@ -1,9 +1,10 @@
-import React from "react";
+import { React, useContext } from "react";
 import Navbar from "../Main/Navbar";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import Footer from "../Main/Footer";
 import Button from "@mui/material/Button";
+import { UserLogin } from "../../UserContext";
 
 const StyledRecruit = styled.section`
   .recruit-container {
@@ -68,6 +69,7 @@ const StyledRecruit = styled.section`
 `;
 
 const Recruit = () => {
+  const { isLogin } = useContext(UserLogin);
   const [keyword, setKeyword] = useState([]);
   const [comment, setComment] = useState([]);
   const [inputComment, setInputComment] = useState("");
@@ -232,11 +234,13 @@ const Recruit = () => {
                   <h2>-스터디 분야</h2>
                   <p>웹 개발 스터디</p>
                 </article>
-                <article>
-                  <Button className="submit-button" variant="contained">
-                    신청하기
-                  </Button>
-                </article>
+                {isLogin ? (
+                  <article>
+                    <Button className="submit-button" variant="contained">
+                      신청하기
+                    </Button>
+                  </article>
+                ) : null}
               </aside>
             </section>
             <section className="recruit-comment-box">

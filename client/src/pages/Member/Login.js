@@ -11,16 +11,16 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import queryString from 'query-string';
 
 // import GoogleButton from "./GoogleButton";
-
 import { FacebookLoginButton } from "react-social-login-buttons";
 import { GoogleLoginButton } from "react-social-login-buttons";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as Links } from "react-router-dom";
+import { UserLogin } from "../../UserContext";
 
 function Copyright(props) {
   return (
@@ -54,15 +54,23 @@ const theme = createTheme();
 
 export default function Login() {
   let navigate = useNavigate();
-  const [getemail , setEmail] = useState("");
-  const [getpassword, setPassword] = useState("");
-  const [refresh, setRefresh] = useState(null);
-  const [access, setAccess] = useState(null);
+  const { setIslogin } = useContext(UserLogin);
+  // const [getemail , setEmail] = useState("");
+  // const [getpassword, setPassword] = useState("");
+  // const [refresh, setRefresh] = useState(null);
+  // const [access, setAccess] = useState(null);
  
+  const handleKakao = () => {
+    window.location.assign(KAKAOPATH);
+    const access = window.location.search;
+    sessionStorage.setItem('access_token', access)
+    setIslogin(true)
+    return <Links to = "/main"/>
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-
     const reqOAuthPost = {
       method: "POST",
       headers: {
@@ -89,7 +97,8 @@ export default function Login() {
       const access_token = sessionStorage.setItem("access_token", response.body.accessToken);
       const refresh_token = sessionStorage.setItem("refresh_token", response.body.refreshToken);
       if(access_token !== null && refresh_token !== null){
-        navigate("/main")
+        navigate("/main");
+        setIslogin(true);
       }
     })
     .then((res) => {
@@ -176,10 +185,11 @@ export default function Login() {
               <FacebookLoginButton onClick={() => alert("Hello")} />
 
               {/* <GoogleButton/> */}
-              <a className="btn btn-block social-btn google" href={KAKAOPATH}>
-              <GoogleLoginButton  />
-              </a>
-              <Links to="/main"> <button>sdfsdf</button></Links>
+              {/* <a className="btn btn-block social-btn google" href={KAKAOPATH}> */}
+              <GoogleLoginButton  onClick={()=>handleKakao()}/>
+              {/* </a> */}
+              <Links to="/main"> <button onClick={()=>{setIslogin(true)}} >임시로그인버튼</button></Links>
+              <Links to="/main"> <button> 로그인 안하고 메인가기</button></Links>
             </div>
            
            

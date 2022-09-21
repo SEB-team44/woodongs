@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Initial from "./Initial";
 import Main from "./pages/Main/Main";
@@ -7,18 +7,21 @@ import SignUp from "./pages/Member/SignUp";
 import Recruit from "./pages/Recruit/Recruit";
 import AddStudy from "./pages/Recruit/AddStudy";
 import MyPage from "./pages/Main/MyPage";
-
 import FreeBoard from "./pages/FreeBoard/FreeBoard";
 import AddBoard from "./pages/FreeBoard/AddBoard";
 import SingleBoard from "./pages/FreeBoard/SingleBoard";
-
 import MyGroup from "./pages/Group/MyGroup";
 import ChatMessage from "./pages/Group/ChatMessage";
 import ChatSideBar from "./pages/Group/ChatSideBar";
+import {UserLogin } from "../src/UserContext"
+
+
 
 function App() {
+  const [isLogin, setIslogin] = useState(false)
   return (
     <>
+    <UserLogin.Provider value={{isLogin, setIslogin}}>
       <BrowserRouter>
         <Routes>
           <Route path="/main" element={<Main />} />
@@ -38,6 +41,7 @@ function App() {
           <Route path="/ChatSideBar" element={<ChatSideBar />} />
         </Routes>
       </BrowserRouter>
+    </UserLogin.Provider>
     </>
   );
 }

@@ -1,6 +1,7 @@
-import React from "react";
+import { React, useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { UserLogin } from "../../UserContext";
 
 const StyledNav = styled.div`
   .nav-container {
@@ -38,8 +39,7 @@ const StyledNav = styled.div`
     height: 63.5px;
   }
 
-
-  .location-container{
+  .location-container {
     width: 25%;
   }
   .location-box {
@@ -64,6 +64,8 @@ const StyledNav = styled.div`
 `;
 
 const Notice = () => {
+  const { isLogin } = useContext(UserLogin);
+
   return (
     <>
       <StyledNav>
@@ -74,18 +76,27 @@ const Notice = () => {
               <button>Notice</button>
             </div>
             <div>
-              <ol className="profile-box">
-                <li>13 Apr, 2022</li>
-                <li>
-                <Link to="/MyPage">
-                    <img
-                      className="avatarimg"
-                      src={require("../../../src/img/avatar.png")}
-                    />
-                  </Link>
-                </li>
-                <li>kim-young-ha</li>
-              </ol>
+              {isLogin ? (
+                <ol className="profile-box">
+                  <li>13 Apr, 2022</li>
+                  <li>
+                    <Link to="/MyPage">
+                      <img
+                        className="avatarimg"
+                        src={require("../../../src/img/avatar.png")}
+                      />
+                    </Link>
+                  </li>
+                  <li>kim-young-ha</li>
+                </ol>
+              ) : (
+                <ol className="profile-box">
+                  <li>13 Apr, 2022</li>
+                  <li>
+                    <Link to="/Login">로그인 후 이용해 주세요</Link>
+                  </li>
+                </ol>
+              )}
             </div>
           </section>
 
@@ -95,7 +106,7 @@ const Notice = () => {
                 <p>현재 위치</p>
               </div>
               <div className="saved-location">
-                <p>서울특별시 서대문구</p>
+                {isLogin ? <p>서울특별시 서대문구</p> : <p>전국</p>}
               </div>
               <button className="my-location-btn">밑</button>
             </div>
