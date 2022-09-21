@@ -63,7 +63,8 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-
+    // JWT를 사용하기 때문에 후에 주소를 /member로 받아와서 토큰안의 멤버 정보를 사용해서 할것
+    // member-id를 사용하지 않아도 될듯
     @Operation(summary = "단일 회원 조회 / 마이페이지")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @GetMapping("/{member-id}")
@@ -74,6 +75,8 @@ public class MemberController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    // JWT를 사용하기 때문에 후에 주소를 /member로 받아와서 토큰안의 멤버 정보를 사용해서 할것
+    // member-id를 사용하지 않아도 될듯
     @Operation(summary = "마이페이지 회원사진 업로드")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @PostMapping("/{member-id}/imageupload")
@@ -89,6 +92,8 @@ public class MemberController {
     }
 
 
+    // JWT를 사용하기 때문에 후에 주소를 /member로 받아와서 토큰안의 멤버 정보를 사용해서 할것
+    // member-id를 사용하지 않아도 될듯
     @Operation(summary = "회원 정보 수정")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @PatchMapping("/{member-id}")
@@ -102,6 +107,8 @@ public class MemberController {
     }
 
 
+    // JWT를 사용하기 때문에 후에 주소를 /member로 받아와서 토큰안의 멤버 정보를 사용해서 할것
+    // member-id를 사용하지 않아도 될듯
     @Operation(summary = "회원 탈퇴")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @DeleteMapping("/{member-id}")

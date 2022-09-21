@@ -40,35 +40,42 @@ public class Member {
     private String s3ImageUrl;
     
 
+    //email 인증 되었는지?? (현재 큰 역할은 X)
     @Column(name = "EMAIL_VERIFIED_YN", length = 1)
     @NotNull
     @Size(min = 1, max = 1)
     private String emailVerifiedYn;
 
+    //OAuth 로그인 했을때 프로필 사진 의 주소
     @Column(name = "PROFILE_IMAGE_URL", length = 512)
     @NotNull
     @Size(max = 512)
     private String profileImageUrl;
 
+    //카카오 로그인? 네이버로그인? 구글 로그인?
     @Column(name = "PROVIDER_TYPE", length = 20)
     @Enumerated(EnumType.STRING)
     @NotNull
     private ProviderType providerType;
 
+    // USER / GUEST
     @Column(name = "ROLE_TYPE", length = 20)
     @Enumerated(EnumType.STRING)
     @NotNull
     private RoleType roleType;
 
+    //생성일자
     @Column(name = "CREATED_AT")
     @NotNull
     private LocalDateTime createdAt;
 
+    //수정일자
     @Column(name = "MODIFIED_AT")
     @NotNull
     private LocalDateTime modifiedAt;
     
 
+    //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
     public Member(
             @NotNull @Size(max = 100) String memberName,
             @NotNull @Size(max = 512) String email,
