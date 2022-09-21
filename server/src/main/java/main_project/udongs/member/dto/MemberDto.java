@@ -36,6 +36,8 @@ public class MemberDto {
 
         private String city;
 
+        private String profileImageUrl;
+
 
         /*
         private String state;
@@ -92,6 +94,14 @@ public class MemberDto {
 //        private String state;
 //        private String latitude;
 //        private String longitude;
+    }
+
+    @Getter
+    @Setter
+    public static class Location {
+        private String longitude;
+        private String latitude;
+        private String city;
     }
 
 }

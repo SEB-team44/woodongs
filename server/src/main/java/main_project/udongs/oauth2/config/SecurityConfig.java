@@ -1,7 +1,6 @@
 package main_project.udongs.oauth2.config;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import main_project.udongs.oauth2.api.repository.UserRefreshTokenRepository;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
 import main_project.udongs.oauth2.oauth.exception.RestAuthenticationEntryPoint;
@@ -69,7 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-//                .antMatchers("/login").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/member/signup").permitAll()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/register/**").permitAll()
                 .antMatchers("/refresh").permitAll()
@@ -77,8 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/board/**").hasAnyAuthority(RoleType.USER.getCode())
                 .antMatchers("/user/**").hasAnyAuthority(RoleType.USER.getCode())
                 .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
-//                .anyRequest().authenticated()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
+//                .anyRequest().permitAll()
                 .and()
                 .oauth2Login()
                 .authorizationEndpoint()

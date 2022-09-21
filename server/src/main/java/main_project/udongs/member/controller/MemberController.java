@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import main_project.udongs.locationservice.LocationService;
-import main_project.udongs.locationservice.geoip.GeoIPService;
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.mapper.MemberMapper;
@@ -18,6 +17,8 @@ import main_project.udongs.member.service.MemberService;
 import main_project.udongs.s3upload.AwsS3Upload;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,7 +45,10 @@ public class MemberController {
      * 경도 / 위도 는 프론트에서 받아올 예정
      * 나중에 로그인 시 위치정보 받아오는 것으로 변경
      */
-     
+
+
+
+
     @Operation(summary = "회원 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Response.class))))})
     @PostMapping("/signup")
@@ -64,15 +68,39 @@ public class MemberController {
     }
 
 
-    @Operation(summary = "단일 회원 조회 / 마이페이지")
-    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
-    @GetMapping("/{member-id}")
-    public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
-        log.debug("get member");
+    //경도, 위도 프론트에서 받기
+    @Operation(summary = "회원 위치 등록")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Location.class))))})
+    @PostMapping("/locate")
+    public ResponseEntity locate(@RequestBody MemberDto.Location requestBody) throws Exception {
+        log.debug("locate member");
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Member findMember = memberService.getMember(principal.getUsername());
+        requestBody.setCity(locationService.coordToAddr(requestBody.getLongitude(), requestBody.getLatitude()));
+        memberService.updateLocation(findMember, requestBody);
 
-        MemberDto.Response response = mapper.memberToMemberResponse(memberService.getMember(memberId));
-        return new ResponseEntity(response, HttpStatus.OK);
+        return ResponseEntity.ok("위치정보 갱신 성공");
     }
+
+    @GetMapping
+    public main_project.udongs.oauth2.common.ApiResponse getUser() {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Member member = memberService.getMember(principal.getUsername());
+        log.info("member : {}" + member.toString());
+        return main_project.udongs.oauth2.common.ApiResponse.success("member", member);
+    }
+
+
+//    @Operation(summary = "단일 회원 조회 / 마이페이지")
+//    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
+//    @GetMapping("/{member-id}")
+//    public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
+//        log.debug("get member");
+//
+//        MemberDto.Response response = mapper.memberToMemberResponse(memberService.getMember(memberId));
+//        return new ResponseEntity(response, HttpStatus.OK);
+//    }
 
     @Operation(summary = "마이페이지 회원사진 업로드")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))

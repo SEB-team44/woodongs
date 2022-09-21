@@ -1,8 +1,6 @@
 package main_project.udongs.member.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
 
@@ -15,6 +13,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Member {
 
     @Id
@@ -36,9 +36,15 @@ public class Member {
     @Column
     private String city;
 
+// profileImageUrl이랑 겹쳐서 주석처리
+//    @Column
+//    private String s3ImageUrl;
+
     @Column
-    private String s3ImageUrl;
-    
+    private String longitude;
+
+    @Column
+    private String latitude;
 
     @Column(name = "EMAIL_VERIFIED_YN", length = 1)
     @NotNull

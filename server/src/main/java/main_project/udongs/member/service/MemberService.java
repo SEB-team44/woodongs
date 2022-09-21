@@ -3,6 +3,7 @@ package main_project.udongs.member.service;
 import lombok.AllArgsConstructor;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
+import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,11 @@ public class MemberService {
     }
 
     @Transactional
+    public Member getMember(String email) {
+        return findVerifiedMember(email);
+    }
+
+    @Transactional
     public Member updateMember(Member member) {
 
         Member findMember = findVerifiedMember(member.getMemberId());
@@ -46,11 +52,25 @@ public class MemberService {
     }
 
     @Transactional
-    public Member uploadImage(Member member, String s3ImageUrl) {
+    public Member updateLocation(Member member, MemberDto.Location location) {
+
+        // 위도, 경도, 지역 만 변경
+        Optional.ofNullable(location.getLongitude())
+                .ifPresent(member::setLongitude);
+        Optional.ofNullable(location.getLatitude())
+                .ifPresent(member::setLatitude);
+        Optional.ofNullable(location.getCity())
+                .ifPresent(member::setCity);
+
+        return memberRepository.save(member);
+    }
+
+    @Transactional
+    public Member uploadImage(Member member, String profileImageUrl) {
 
         Member findMember = findVerifiedMember(member.getMemberId());
 
-            findMember.setS3ImageUrl(s3ImageUrl);
+            findMember.setProfileImageUrl(profileImageUrl);
             return memberRepository.save(findMember);
 
     }
@@ -74,6 +94,15 @@ public class MemberService {
         Member findMember =
                 optionalMember.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        return findMember;
+    }
+
+    @Transactional(readOnly = true)
+    public Member findVerifiedMember(String email) {
+        Member findMember = memberRepository.findByEmail(email);
+        if (findMember == null) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
         return findMember;
     }
 

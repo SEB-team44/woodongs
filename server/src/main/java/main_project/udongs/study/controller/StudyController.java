@@ -30,7 +30,6 @@ public class StudyController {
 
     private final MemberService memberService;
 
-
     @Operation(summary = "스터디 모집 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Response.class))))})
     @PostMapping("/recruit")

@@ -1,9 +1,6 @@
 package main_project.udongs.oauth2.oauth.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import main_project.udongs.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,12 +19,16 @@ import java.util.Map;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
+
+    private final Long id;
     private final String email;
     private final String password;
     private final ProviderType providerType;
     private final RoleType roleType;
     private final Collection<GrantedAuthority> authorities;
     private Map<String, Object> attributes;
+
+    public Long getId() { return id;}
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -86,6 +87,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 
     public static UserPrincipal create(Member user) {
         return new UserPrincipal(
+                user.getMemberId(),
                 user.getEmail(),
                 user.getPassword(),
                 user.getProviderType(),
