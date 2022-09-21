@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Tag(name = "Member", description = "회원 관련 API")
 @Slf4j
@@ -58,9 +59,11 @@ public class MemberController {
         //경도 / 위도 는 프론트에서 받아올 예정
         String s = locationService.coordToAddr("126.76903412977279", "37.51018419688551");
         requestBody.setCity(s);
+
         requestBody.setPassword(passwordEncoder.encode(requestBody.getPassword()));
         
         Member member = mapper.memberPostToMember(requestBody);
+        member.setCreatedAt(LocalDateTime.now());
         Member createdMember = memberService.createMember(member);
         MemberDto.Response response = mapper.memberToMemberResponse(createdMember);
 
@@ -120,8 +123,14 @@ public class MemberController {
     @PatchMapping("")
     public ResponseEntity patchMember(@RequestBody MemberDto.Patch requestBody) {
         log.debug("patch member");
-        requestBody.setPassword(passwordEncoder.encode(requestBody.getPassword()));
-        Member member = memberService.updateMember(getMember(),requestBody);
+
+        requestBody.setMemberId(memberId);
+
+        Member updatedMember = mapper.memberPatchToMember(requestBody);
+        updatedMember.setModifiedAt(LocalDateTime.now());
+        updatedMember.setPassword(passwordEncoder.encode(requestBody.getPassword()));
+
+        Member member = memberService.updateMember(updatedMember);
 
         return new ResponseEntity(mapper.memberToMemberResponse(member), HttpStatus.OK);
     }

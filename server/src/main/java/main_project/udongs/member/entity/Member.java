@@ -3,11 +3,14 @@ package main_project.udongs.member.entity;
 import lombok.*;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
+import main_project.udongs.study.entity.Study;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -79,6 +82,9 @@ public class Member {
     @Column(name = "MODIFIED_AT")
     @NotNull
     private LocalDateTime modifiedAt;
+
+    @OneToMany(mappedBy = "member")
+    private List<Study> studies = new ArrayList<>();
     
 
     //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
