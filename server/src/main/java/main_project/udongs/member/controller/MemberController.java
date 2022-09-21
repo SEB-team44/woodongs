@@ -1,31 +1,31 @@
+
 package main_project.udongs.member.controller;
-
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import main_project.udongs.locationservice.LocationService;
-import main_project.udongs.member.dto.MemberDto;
-import main_project.udongs.member.entity.Member;
-import main_project.udongs.member.mapper.MemberMapper;
-import main_project.udongs.member.service.MemberService;
-import main_project.udongs.s3upload.AwsS3Upload;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+        import io.swagger.v3.oas.annotations.media.ArraySchema;
+        import io.swagger.v3.oas.annotations.media.Content;
+        import io.swagger.v3.oas.annotations.media.Schema;
+        import io.swagger.v3.oas.annotations.responses.ApiResponse;
+        import io.swagger.v3.oas.annotations.responses.ApiResponses;
+        import io.swagger.v3.oas.annotations.tags.Tag;
+        import lombok.RequiredArgsConstructor;
+        import lombok.extern.slf4j.Slf4j;
+        import main_project.udongs.locationservice.LocationService;
+        import main_project.udongs.member.dto.MemberDto;
+        import main_project.udongs.member.entity.Member;
+        import main_project.udongs.member.mapper.MemberMapper;
+        import main_project.udongs.member.service.MemberService;
+        import main_project.udongs.s3upload.AwsS3Upload;
+        import org.springframework.http.HttpStatus;
+        import org.springframework.http.ResponseEntity;
+        import org.springframework.security.core.context.SecurityContextHolder;
+        import org.springframework.security.core.userdetails.User;
+        import org.springframework.security.crypto.password.PasswordEncoder;
+        import org.springframework.web.bind.annotation.*;
+        import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import java.io.IOException;
-import java.time.LocalDateTime;
+        import javax.validation.Valid;
+        import java.io.IOException;
+        import java.time.LocalDateTime;
 
 @Tag(name = "Member", description = "회원 관련 API")
 @Slf4j
@@ -61,7 +61,7 @@ public class MemberController {
         requestBody.setCity(s);
 
         requestBody.setPassword(passwordEncoder.encode(requestBody.getPassword()));
-        
+
         Member member = mapper.memberPostToMember(requestBody);
         member.setCreatedAt(LocalDateTime.now());
         Member createdMember = memberService.createMember(member);
@@ -123,14 +123,8 @@ public class MemberController {
     @PatchMapping("")
     public ResponseEntity patchMember(@RequestBody MemberDto.Patch requestBody) {
         log.debug("patch member");
-
-        requestBody.setMemberId(memberId);
-
-        Member updatedMember = mapper.memberPatchToMember(requestBody);
-        updatedMember.setModifiedAt(LocalDateTime.now());
-        updatedMember.setPassword(passwordEncoder.encode(requestBody.getPassword()));
-
-        Member member = memberService.updateMember(updatedMember);
+        requestBody.setPassword(passwordEncoder.encode(requestBody.getPassword()));
+        Member member = memberService.updateMember(getMember(),requestBody);
 
         return new ResponseEntity(mapper.memberToMemberResponse(member), HttpStatus.OK);
     }
@@ -174,7 +168,6 @@ public class MemberController {
     @GetMapping()
     public ResponseEntity getMembers() {
         log.debug("get members");
-
         return new ResponseEntity("getmembers", HttpStatus.OK);
     }
 */
@@ -192,7 +185,6 @@ public class MemberController {
     public ResponseEntity postMember(@Valid *//*@RequestParam(value="ipAddress", required=true) String ipAddress,*//*
                                      @RequestBody MemberDto.Post requestBody  ,HttpServletRequest request  ) throws Exception{
         log.debug("post member");
-
         *//*
  *   ip값을 param으로 받아와서 GeoIPService에서 위치정보로 변환한 뒤에
  *   requestbody에 저장
@@ -200,16 +192,12 @@ public class MemberController {
         GeoIPService locationService = new GeoIPService();
         GeoIP location = locationService.getLocation(locationService.getRemoteIP(request));
         //GeoIP location = locationService.getLocation(ipAddress);
-
         requestBody.setLatitude(location.getLatitude());
         requestBody.setLongitude(location.getLongitude());
         requestBody.setState(location.getState());
         requestBody.setCity(location.getCity());
-
         Member member = mapper.memberPostToMember(requestBody);
         Member createdMember = memberService.createMember(member);
         MemberDto.Response response = mapper.memberToMemberResponse(createdMember);
-
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }*/
-
