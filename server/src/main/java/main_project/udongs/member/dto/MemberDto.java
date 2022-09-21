@@ -55,10 +55,9 @@ public class MemberDto {
 
     //회원 정보 수정
     @Getter
+    @Setter
     @AllArgsConstructor
     public static class Patch {
-
-        private long memberId;
 
         @NotBlank(message = "회원 이름은 공백이 아니어야 합니다")
         private String memberName;
@@ -73,9 +72,6 @@ public class MemberDto {
 
         //비밀번호 변경기능도 추가?
 
-        public void setMemberId(long memberId){
-            this.memberId = memberId;
-        }
     }
 
     @AllArgsConstructor

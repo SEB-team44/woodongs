@@ -36,19 +36,18 @@ public class MemberService {
     }
 
     @Transactional
-    public Member updateMember(Member member) {
+    public Member updateMember(Member member, MemberDto.Patch patch) {
 
-        Member findMember = findVerifiedMember(member.getMemberId());
 
         // 이름, 폰번호, 비번 만 변경
-        Optional.ofNullable(member.getMemberName())
-                .ifPresent(findMember::setMemberName);
-        Optional.ofNullable(member.getPhoneNumber())
-                .ifPresent(findMember::setPhoneNumber);
-        Optional.ofNullable(member.getPassword())
-                .ifPresent(findMember::setPassword);
+        Optional.ofNullable(patch.getMemberName())
+                .ifPresent(member::setMemberName);
+        Optional.ofNullable(patch.getPhoneNumber())
+                .ifPresent(member::setPhoneNumber);
+        Optional.ofNullable(patch.getPassword())
+                .ifPresent(member::setPassword);
 
-        return memberRepository.save(findMember);
+        return memberRepository.save(member);
     }
 
     @Transactional
@@ -67,11 +66,11 @@ public class MemberService {
 
     @Transactional
     public Member uploadImage(Member member, String profileImageUrl) {
+//
+//        Member findMember = findVerifiedMember(member.getMemberId());
 
-        Member findMember = findVerifiedMember(member.getMemberId());
-
-            findMember.setProfileImageUrl(profileImageUrl);
-            return memberRepository.save(findMember);
+            member.setProfileImageUrl(profileImageUrl);
+            return memberRepository.save(member);
 
     }
 
