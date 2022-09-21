@@ -21,6 +21,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Can not find email.");
         }
-        return UserPrincipal.create(user);
+        return new UserPrincipal(user);
     }
 }

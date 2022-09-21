@@ -14,11 +14,11 @@ import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.mapper.MemberMapper;
 import main_project.udongs.member.service.MemberService;
+import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
 import main_project.udongs.s3upload.AwsS3Upload;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -73,17 +73,19 @@ public class MemberController {
     @Operation(summary = "회원 위치 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Location.class))))})
     @PostMapping("/locate")
-    public ResponseEntity locate(@RequestBody MemberDto.Location requestBody) throws Exception {
+    public ResponseEntity locate(@RequestBody MemberDto.Location requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) throws Exception {
         log.debug("locate member");
         requestBody.setCity(locationService.coordToAddr(requestBody.getLongitude(), requestBody.getLatitude()));
-        memberService.updateLocation(getMember(), requestBody);
+        memberService.updateLocation(userPrincipal.getMember(), requestBody);
 
         return ResponseEntity.ok("위치정보 갱신 성공");
     }
 
+    @Operation(summary = "회원 정보 조회")
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @GetMapping("/me")
-    public main_project.udongs.oauth2.common.ApiResponse returnMember() {
-        Member member = getMember();
+    public main_project.udongs.oauth2.common.ApiResponse getMember(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        Member member = userPrincipal.getMember();
         log.info("member : {}" + member.toString());
         return main_project.udongs.oauth2.common.ApiResponse.success("member", member);
     }
@@ -102,60 +104,39 @@ public class MemberController {
     @Operation(summary = "마이페이지 회원사진 업로드")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @PostMapping("/imageupload")
-    public ResponseEntity<Object> uploadImage(@RequestParam("images") MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<Object> uploadImage(@RequestParam("images") MultipartFile multipartFile, @AuthenticationPrincipal UserPrincipal userPrincipal) throws IOException {
         log.debug("upload image");
 
         String savedImagePath = s3Upload.upload(multipartFile);
 
-        Member imageupdated = memberService.uploadImage(getMember(), savedImagePath);
+        Member imageupdated = memberService.uploadImage(userPrincipal.getMember(), savedImagePath);
 
         return new ResponseEntity<>(imageupdated, HttpStatus.OK);
     }
 
-
-    // JWT를 사용하기 때문에 후에 주소를 /member로 받아와서 토큰안의 멤버 정보를 사용해서 할것
-    // member-id를 사용하지 않아도 될듯
     @Operation(summary = "회원 정보 수정")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @PatchMapping("")
-    public ResponseEntity patchMember(@RequestBody MemberDto.Patch requestBody) {
+    public ResponseEntity patchMember(@RequestBody MemberDto.Patch requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("patch member");
         requestBody.setPassword(passwordEncoder.encode(requestBody.getPassword()));
-        Member member = memberService.updateMember(getMember(),requestBody);
+        Member member = memberService.updateMember(userPrincipal.getMember(),requestBody);
 
         return new ResponseEntity(mapper.memberToMemberResponse(member), HttpStatus.OK);
     }
 
 
-    // JWT를 사용하기 때문에 후에 주소를 /member로 받아와서 토큰안의 멤버 정보를 사용해서 할것
-    // member-id를 사용하지 않아도 될듯
     @Operation(summary = "회원 탈퇴")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @DeleteMapping("")
-    public ResponseEntity deleteMember() {
+    public ResponseEntity deleteMember(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("delete member");
 
-        memberService.deleteMember(getMember().getMemberId());
+        memberService.deleteMember(userPrincipal.getMember().getMemberId());
 
         return new ResponseEntity(HttpStatus.OK);
     }
-
-    public Member getMember() {
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return memberService.getMember(principal.getUsername());
-    }
 }
-
-//    @GetMapping
-//    public ApiResponse getUser() {
-//        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//
-//        Member user = userService.getUser(principal.   );
-//        log.info("user : {}" + user.toString());
-//        return ApiResponse.success("user", user);
-//    }
-
-
 
 
 // 사용자 입장에서 전체 회원 조회는 할 일이 없으므로

@@ -59,7 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             savedUser = createUser(userInfo, providerType);
         }
 
-        return UserPrincipal.create(savedUser, user.getAttributes());
+        return new UserPrincipal(savedUser, user.getAttributes());
     }
 
     private Member createUser(OAuth2UserInfo userInfo, ProviderType providerType) {

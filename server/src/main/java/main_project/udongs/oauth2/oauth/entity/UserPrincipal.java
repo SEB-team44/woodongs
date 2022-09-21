@@ -1,13 +1,12 @@
 package main_project.udongs.oauth2.oauth.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import main_project.udongs.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
@@ -16,19 +15,28 @@ import java.util.Map;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @RequiredArgsConstructor
-public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
+public class UserPrincipal implements OAuth2User, UserDetails {
 
-    private final Long id;
-    private final String email;
-    private final String password;
-    private final ProviderType providerType;
-    private final RoleType roleType;
-    private final Collection<GrantedAuthority> authorities;
+
+    private Member member;
+//    private final Long id;
+//    private final String email;
+//    private final String password;
+//    private final ProviderType providerType;
+//    private final RoleType roleType;
+//    private final Collection<GrantedAuthority> authorities;
     private Map<String, Object> attributes;
+    public UserPrincipal(Member member) {
+        this.member = member;
+    }
 
-    public Long getId() { return id;}
+    public UserPrincipal(Member member, Map<String, Object> attributes) {
+        this.member = member;
+        this.attributes = attributes;
+    }
+
+//    public Long getId() { return id;}
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -37,17 +45,27 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return Collections.singletonList(new SimpleGrantedAuthority(member.getRoleType().getCode()));
     }
 
     @Override
+    public String getPassword() {
+        return member.getPassword();
+    }
+
+//    @Override
+//    public String getName() {
+//        return email;
+//    }
+
+    @Override
     public String getName() {
-        return email;
+        return member.getMemberName();
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return member.getMemberName();
     }
 
     @Override
@@ -70,36 +88,25 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
         return true;
     }
 
-    @Override
-    public Map<String, Object> getClaims() {
-        return null;
-    }
+//    public static UserPrincipal create(Member user) {
+//        return new UserPrincipal(
+//                user.getMemberId(),
+//                user.getEmail(),
+//                user.getPassword(),
+//                user.getProviderType(),
+//                RoleType.USER,
+//                Collections.singletonList(new SimpleGrantedAuthority(RoleType.USER.getCode()))
+//        );
+//    }
 
-    @Override
-    public OidcUserInfo getUserInfo() {
-        return null;
-    }
+//    public static UserPrincipal create(Member user) {
+//        return new UserPrincipal(user);
+//    }
 
-    @Override
-    public OidcIdToken getIdToken() {
-        return null;
-    }
+//    public static UserPrincipal create(Member user, Map<String, Object> attributes) {
+//        UserPrincipal userPrincipal = create(user);
+//        userPrincipal.setAttributes(attributes);
 
-    public static UserPrincipal create(Member user) {
-        return new UserPrincipal(
-                user.getMemberId(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getProviderType(),
-                RoleType.USER,
-                Collections.singletonList(new SimpleGrantedAuthority(RoleType.USER.getCode()))
-        );
-    }
-
-    public static UserPrincipal create(Member user, Map<String, Object> attributes) {
-        UserPrincipal userPrincipal = create(user);
-        userPrincipal.setAttributes(attributes);
-
-        return userPrincipal;
-    }
+//        return new UserPrincipal(user,attributes);
+//    }
 }
