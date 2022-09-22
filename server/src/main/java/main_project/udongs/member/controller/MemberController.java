@@ -70,6 +70,7 @@ public class MemberController {
 
 
     //경도, 위도 프론트에서 받기
+    //로그인시 바로 위치 요청 받기
     @Operation(summary = "회원 위치 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Location.class))))})
     @PostMapping("/locate")
