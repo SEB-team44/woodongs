@@ -75,10 +75,6 @@ public class StudyService {
         Study findStudy = findVerifiedStudy(studyId);
         studyRepository.delete(findStudy);
     }
-    @Transactional
-    public Study getStudy(Long studyId){
-        return findVerifiedStudy(studyId);
-    }
 
 
     // 스터디가 존재하는지 검증 처리
