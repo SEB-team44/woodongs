@@ -6,6 +6,7 @@ import main_project.udongs.oauth2.api.repository.UserRefreshTokenRepository;
 import main_project.udongs.oauth2.config.AppProperties;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
+import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
 import main_project.udongs.oauth2.oauth.info.OAuth2UserInfo;
 import main_project.udongs.oauth2.oauth.info.OAuth2UserInfoFactory;
 import main_project.udongs.oauth2.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
@@ -66,9 +67,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
         ProviderType providerType = ProviderType.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
 
-        OidcUser user = ((OidcUser) authentication.getPrincipal());
+        UserPrincipal user = ((UserPrincipal) authentication.getPrincipal());
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        Collection<? extends GrantedAuthority> authorities = ((OidcUser) authentication.getPrincipal()).getAuthorities();
+        Collection<? extends GrantedAuthority> authorities = ((UserPrincipal) authentication.getPrincipal()).getAuthorities();
 
         RoleType roleType = hasAuthority(authorities, RoleType.ADMIN.getCode()) ? RoleType.ADMIN : RoleType.USER;
 
