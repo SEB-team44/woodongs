@@ -23,7 +23,7 @@ const AddStudyStyled = styled.div`
     justify-content: center;
   }
   .submit-button {
-    background-color: #6787f6;
+    /* background-color: #6787f6; */
   }
   .form-group {
     display: inline-block;
@@ -89,14 +89,14 @@ const AddStudy = () => {
   });
 
   const submitButton = () => {
-    const token = localStorage.getItem("token");
+    const access_token = localStorage.getItem("access_token");
     let reqPost = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         withCredentials: true,
         "Access-Control-Allow-Origin": "*",
-        Authorization: token,
+        Authorization: access_token,
       },
       body: JSON.stringify({
         // memberId : id,
@@ -104,15 +104,19 @@ const AddStudy = () => {
         body: content.body,
       }),
     };
-
-    fetch("http://localhost:3001/main", reqPost).then((res) => {
-      if (res.ok) {
-        console.log(content.title, content.body);
-        // console.log(res.json());
-        navigate(`/`);
-        return res.json();
-      }
-    });
+    //대한님 59.16.126.210:8080
+    //지훈님 14.6.86.98:8080
+    fetch("59.16.126.210:8080/main", reqPost)
+      .then((res) => {
+        if (res.ok) {
+          // console.log(content.title, content.body);
+          // console.log(res.json());
+          navigate(`/`);
+          return res.json();
+        }
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
   const getValue = (e) => {
     const { name, value } = e.target;

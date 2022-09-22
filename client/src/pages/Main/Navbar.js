@@ -4,14 +4,16 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Popper from "@mui/material/Popper";
 import Button from "@mui/material/Button";
+import Input from "@mui/material/Input";
 import { UserLogin } from "../../UserContext";
 import { useContext } from "react";
 
 const StyledNav = styled.div`
   .header-container {
     height: 63.5px;
-    width: 100%;
+    width: 100vw;
     border: solid black 1px;
+    background-color: white;
   }
   .nav-container {
     display: flex;
@@ -29,6 +31,15 @@ const StyledNav = styled.div`
     align-items: center;
     padding-left: 0px;
     height: 63.5px;
+    text-decoration: none;
+  }
+  .tap-box li {
+    text-decoration: none;
+    padding: 8px 12px;
+  }
+  .tap-box li:hover {
+    background-color: #b6c6d4;
+    border-radius: 4px;
   }
   ol {
     margin: 0px;
@@ -36,6 +47,9 @@ const StyledNav = styled.div`
   li {
     list-style: none;
     padding-right: 20px;
+    text-decoration-line: none;
+    color: black;
+    text-decoration: none;
   }
   .other-box {
     display: flex;
@@ -61,8 +75,14 @@ const StyledNav = styled.div`
     resize: none;
   }
   .avatarimg {
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
+  }
+  .group-btn {
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    background-color: white;
   }
 `;
 
@@ -108,7 +128,8 @@ const Navbar = () => {
 
             <section className="other-box">
               <div className="search-box">
-                <textarea></textarea>
+                <Input placeholder="Search.." />
+                <Button>검색</Button>
               </div>
               {isLogin ? (
                 <div className="info-box">
@@ -126,32 +147,29 @@ const Navbar = () => {
                     />
                   </div>
                   <div className="group-img">
-                    <img
-                      className="myinfo-img myinfo-group-img"
-                      src={require("../../../src/img/group.png")}
-                    />
-                  </div>
-                  <div className="group-btn">
-                    <div>
-                      <button
-                        aria-describedby={id}
-                        type="button"
-                        onClick={handleClick}
+                    <button
+                      className="group-btn"
+                      aria-describedby={id}
+                      type="button"
+                      onClick={handleClick}
+                    >
+                      <img
+                        className="myinfo-img myinfo-group-img"
+                        src={require("../../../src/img/group.png")}
+                      />
+                    </button>
+                    <Popper id={id} open={open} anchorEl={anchorEl}>
+                      <Box
+                        sx={{ border: 1, p: 1, bgcolor: "background.paper" }}
                       >
-                        내 그룹
-                      </button>
-                      <Popper id={id} open={open} anchorEl={anchorEl}>
-                        <Box
-                          sx={{ border: 1, p: 1, bgcolor: "background.paper" }}
-                        >
-                          <Link to="/MyGroup">
-                            <button>1번스터디</button>
-                            <button>2번스터디</button>
-                          </Link>
-                        </Box>
-                      </Popper>
-                    </div>
+                        <Link to="/MyGroup">
+                          <button>1번스터디</button>
+                          <button>2번스터디</button>
+                        </Link>
+                      </Box>
+                    </Popper>
                   </div>
+
                   <div className="my-info-btn">
                     <Link to="/MyPage">
                       <img
