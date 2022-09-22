@@ -60,12 +60,12 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     @Override
     public String getName() {
-        return member.getMemberName();
+        return member.getNickName();
     }
 
     @Override
     public String getUsername() {
-        return member.getMemberName();
+        return member.getNickName();
     }
 
     @Override

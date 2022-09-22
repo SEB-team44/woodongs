@@ -40,10 +40,6 @@ public class Study {
     private Member member;
 
 
-
-
-
-
     //스터디 수락 부분 mapping
 
 

@@ -40,8 +40,8 @@ public class MemberService {
 
 
         // 이름, 폰번호, 비번 만 변경
-        Optional.ofNullable(patch.getMemberName())
-                .ifPresent(member::setMemberName);
+        Optional.ofNullable(patch.getNickName())
+                .ifPresent(member::setNickName);
         Optional.ofNullable(patch.getPhoneNumber())
                 .ifPresent(member::setPhoneNumber);
         Optional.ofNullable(patch.getPassword())

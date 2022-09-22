@@ -17,13 +17,18 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getName() {
-        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+//        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
 
-        if (properties == null) {
+//        if (properties == null) {
+//            return null;
+//        }
+        if (kakaoAccount == null) {
             return null;
         }
-
-        return (String) properties.get("nickname");
+        return (String) profile.get("nickname");
+//        return (String) properties.get("nickname");
     }
 
     @Override
@@ -34,12 +39,17 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getImageUrl() {
-        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+//        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+                Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
 
-        if (properties == null) {
+//        if (properties == null) {
+//            return null;
+//        }
+        if (kakaoAccount == null) {
             return null;
         }
-
-        return (String) properties.get("thumbnail_image");
+        return (String) profile.get("thumbnail_image_url");
+//        return (String) properties.get("thumbnail_image");
     }
 }
