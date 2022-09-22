@@ -3,7 +3,7 @@ package main_project.udongs.member.entity;
 import lombok.*;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
-import main_project.udongs.study.entity.Study;
+import main_project.udongs.apply.entity.StudyApply;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -85,7 +85,9 @@ public class Member {
 
    /* @OneToMany(mappedBy = "member")
     private List<Study> studies = new ArrayList<>();*/
-    
+
+    @OneToMany(mappedBy = "member")
+    List<StudyApply> studyApplies = new ArrayList<>();
 
     //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
     public Member(

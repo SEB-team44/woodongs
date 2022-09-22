@@ -27,6 +27,8 @@ public class StudyDto {
 
         private String category;
 
+        private Long headCount;
+
     }
 
     //스터디 모집 글 수정

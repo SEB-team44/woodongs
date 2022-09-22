@@ -9,6 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import main_project.udongs.apply.entity.StudyApply;
+import main_project.udongs.apply.service.StudyApplyService;
+import main_project.udongs.exception.BusinessLogicException;
+import main_project.udongs.exception.ExceptionCode;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.service.MemberService;
 
@@ -27,6 +31,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,21 +46,21 @@ import java.util.List;
 public class StudyController {
 
     private final StudyService studyService;
+    private final StudyApplyService studyApplyService;
     private final StudyMapper mapper;
     private final MemberService memberService;
 
     @Operation(summary = "스터디 모집 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.ResponseBuilder.class))))})
-    @PostMapping("{member-id}/recruit")
-    public ResponseEntity postStudy(@Valid @PathVariable("member-id") Long memberId,@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                        @RequestBody StudyDto.Post requestBody) {
+    @PostMapping("/recruit")
+    public ResponseEntity postStudy(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody StudyDto.Post requestBody) {
         log.debug("POST STUDY");
 
         Study study = mapper.studyPostToStudy(requestBody);
         study.setCreatedAt(LocalDateTime.now());
 
         //등록시 스터디장의 위치정보, 스터디장 id번호 반환
-        Member member = memberService.findVerifiedMember(memberId);
+        Member member = userPrincipal.getMember();
         study.setCity(member.getCity());
         study.setMember(member);
 
@@ -93,6 +98,17 @@ public class StudyController {
     }
 
 
-
+    @Operation(summary = "스터디 승인")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.class))))})
+    @PostMapping("/{study-id}/{apply-id}/accept")
+    public ResponseEntity accpetStudy(@PathVariable("study-id") Long studyId, @PathVariable("apply-id") Long applyId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        log.debug("ACCEPT APPLICATION");
+        Study study = studyService.getStudy(studyId);
+        if (study.getAcceptanceList().size() == study.getHeadCount()) {
+            throw new BusinessLogicException(ExceptionCode.STUDY_BE_FULL);
+        }
+        StudyApply studyApply = studyApplyService.getStudyApply(applyId);
+        return studyService.accept(study, studyApply);
+    }
 
 }

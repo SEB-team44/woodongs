@@ -70,7 +70,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         log.info(userInfo.getId());
         log.info(userInfo.getAttributes().toString());
         Member user = new Member(
-//                userInfo.getId(),
                 userInfo.getName(),
                 userInfo.getEmail(),
                 "Y",
