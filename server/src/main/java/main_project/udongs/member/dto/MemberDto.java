@@ -87,7 +87,8 @@ public class MemberDto {
 
         private String city;
 
-        private String S3ImageUrl;
+//        private String S3ImageUrl;
+        private String profileImageUrl;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
 
