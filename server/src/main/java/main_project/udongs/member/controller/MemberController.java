@@ -86,10 +86,11 @@ public class MemberController {
     @Operation(summary = "회원 정보 조회")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @GetMapping("/me")
-    public main_project.udongs.oauth2.common.ApiResponse getMember(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResponseEntity getMember(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         Member member = userPrincipal.getMember();
+        MemberDto.Response response = mapper.memberToMemberResponse(member);
         log.info("member : {}" + member.toString());
-        return main_project.udongs.oauth2.common.ApiResponse.success("member", member);
+        return ResponseEntity.ok(response);
     }
 
 

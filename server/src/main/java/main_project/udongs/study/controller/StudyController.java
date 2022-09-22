@@ -98,17 +98,5 @@ public class StudyController {
     }
 
 
-    @Operation(summary = "스터디 승인")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.class))))})
-    @PostMapping("/{study-id}/{apply-id}/accept")
-    public ResponseEntity accpetStudy(@PathVariable("study-id") Long studyId, @PathVariable("apply-id") Long applyId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        log.debug("ACCEPT APPLICATION");
-        Study study = studyService.getStudy(studyId);
-        if (study.getAcceptanceList().size() == study.getHeadCount()) {
-            throw new BusinessLogicException(ExceptionCode.STUDY_BE_FULL);
-        }
-        StudyApply studyApply = studyApplyService.getStudyApply(applyId);
-        return studyService.accept(study, studyApply);
-    }
 
 }

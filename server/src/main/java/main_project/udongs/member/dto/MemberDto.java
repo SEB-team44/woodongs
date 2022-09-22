@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import main_project.udongs.oauth2.oauth.entity.ProviderType;
+import main_project.udongs.oauth2.oauth.entity.RoleType;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -83,17 +85,18 @@ public class MemberDto {
         private String nickName;
         private String email;
         private String phoneNumber;
-//        private String grade;
+        private ProviderType providerType;
+        private String emailVerifiedYn;
+        private RoleType roleType;
+        private String profileImageUrl;
 
+        private String latitude;
+        private String longitude;
         private String city;
-
-        private String S3ImageUrl;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
 
 //        private String state;
-//        private String latitude;
-//        private String longitude;
     }
 
     @Getter

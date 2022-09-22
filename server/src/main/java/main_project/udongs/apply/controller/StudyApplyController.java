@@ -9,8 +9,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.apply.mapper.StudyApplyMapper;
 import main_project.udongs.apply.service.StudyApplyService;
+import main_project.udongs.exception.BusinessLogicException;
+import main_project.udongs.exception.ExceptionCode;
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
@@ -28,7 +31,6 @@ public class StudyApplyController {
 
     private final StudyApplyService studyApplyService;
     private final StudyService studyService;
-    private final StudyApplyMapper mapper;
 
     @Operation(summary = "스터디 신청")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.class))))})
@@ -37,7 +39,29 @@ public class StudyApplyController {
         log.debug("APPLY STUDY");
 
         Study study = studyService.getStudy(studyId);
+        if (study.getMember().getMemberId() == userPrincipal.getMember().getMemberId()) {
+            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+        }
         studyApplyService.createStudyApply(study,userPrincipal.getMember());
         return ResponseEntity.ok("신청했습니다");
+    }
+
+    @Operation(summary = "스터디 신청 승인")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
+    @PostMapping("/{apply-id}/accept")
+    public ResponseEntity accpetStudy(@PathVariable("apply-id") Long applyId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        log.debug("ACCEPT APPLICATION");
+        Study study = studyApplyService.getStudyApply(applyId).getStudy();
+
+        if (userPrincipal.getMember().getMemberId() != study.getMember().getMemberId()) {
+            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+        }
+
+        if (study.getAcceptanceList().size() == study.getHeadCount()) {
+            throw new BusinessLogicException(ExceptionCode.STUDY_BE_FULL);
+        }
+
+        StudyApply studyApply = studyApplyService.getStudyApply(applyId);
+        return studyService.accept(study, studyApply);
     }
 }
