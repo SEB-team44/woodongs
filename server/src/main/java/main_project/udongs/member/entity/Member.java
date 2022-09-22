@@ -3,6 +3,7 @@ package main_project.udongs.member.entity;
 import lombok.*;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
+import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
 
@@ -83,6 +84,9 @@ public class Member {
     @Column(name = "MODIFIED_AT")
     @NotNull
     private LocalDateTime modifiedAt;
+
+    @OneToMany(mappedBy = "member")
+    private List<StudyApply> studyApplies = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
     private List<Study> studies = new ArrayList<>();

@@ -9,7 +9,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import main_project.udongs.apply.entity.StudyApply;
+import main_project.udongs.apply.service.StudyApplyService;
+import main_project.udongs.exception.BusinessLogicException;
+import main_project.udongs.exception.ExceptionCode;
+
 import main_project.udongs.globaldto.MultiResponseDto;
+
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.service.MemberService;
 
@@ -28,6 +35,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -42,6 +50,7 @@ import java.util.List;
 public class StudyController {
 
     private final StudyService studyService;
+    private final StudyApplyService studyApplyService;
     private final StudyMapper mapper;
     private final MemberService memberService;
 
@@ -118,7 +127,6 @@ public class StudyController {
 
         return new ResponseEntity<>("스터디가 삭제 되었습니다.",HttpStatus.OK);
     }
-
 
 
 }
