@@ -103,7 +103,7 @@ public class LocationService {
             if(value.equals("") || value==null){
                 subJobj = (JSONObject) jArray.get(1);
                 subJobj = (JSONObject) subJobj.get("address");
-                value =(String) subJobj.get("address_name");
+                value =(String) subJobj.get("region_2depth_name");
             }
         }
         return value;
