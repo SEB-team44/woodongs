@@ -39,6 +39,16 @@
       "id": 8,
       "title": "[서울] 프론트엔드 스터디",
       "content": "프론트엔드 공부할 사람~<"
+    },
+    {
+      "id": 9,
+      "title": "[서울] 프론트엔드 스터디",
+      "content": "프론트엔드 공부할 사람~<"
+    },
+    {
+      "id": 10,
+      "title": "[서울] 프론트엔드 스터디",
+      "content": "프론트엔드 공부할 사람~<"
     }
   ],
   "myLocate": [
@@ -55,22 +65,18 @@
       "location": "부천시 중동"
     }
   ],
-  "keyword": [
-    "JavaScript",
-    "CSS",
-    "TypeScript",
-    "Next.JS"
-  ],
+  "keyword": ["JavaScript", "CSS", "TypeScript", "Next.JS"],
+  "boardcomment": [{ "name": "최진영", "content": "아시는분", "id": 1 }],
   "comment": [
     {
       "name": "김영하",
-      "content": "ㅋㅋㅋㅋㅋ저장되나요",
-      "id": 3
+      "content": "ddkdkdk",
+      "id": 1
     },
     {
       "name": "김영하",
-      "content": "ㅔㄴ에에\n",
-      "id": 4
+      "content": "dkdk\n",
+      "id": 2
     }
   ],
   "board": [

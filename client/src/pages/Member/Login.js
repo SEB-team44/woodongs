@@ -13,11 +13,12 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import queryString from 'query-string';
+import queryString from "query-string";
 
 // import GoogleButton from "./GoogleButton";
 import { FacebookLoginButton } from "react-social-login-buttons";
 import { GoogleLoginButton } from "react-social-login-buttons";
+import KakaoButton from "react-kakao-button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as Links } from "react-router-dom";
 import { UserLogin } from "../../UserContext";
@@ -47,8 +48,9 @@ navigator.geolocation.getCurrentPosition(function (pos) {
   alert("현재 위치는 : " + latitude + ", " + longitude);
 });
 
-// 카카오 인증 url 
-const KAKAOPATH = "http://14.6.86.98:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/main"
+// 카카오 인증 url
+const KAKAOPATH =
+  "http://14.6.86.98:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/main";
 
 const theme = createTheme();
 
@@ -59,14 +61,14 @@ export default function Login() {
   // const [getpassword, setPassword] = useState("");
   // const [refresh, setRefresh] = useState(null);
   // const [access, setAccess] = useState(null);
- 
+
   const handleKakao = () => {
     window.location.assign(KAKAOPATH);
     const access = window.location.search;
-    sessionStorage.setItem('access_token', access)
-    setIslogin(true)
-    return <Links to = "/main"/>
-  }
+    sessionStorage.setItem("access_token", access);
+    setIslogin(true);
+    return <Links to="/main" />;
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -86,29 +88,33 @@ export default function Login() {
       }),
     };
 
-
-    fetch("http://14.6.86.98:8080/login",reqOAuthPost)
-    .then((response) => {
-      if (response.ok) {
-        return response.json()
-      }
-    })
-    .then((response)=>{
-      const access_token = sessionStorage.setItem("access_token", response.body.accessToken);
-      const refresh_token = sessionStorage.setItem("refresh_token", response.body.refreshToken);
-      if(access_token !== null && refresh_token !== null){
-        navigate("/main");
-        setIslogin(true);
-      }
-    })
-    .then((res) => {
-      console.log(res)
-     ;
-    })
-    .catch((error) => {
-      alert(error);
-      console.log(error)
-    })
+    fetch("http://14.6.86.98:8080/login", reqOAuthPost)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((response) => {
+        const access_token = sessionStorage.setItem(
+          "access_token",
+          response.body.accessToken
+        );
+        const refresh_token = sessionStorage.setItem(
+          "refresh_token",
+          response.body.refreshToken
+        );
+        if (access_token !== null && refresh_token !== null) {
+          navigate("/main");
+          setIslogin(true);
+        }
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        alert(error);
+        console.log(error);
+      });
   };
 
   return (
@@ -160,14 +166,14 @@ export default function Login() {
               label="Remember me"
             />
             {/* <Links to="/main"> */}
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Login
-              </Button>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Login
+            </Button>
             {/* </Links> */}
             <Grid container>
               <Grid item xs>
@@ -186,13 +192,23 @@ export default function Login() {
 
               {/* <GoogleButton/> */}
               {/* <a className="btn btn-block social-btn google" href={KAKAOPATH}> */}
-              <GoogleLoginButton  onClick={()=>handleKakao()}/>
+              <KakaoButton onClick={() => handleKakao()} />
               {/* </a> */}
-              <Links to="/main"> <button onClick={()=>{setIslogin(true)}} >임시로그인버튼</button></Links>
-              <Links to="/main"> <button> 로그인 안하고 메인가기</button></Links>
+              <Links to="/main">
+                {" "}
+                <button
+                  onClick={() => {
+                    setIslogin(true);
+                  }}
+                >
+                  임시로그인버튼
+                </button>
+              </Links>
+              <Links to="/main">
+                {" "}
+                <button> 로그인 안하고 메인가기</button>
+              </Links>
             </div>
-           
-           
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />

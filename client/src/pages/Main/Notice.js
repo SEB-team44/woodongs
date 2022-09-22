@@ -2,6 +2,7 @@ import { React, useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { UserLogin } from "../../UserContext";
+import Alert from "@mui/material/Alert";
 
 const StyledNav = styled.div`
   .nav-container {
@@ -13,15 +14,22 @@ const StyledNav = styled.div`
     height: 50.5px;
     border: black solid 1px;
     border-radius: 3%;
+    background-color: white;
   }
 
-  .notice-box {
+  .notice-box1 {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
     padding-left: 0px;
     width: 60%;
+  }
+  .notice-box2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 0px;
+    width: 20%;
   }
   ol {
     margin: 0px;
@@ -70,12 +78,19 @@ const Notice = () => {
     <>
       <StyledNav>
         <nav className="nav-container">
-          <section className="notice-box">
-            <a>공지사항 입니다!!</a>
-            <div className="notice-btn">
+          <section className="notice-box-1">
+            <div className="notice-text">
+              <Alert severity="info">
+                공지사항 입니다!!공지사항입니다! 공지사항 봐주세요! 공지사항
+                전체게시판이랑 연결되야 될 듯?
+              </Alert>
+              {/* <div className="notice-btn">
               <button>Notice</button>
+            </div> */}
             </div>
-            <div>
+          </section>
+          <section className="profile-box">
+            <div className="avatar-text">
               {isLogin ? (
                 <ol className="profile-box">
                   <li>13 Apr, 2022</li>

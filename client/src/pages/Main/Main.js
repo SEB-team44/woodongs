@@ -5,6 +5,9 @@ import Notice from "./Notice";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
 
 const StyledMain = styled.div`
   .main-container {
@@ -12,7 +15,7 @@ const StyledMain = styled.div`
     display: flex;
     flex-direction: column;
     width: 100vw;
-    border: solid black 1px;
+    background-color: #dedede;
   }
 
   .main-nav-container {
@@ -21,6 +24,7 @@ const StyledMain = styled.div`
   }
   .main-notice-container {
     margin-bottom: 30px;
+    border-radius: 10px;
   }
   .main-cardlist-container {
     border: solid black 1px;
@@ -33,25 +37,26 @@ const StyledMain = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
     background-color: #f1f4f7;
-    /* justify-content: */
-    /* margin-left: 10%; */
+    justify-content: space-around;
+    align-items: center;
   }
   .cardlist {
-    height: 500px;
+    height: 450px;
     width: 400px;
     border: black solid 1px;
     margin-bottom: 80px;
-    border-radius: 5%;
-    margin-left: 4%;
+    border-radius: 3%;
+    margin: 20px 5px;
     background-color: white;
+    justify-content: center;
   }
-  .cardlist :nth-child(1) {
+  .cardlists-box :nth-child(1) {
     margin-bottom: 10px;
   }
   .cardimg {
     width: 100%;
-    border-top-left-radius: 5%;
-    border-top-right-radius: 5%;
+    /* border-top-left-radius: 5%;
+    border-top-right-radius: 5%; */
   }
   .study-info-box {
     display: flex;
@@ -59,6 +64,7 @@ const StyledMain = styled.div`
   }
   .study-info-header {
     color: black !important;
+    text-decoration: none;
   }
   .study-info {
     margin-bottom: 10px;
@@ -76,6 +82,9 @@ const StyledMain = styled.div`
   }
   li {
     list-style: none;
+  }
+  .count {
+    padding: 16px;
   }
 
   .study-info-header {
@@ -157,14 +166,15 @@ const Main = ({ list, totall }) => {
             <main className="cardlists-box">
               {cardList.map((el, idx) => {
                 return (
-                  <article className="cardlist" key={idx}>
-                    <div className="cardimg-box">
+                  <Card sx={{ maxWidth: 300 }} className="cardlist" key={idx}>
+                    {/* <article > */}
+                    <CardMedia className="cardimg-box">
                       <img
                         className="cardimg"
                         src={require("../../../src/img/businessplan.png")}
                       ></img>
-                    </div>
-                    <div className="study-info-box">
+                    </CardMedia>
+                    <CardContent className="study-info-box">
                       <header className="study-info study-info-header">
                         <Link to="/recruit">{el.title}</Link>
                       </header>
@@ -174,13 +184,14 @@ const Main = ({ list, totall }) => {
                         <li>#React</li>
                         <li>#CSS</li>
                       </ol>
-                    </div>
-                    <div className="">
+                    </CardContent>
+                    <div className="count">
                       <a>모집완료 0/3</a>
                       {/* <div ref={observer} />
                       <>{isLoading && <Loading />}</> */}
                     </div>
-                  </article>
+                    {/* </article> */}
+                  </Card>
                 );
               })}
             </main>

@@ -7,64 +7,88 @@ import Button from "@mui/material/Button";
 import { UserLogin } from "../../UserContext";
 
 const StyledRecruit = styled.section`
+  h1 {
+    font-size: 50px;
+    margin: 10px;
+  }
   .recruit-container {
     position: absolute;
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
-    /* height: 100%; */
     width: 100vw;
-    border: solid black 1px;
   }
   .recruit-main-container {
     border: solid black 1px;
-    margin-left: 30px;
-    margin-right: 30px;
-    padding-left: 50px;
-    padding-right: 50px;
+    border-radius: 50px;
+    margin: 30px 300px;
     height: 100%;
+    width: 1000px;
     display: flex;
     flex-direction: column;
     background-color: #f1f4f7;
-    /* height: 100%; */
   }
   .recruit-title-box {
-    border: solid 1px black;
     align-items: center;
     text-align: center;
-    height: 200px;
-    padding: 150px;
+    justify-content: center;
+    padding: 20px;
   }
   .recruit-main-box {
     display: flex;
     flex-direction: row;
-    border: solid 1px black;
+    border-top: solid 1px black;
+    border-bottom: solid 1px black;
   }
   .recruit-main-section {
-    padding-right: 70px;
+    padding: 20px;
   }
   .recruit-main-aside {
     width: 300px;
-    border: solid 1px black;
+    border-left: solid 1px black;
     padding: 20px;
+    text-align: center;
   }
   .my-info {
-    display: flex;
+    border: solid black 1px;
+    border-radius: 30px;
+    background-color: #e6edfc;
+    padding: 20px;
+
     flex-direction: row;
     justify-content: center;
   }
   .recruit-comment-box {
-    border: 1px solid black;
-    padding-bottom: 50px;
-    padding-top: 20px;
+    padding: 20px;
   }
   .inputbox-textarea {
-    width: 70%;
+    width: 70vh;
   }
   .recruit-comment {
     margin-bottom: 20px;
+    border-left: black 1px solid;
+    display: flex;
   }
   textarea {
     resize: none;
+  }
+  .input-button {
+    padding: 0px;
+  }
+  .recruit-inputbox {
+    align-items: center;
+    justify-content: center;
+  }
+  .recruit-comment-name {
+    font-weight: bold;
+    margin: 5px;
+  }
+  .recruit-comment-content {
+    margin: 5px;
+  }
+  .recruit-comment-delete-btn {
+    border: none;
   }
 `;
 
@@ -159,21 +183,15 @@ const Recruit = () => {
             <section className="recruit-title-box">
               <button>스터디 네트워킹</button>
               <h1>{`[서울] 인터렉티브 웹 스터디`}</h1>
-              <div>
-                <div className="my-info">
-                  <button>내 사진</button>
-                  <p>이름</p>
-                </div>
-              </div>
             </section>
             <section className="recruit-main-box">
               <section className="recruit-main-section">
                 <article>
-                  <h2>-모집현황</h2>
+                  <h2>✔️ 모집현황</h2>
                   <p>프론트 엔드 스터디원 0/3</p>
                 </article>
                 <article>
-                  <h2>-스터디 키워드</h2>
+                  <h2>✔️ 스터디 키워드</h2>
                   <div className="keywords-box">
                     {keyword.map((el, idx) => {
                       return (
@@ -185,7 +203,7 @@ const Recruit = () => {
                   </div>
                 </article>
                 <article>
-                  <h2>-소개</h2>
+                  <h2>✔️ 소개</h2>
                   <p>
                     ● 스터디 목표 및 진행방식 [목표] : 인터렉티브 웹 스터디
                     웹3.0 시대에 적절한 예술 전시 형태가 무엇일까요? <br></br>
@@ -220,17 +238,20 @@ const Recruit = () => {
               </section>
               <aside className="recruit-main-aside">
                 <article>
-                  <h2>-리더정보</h2>
+                  <h2>리더정보</h2>
                   <div className="my-info">
-                    <button>내 사진</button>
-                    <p>이름</p>
+                    <img
+                      className="avatarimg"
+                      src={require("../../../src/img/avatar.png")}
+                    />
+                    <p>Choi</p>
                   </div>
                 </article>
-                <article>
+                <article className="innertext">
                   <h2>-스터디 기간</h2>
                   <p>22.09.02 ~23.03.02</p>
                 </article>
-                <article>
+                <article className="innertext">
                   <h2>-스터디 분야</h2>
                   <p>웹 개발 스터디</p>
                 </article>
@@ -251,7 +272,13 @@ const Recruit = () => {
                   onChange={(e) => handleChangeInput(e)}
                   value={inputComment}
                 />
-                <Button onClick={(e) => handleSumit(e)}>입력</Button>
+                <Button
+                  className="input-button"
+                  variant="contained"
+                  onClick={(e) => handleSumit(e)}
+                >
+                  입력
+                </Button>
               </div>
               <div className="recruit-commentbox">
                 {comment.map((el, idx) => {
@@ -262,12 +289,12 @@ const Recruit = () => {
                         <div className="recruit-comment-content">
                           {el.content}
                         </div>
-                        <div
+                        <button
                           className="recruit-comment-delete-btn"
                           onClick={() => handeDeleteComment(el.id)}
                         >
-                          X
-                        </div>
+                          ✖️ 삭제
+                        </button>
                       </div>
                     </>
                   );
