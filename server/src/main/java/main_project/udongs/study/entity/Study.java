@@ -1,5 +1,6 @@
 package main_project.udongs.study.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import main_project.udongs.member.entity.Member;
@@ -29,12 +30,16 @@ public class Study {
     private String city;
 
     @Column
+    private Long createdBy;
+
+    @Column
     private LocalDateTime createdAt;
 
     @Column
     private LocalDateTime modifiedAt;
 
     //스터디 장 정보
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "memberId")
     private Member member;
