@@ -12,10 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.service.MemberService;
+import main_project.udongs.study.dto.SingleResponseStudyDto;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
 import main_project.udongs.study.mapper.StudyMapper;
 import main_project.udongs.study.service.StudyService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -55,7 +60,7 @@ public class StudyController {
         Study savedStudy = studyService.createStudy(study);
         StudyDto.Response response = mapper.studyToStudyResponse(savedStudy);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 
@@ -66,19 +71,21 @@ public class StudyController {
     public ResponseEntity postStudy(@Valid @PathVariable("study-id") Long studyId) {
         log.debug("GET STUDY");
 
-        StudyDto.Response response = mapper.studyToStudyResponse(studyService.findVerifiedStudy(studyId));
+        Study study = studyService.findVerifiedStudy(studyId);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(new SingleResponseStudyDto<>(List.of(mapper.studyToStudyResponse(study))));
     }
 
 
     @Operation(summary = "전체 스터디 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.class))))})
     @GetMapping
-    public ResponseEntity<List<StudyDto.Response>> getStudies() {
+    public ResponseEntity getStudies(@PageableDefault(size = 15, sort = "studyId", direction = Sort.Direction.DESC)Pageable pageable) {
         log.debug("GET ALL STUDIES");
 
         List<StudyDto.Response> list = mapper.studiesToStudyResponse(studyService.getStudies());
+
+       // Page<Study> pageStudies = studyService.findVerifiedStudy(pageable);
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
