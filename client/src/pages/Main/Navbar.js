@@ -4,12 +4,16 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Popper from "@mui/material/Popper";
 import Button from "@mui/material/Button";
+import Input from "@mui/material/Input";
+import { UserLogin } from "../../UserContext";
+import { useContext } from "react";
 
 const StyledNav = styled.div`
   .header-container {
     height: 63.5px;
-    width: 100%;
+    width: 100vw;
     border: solid black 1px;
+    background-color: white;
   }
   .nav-container {
     display: flex;
@@ -27,6 +31,15 @@ const StyledNav = styled.div`
     align-items: center;
     padding-left: 0px;
     height: 63.5px;
+    text-decoration: none;
+  }
+  .tap-box li {
+    text-decoration: none;
+    padding: 8px 12px;
+  }
+  .tap-box li:hover {
+    background-color: #b6c6d4;
+    border-radius: 4px;
   }
   ol {
     margin: 0px;
@@ -34,6 +47,9 @@ const StyledNav = styled.div`
   li {
     list-style: none;
     padding-right: 20px;
+    text-decoration-line: none;
+    color: black;
+    text-decoration: none;
   }
   .other-box {
     display: flex;
@@ -59,13 +75,20 @@ const StyledNav = styled.div`
     resize: none;
   }
   .avatarimg {
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
+  }
+  .group-btn {
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    background-color: white;
   }
 `;
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const { isLogin } = useContext(UserLogin);
 
   const handleClick = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -88,9 +111,16 @@ const Navbar = () => {
             </section>
 
             <ol className="tap-box">
-              <Link to="/main">
-                <li>내 주변 스터디</li>
-              </Link>
+              {isLogin ? (
+                <Link to="/main">
+                  <li>내 주변 스터디</li>
+                </Link>
+              ) : (
+                <Link to="/main">
+                  <li>스터디 목록</li>
+                </Link>
+              )}
+
               <Link to="/FreeBoard">
                 <li>전체 게시판</li>
               </Link>
@@ -98,36 +128,35 @@ const Navbar = () => {
 
             <section className="other-box">
               <div className="search-box">
-                <textarea></textarea>
+                <Input placeholder="Search.." />
+                <Button>검색</Button>
               </div>
-              <div className="info-box">
-                <div className="new-study-btn">
-                  <Link to="/AddStudy">
-                    <Button className="submit-button" variant="contained">
-                      스터디 생성
-                    </Button>
-                  </Link>
-                </div>
-                <div className="alert-img">
-                  <img
-                    className="myinfo-img myinfo-ball-img"
-                    src={require("../../../src/img/ball.png")}
-                  />
-                </div>
-                <div className="group-img">
-                  <img
-                    className="myinfo-img myinfo-group-img"
-                    src={require("../../../src/img/group.png")}
-                  />
-                </div>
-                <div className="group-btn">
-                  <div>
+              {isLogin ? (
+                <div className="info-box">
+                  <div className="new-study-btn">
+                    <Link to="/AddStudy">
+                      <Button className="submit-button" variant="contained">
+                        스터디 생성
+                      </Button>
+                    </Link>
+                  </div>
+                  <div className="alert-img">
+                    <img
+                      className="myinfo-img myinfo-ball-img"
+                      src={require("../../../src/img/ball.png")}
+                    />
+                  </div>
+                  <div className="group-img">
                     <button
+                      className="group-btn"
                       aria-describedby={id}
                       type="button"
                       onClick={handleClick}
                     >
-                      내 그룹
+                      <img
+                        className="myinfo-img myinfo-group-img"
+                        src={require("../../../src/img/group.png")}
+                      />
                     </button>
                     <Popper id={id} open={open} anchorEl={anchorEl}>
                       <Box
@@ -140,16 +169,21 @@ const Navbar = () => {
                       </Box>
                     </Popper>
                   </div>
+
+                  <div className="my-info-btn">
+                    <Link to="/MyPage">
+                      <img
+                        className="avatarimg"
+                        src={require("../../../src/img/avatar.png")}
+                      />
+                    </Link>
+                  </div>
                 </div>
-                <div className="my-info-btn">
-                  <Link to="/MyPage">
-                    <img
-                      className="avatarimg"
-                      src={require("../../../src/img/avatar.png")}
-                    />
-                  </Link>
-                </div>
-              </div>
+              ) : (
+                <Link to="/Login">
+                  <Button>로그인</Button>
+                </Link>
+              )}
             </section>
           </nav>
         </header>

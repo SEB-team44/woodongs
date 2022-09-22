@@ -11,16 +11,19 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import queryString from "query-string";
 
 // import GoogleButton from "./GoogleButton";
-
 import { FacebookLoginButton } from "react-social-login-buttons";
 import { GoogleLoginButton } from "react-social-login-buttons";
+import KakaoButton from "react-kakao-button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as Links } from "react-router-dom";
-
+import { UserLogin } from "../../UserContext";
+import { Alert } from "antd";
+//
 function Copyright(props) {
   return (
     <Typography
@@ -46,23 +49,32 @@ navigator.geolocation.getCurrentPosition(function (pos) {
   alert("현재 위치는 : " + latitude + ", " + longitude);
 });
 
+// 카카오 인증 url
+const KAKAOPATH =
+  "http://59.16.126.210:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/Redirect";
+
 const theme = createTheme();
 
 export default function Login() {
   let navigate = useNavigate();
-  const [getemail , setEmail] = useState("");
-  const [getpassword, setPassword] = useState("");
+  const { setIslogin } = useContext(UserLogin);
+  const [latitude, setlatitude] = useState(null);
+  const [longitude, setlongitude] = useState(null);
 
+  //위도, 경도 받아오는거//
+  navigator.geolocation.getCurrentPosition(function (pos) {
+    console.log(pos);
+    let latitude = pos.coords.latitude;
+    setlatitude(latitude);
+    let longitude = pos.coords.longitude;
+    setlongitude(longitude);
+    alert("현재 위치는 : " + latitude + ", " + longitude);
+  });
 
- 
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // setEmail((prev) => {return prev = data.get("email")});
-    // setPassword(data.get("password"));
-    setEmail(data.get("email"));
-    setPassword(data.get("password"));
     const reqOAuthPost = {
       method: "POST",
       headers: {
@@ -78,34 +90,39 @@ export default function Login() {
       }),
     };
 
-    fetch("http://14.6.86.98:8080/member/signin",reqOAuthPost)
-    .then((response) => {
-      if (response.ok) {
-        const refresh_token = response.headers.get("Refresh");
-        sessionStorage.setItem("refresh_token", refresh_token);
-        console.log(refresh_token);
-      }
-      return response
-    })
-    .then((response)=>{
-      const access_token = response.headers.get("Authorization");
-      sessionStorage.setItem("access_token", access_token);
-      console.log(access_token);
-    })
-    .then((res) => {
-      console.log(res)
-      navigate("/main");
-    })
-    .catch((error) => {
-      alert(error);
-      console.log(error)
-    })
+    //59.16.126.210:8080대한님
+    //14.6.86.98:8080 지훈님
+    fetch("http://59.16.126.210:8080/login", reqOAuthPost)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((response) => {
+        localStorage.setItem("access_token", response.body.accessToken);
+        localStorage.setItem("refresh_token", response.body.refreshToken);
+        const a_token = localStorage.getItem("access_token");
+        const b_token = localStorage.getItem("refresh_token");
+        let tokens = [a_token, b_token];
+        return tokens;
+      })
+      .then((tokens) => {
+        if (!tokens[0] || !tokens[1]) {
+          throw Error("could not fetch the data for that resource");
+        } else {
+          if (tokens[0] !== null && tokens[1] !== null) {
+            navigate("/main");
+            setIslogin(true);
+          }
+        }
+      })
+      .then((res) => {
+        alert("토큰을 가져왔습니다");
+      })
+      .catch((error) => {
+        alert(error);
+      });
   };
-
-
-  const handleGoogle = (event) => {
-    return window.location.assign(`14.6.86.98:8080/oauth2/authorization/google/`+`${getemail}`)
-  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -156,14 +173,14 @@ export default function Login() {
               label="Remember me"
             />
             {/* <Links to="/main"> */}
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Login
-              </Button>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Login
+            </Button>
             {/* </Links> */}
             <Grid container>
               <Grid item xs>
@@ -181,11 +198,32 @@ export default function Login() {
               <FacebookLoginButton onClick={() => alert("Hello")} />
 
               {/* <GoogleButton/> */}
-              <GoogleLoginButton onClick={handleGoogle} />
-              <Links to="/main"> <button>sdfsdf</button></Links>
+              {/* onClick={() => handleKakao()} */}
+              <a className="btn btn-block social-btn google" href={KAKAOPATH}>
+              <KakaoButton  />
+              </a>
+              <Links to="/main">
+                {" "}
+                <button
+                  onClick={() => {
+                    setIslogin(true);
+                  }}
+                >
+                  임시로그인버튼
+                </button>
+              </Links>
+              <Links to="/main">
+                {" "}
+                <button
+                  onClick={() => {
+                    localStorage.clear();
+                  }}
+                >
+                  {" "}
+                  로그인 안하고 메인가기
+                </button>
+              </Links>
             </div>
-           
-           
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
