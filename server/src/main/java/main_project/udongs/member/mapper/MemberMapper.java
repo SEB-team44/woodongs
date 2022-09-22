@@ -30,7 +30,7 @@ public interface MemberMapper {
 //                .longitude("126.76903412977279")
 //                .latitude("37.51018419688551")
                 .createdAt(LocalDateTime.now())
-                .modifiedAt(LocalDateTime.now())
+//                .modifiedAt(LocalDateTime.now())
                 .build();
     }
 

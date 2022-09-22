@@ -38,7 +38,6 @@ public class MemberService {
     @Transactional
     public Member updateMember(Member member, MemberDto.Patch patch) {
 
-
         // 이름, 폰번호, 비번 만 변경
         Optional.ofNullable(patch.getNickName())
                 .ifPresent(member::setNickName);

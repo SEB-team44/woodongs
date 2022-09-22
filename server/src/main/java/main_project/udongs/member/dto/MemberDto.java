@@ -93,10 +93,13 @@ public class MemberDto {
         private String latitude;
         private String longitude;
         private String city;
+
+        private String profileImageUrl;
+
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
 
-//        private String state;
+
     }
 
     @Getter

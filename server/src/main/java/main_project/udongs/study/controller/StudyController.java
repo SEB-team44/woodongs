@@ -9,10 +9,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.apply.service.StudyApplyService;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
+
+import main_project.udongs.globaldto.MultiResponseDto;
+
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.service.MemberService;
 
@@ -51,7 +55,7 @@ public class StudyController {
     private final MemberService memberService;
 
     @Operation(summary = "스터디 모집 등록")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.ResponseBuilder.class))))})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
     @PostMapping("/recruit")
     public ResponseEntity postStudy(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody StudyDto.Post requestBody) {
         log.debug("POST STUDY");
@@ -71,9 +75,23 @@ public class StudyController {
     }
 
 
+    @Operation(summary = "스터디 모집 내용 수정")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
+    @PatchMapping("/{study-id}")
+    public ResponseEntity patchStudy(@Valid @PathVariable("study-id") Long studyId, @RequestBody StudyDto.Patch requestBody) {
+        log.debug("PATCH STUDY");
 
-    @Operation(summary = "스터디 조회")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.class))))})
+        Study findStudy = studyService.findVerifiedStudy(studyId);
+        Study study = studyService.patchStudy(findStudy, requestBody);
+
+        return ResponseEntity.ok(new SingleResponseStudyDto<>(List.of(mapper.studyToStudyResponse(study))));
+    }
+
+
+
+
+    @Operation(summary = "단일 스터디 조회")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
     @GetMapping("/{study-id}")
     public ResponseEntity postStudy(@Valid @PathVariable("study-id") Long studyId) {
         log.debug("GET STUDY");
@@ -84,19 +102,31 @@ public class StudyController {
     }
 
 
+    //무한스크롤
+    //일단 페이지네이션 적용
     @Operation(summary = "전체 스터디 조회")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.class))))})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
     @GetMapping
     public ResponseEntity getStudies(@PageableDefault(size = 15, sort = "studyId", direction = Sort.Direction.DESC)Pageable pageable) {
         log.debug("GET ALL STUDIES");
 
-        List<StudyDto.Response> list = mapper.studiesToStudyResponse(studyService.getStudies());
+        Page<Study> pageStudies = studyService.getStudies(pageable);
+        List<Study> studies = pageStudies.getContent();
 
-       // Page<Study> pageStudies = studyService.findVerifiedStudy(pageable);
-
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(studies),pageStudies), HttpStatus.OK);
     }
 
+
+    @Operation(summary = "해당 스터디 삭제")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
+    @DeleteMapping("/{study-id}")
+    public ResponseEntity deleteStudy(@Valid @PathVariable("study-id") Long studyId) {
+        log.debug("DELETE STUDY");
+
+        studyService.deleteStudy(studyId);
+
+        return new ResponseEntity<>("스터디가 삭제 되었습니다.",HttpStatus.OK);
+    }
 
 
 }

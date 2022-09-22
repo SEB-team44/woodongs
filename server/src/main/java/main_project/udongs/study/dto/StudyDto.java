@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 
 public class StudyDto {
 
@@ -63,8 +65,10 @@ public class StudyDto {
         private String body;
         private String category;
         private String city;
-        private String createdAt;
-        private String modifiedAt;
+        private Long createdBy;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+        private MemberDto.Response memberResponseDto;
 
     }
 }

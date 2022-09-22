@@ -4,6 +4,8 @@ import lombok.*;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
 import main_project.udongs.apply.entity.StudyApply;
+import main_project.udongs.study.dto.StudyDto;
+import main_project.udongs.study.entity.Study;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -83,11 +85,12 @@ public class Member {
     @NotNull
     private LocalDateTime modifiedAt;
 
-   /* @OneToMany(mappedBy = "member")
-    private List<Study> studies = new ArrayList<>();*/
-
     @OneToMany(mappedBy = "member")
     private List<StudyApply> studyApplies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    private List<Study> studies = new ArrayList<>();
+    
 
     //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
     public Member(
@@ -97,8 +100,8 @@ public class Member {
             @NotNull @Size(max = 512) String profileImageUrl,
             @NotNull ProviderType providerType,
             @NotNull RoleType roleType,
-            @NotNull LocalDateTime createdAt,
-            @NotNull LocalDateTime modifiedAt
+            @NotNull LocalDateTime createdAt
+            //LocalDateTime modifiedAt
     ) {
         this.nickName = nickName;
         this.password = "NO_PASS";
@@ -108,7 +111,7 @@ public class Member {
         this.providerType = providerType;
         this.roleType = roleType;
         this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
+        //this.modifiedAt = modifiedAt;
     }
 
 }
