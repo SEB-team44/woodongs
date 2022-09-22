@@ -47,8 +47,6 @@ public class MemberController {
      */
 
 
-
-
     @Operation(summary = "회원 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Response.class))))})
     @PostMapping("/signup")
@@ -83,6 +81,7 @@ public class MemberController {
         return ResponseEntity.ok("위치정보 갱신 성공");
     }
 
+
     @Operation(summary = "회원 정보 조회")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @GetMapping("/me")
@@ -103,6 +102,7 @@ public class MemberController {
 //        return new ResponseEntity(response, HttpStatus.OK);
 //    }
 
+
     @Operation(summary = "마이페이지 회원사진 업로드")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
     @PostMapping("/imageupload")
@@ -122,7 +122,11 @@ public class MemberController {
     public ResponseEntity patchMember(@RequestBody MemberDto.Patch requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("patch member");
         requestBody.setPassword(passwordEncoder.encode(requestBody.getPassword()));
-        Member member = memberService.updateMember(userPrincipal.getMember(),requestBody);
+
+        Member verifiedMember = userPrincipal.getMember();
+        verifiedMember.setModifiedAt(LocalDateTime.now());
+
+        Member member = memberService.updateMember(verifiedMember,requestBody);
 
         return new ResponseEntity(mapper.memberToMemberResponse(member), HttpStatus.OK);
     }
