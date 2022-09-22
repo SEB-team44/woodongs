@@ -54,6 +54,11 @@ const MyPage = () => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
+  const handleLogout=() => {
+    localStorage.clear();
+    setIslogin(false);
+  }
+
   return (
     <>
       <MyPageStyled>
@@ -108,7 +113,7 @@ const MyPage = () => {
               </div>
             </div>
             <Link to="/Login">
-              <Button onClick={()=> setIslogin(false)} className="submit-button" variant="contained">
+              <Button onClick={()=> handleLogout()} className="submit-button" variant="contained">
                 LogOut
               </Button>
             </Link>

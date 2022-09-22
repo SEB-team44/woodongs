@@ -55,8 +55,8 @@ const AddStudy = () => {
       setCheckedList(checkedList.filter((el) => el !== item));
     }
   };
-  //체크박스 체크 된 부분 어떻게 가져올지..하던부분
-  // const [checked,setChecked] = useState(false)
+  // 체크박스 체크 된 부분 어떻게 가져올지..하던부분
+  const [checked,setChecked] = useState(false)
   // const handleAgree = (event)=>{
   //   setChecked(event.target.checked)
   // }
@@ -66,22 +66,22 @@ const AddStudy = () => {
   // const issueList = () => {
   //   const issue = [...Array(10).keys()];
   // };
-  // const [checked, setChecked] = useState(false);
+
   // const checkHandler = ({ target }) => {
   //   setChecked(!checked);
   //   checkedItemHandler(issue.id, target.checked);
   // };
 
-  // const [checkedItems, setCheckedItems] = useState(new Set());
-  // const checkedItemHandler = (id, isChecked) => {
-  //   if (isChecked) {
-  //     checkedItems.add(id);
-  //     setCheckedItems(checkedItems);
-  //   } else if (!isChecked && checkedItems.has(id)) {
-  //     checkedItems.delete(id);
-  //     setCheckedItems(checkedItems);
-  //   }
-  // };
+  const [checkedItems, setCheckedItems] = useState(new Set());
+  const checkedItemHandler = (id, isChecked) => {
+    if (isChecked) {
+      checkedItems.add(id);
+      setCheckedItems(checkedItems);
+    } else if (!isChecked && checkedItems.has(id)) {
+      checkedItems.delete(id);
+      setCheckedItems(checkedItems);
+    }
+  };
   const navigate = useNavigate();
   const [content, setContent] = useState({
     title: "",
