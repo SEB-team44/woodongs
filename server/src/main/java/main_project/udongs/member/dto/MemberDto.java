@@ -20,8 +20,8 @@ public class MemberDto {
     @AllArgsConstructor
     public static class Post {
 
-        @NotBlank(message = "이름은 공백이 아니어야 합니다.")
-        private String nickname;
+        @NotBlank(message = "닉네임은 공백이 아니어야 합니다.")
+        private String nickName;
 
         @NotBlank(message = "이메일은 공백이 아니어야 합니다.")
         @Email
@@ -60,8 +60,8 @@ public class MemberDto {
     @AllArgsConstructor
     public static class Patch {
 
-        @NotBlank(message = "회원 이름은 공백이 아니어야 합니다")
-        private String memberName;
+        @NotBlank(message = "닉네임은 공백이 아니어야 합니다")
+        private String nickName;
 
         @NotBlank
         @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$",
@@ -80,7 +80,7 @@ public class MemberDto {
     @Builder
     public static class Response {
         private Long memberId;
-        private String memberName;
+        private String nickName;
         private String email;
         private String phoneNumber;
 //        private String grade;

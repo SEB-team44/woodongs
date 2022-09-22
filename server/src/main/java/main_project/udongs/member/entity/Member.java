@@ -28,7 +28,7 @@ public class Member {
     private String email;
 
     @Column
-    private String nickname;
+    private String nickName;
 
     @Column
     private String phoneNumber;
@@ -89,7 +89,7 @@ public class Member {
 
     //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
     public Member(
-            @NotNull @Size(max = 100) String nickname,
+            @NotNull @Size(max = 100) String nickName,
             @NotNull @Size(max = 512) String email,
             @NotNull @Size(max = 1) String emailVerifiedYn,
             @NotNull @Size(max = 512) String profileImageUrl,
@@ -98,7 +98,7 @@ public class Member {
             @NotNull LocalDateTime createdAt,
             @NotNull LocalDateTime modifiedAt
     ) {
-        this.nickname = nickname;
+        this.nickName = nickName;
         this.password = "NO_PASS";
         this.email = email != null ? email : "NO_EMAIL";
         this.emailVerifiedYn = emailVerifiedYn;
@@ -108,7 +108,5 @@ public class Member {
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
-
-
 
 }
