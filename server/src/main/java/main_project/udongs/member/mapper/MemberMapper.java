@@ -19,7 +19,7 @@ public interface MemberMapper {
     default Member memberPostToMember(MemberDto.Post requestBody) {
         return Member.builder()
                 .email(requestBody.getEmail())
-                .memberName(requestBody.getMemberName())
+                .nickName(requestBody.getNickName())
                 .phoneNumber(requestBody.getPhoneNumber())
                 .password(requestBody.getPassword())
                 .city(requestBody.getCity())
