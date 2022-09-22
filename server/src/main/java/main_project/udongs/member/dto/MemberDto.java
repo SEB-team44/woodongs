@@ -94,8 +94,6 @@ public class MemberDto {
         private String longitude;
         private String city;
 
-        private String profileImageUrl;
-
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
 

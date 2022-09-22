@@ -85,9 +85,11 @@ public class Member {
     @NotNull
     private LocalDateTime modifiedAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<StudyApply> studyApplies = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
     private List<Study> studies = new ArrayList<>();
     
