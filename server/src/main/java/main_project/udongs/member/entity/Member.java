@@ -83,8 +83,8 @@ public class Member {
     @NotNull
     private LocalDateTime modifiedAt;
 
-    @OneToMany(mappedBy = "member")
-    private List<Study> studies = new ArrayList<>();
+   /* @OneToMany(mappedBy = "member")
+    private List<Study> studies = new ArrayList<>();*/
     
 
     //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
