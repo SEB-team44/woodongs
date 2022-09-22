@@ -56,8 +56,8 @@ public class MemberController {
         log.debug("post member");
 
         //경도 / 위도 는 프론트에서 받아올 예정
-        String s = locationService.coordToAddr("126.76903412977279", "37.51018419688551");
-        requestBody.setCity(s);
+        /*String s = locationService.coordToAddr("126.76903412977279", "37.51018419688551");
+        requestBody.setCity(s);*/
 
         requestBody.setPassword(passwordEncoder.encode(requestBody.getPassword()));
 
