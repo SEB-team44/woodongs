@@ -65,18 +65,29 @@
       "location": "부천시 중동"
     }
   ],
-  "keyword": ["JavaScript", "CSS", "TypeScript", "Next.JS"],
-  "boardcomment": [{ "name": "최진영", "content": "아시는분", "id": 1 }],
+  "keyword": [
+    "JavaScript",
+    "CSS",
+    "TypeScript",
+    "Next.JS"
+  ],
+  "boardcomment": [
+    {
+      "name": "최진영",
+      "content": "아시는분",
+      "id": 1
+    }
+  ],
   "comment": [
     {
       "name": "김영하",
-      "content": "ddkdkdk",
-      "id": 1
+      "content": "ㅔㄴ에에\n",
+      "id": 4
     },
     {
       "name": "김영하",
-      "content": "dkdk\n",
-      "id": 2
+      "content": "zzzz",
+      "id": 5
     }
   ],
   "board": [

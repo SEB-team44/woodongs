@@ -22,7 +22,8 @@ import KakaoButton from "react-kakao-button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as Links } from "react-router-dom";
 import { UserLogin } from "../../UserContext";
-
+import { Alert } from "antd";
+//
 function Copyright(props) {
   return (
     <Typography
@@ -50,25 +51,26 @@ navigator.geolocation.getCurrentPosition(function (pos) {
 
 // 카카오 인증 url
 const KAKAOPATH =
-  "http://14.6.86.98:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/main";
+  "http://59.16.126.210:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/Redirect";
 
 const theme = createTheme();
 
 export default function Login() {
   let navigate = useNavigate();
   const { setIslogin } = useContext(UserLogin);
-  // const [getemail , setEmail] = useState("");
-  // const [getpassword, setPassword] = useState("");
-  // const [refresh, setRefresh] = useState(null);
-  // const [access, setAccess] = useState(null);
+  const [latitude, setlatitude] = useState(null);
+  const [longitude, setlongitude] = useState(null);
 
-  const handleKakao = () => {
-    window.location.assign(KAKAOPATH);
-    const access = window.location.search;
-    sessionStorage.setItem("access_token", access);
-    setIslogin(true);
-    return <Links to="/main" />;
-  };
+  //위도, 경도 받아오는거//
+  navigator.geolocation.getCurrentPosition(function (pos) {
+    console.log(pos);
+    let latitude = pos.coords.latitude;
+    setlatitude(latitude);
+    let longitude = pos.coords.longitude;
+    setlongitude(longitude);
+    alert("현재 위치는 : " + latitude + ", " + longitude);
+  });
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -88,32 +90,37 @@ export default function Login() {
       }),
     };
 
-    fetch("http://14.6.86.98:8080/login", reqOAuthPost)
+    //59.16.126.210:8080대한님
+    //14.6.86.98:8080 지훈님
+    fetch("http://59.16.126.210:8080/login", reqOAuthPost)
       .then((response) => {
         if (response.ok) {
           return response.json();
         }
       })
       .then((response) => {
-        const access_token = sessionStorage.setItem(
-          "access_token",
-          response.body.accessToken
-        );
-        const refresh_token = sessionStorage.setItem(
-          "refresh_token",
-          response.body.refreshToken
-        );
-        if (access_token !== null && refresh_token !== null) {
-          navigate("/main");
-          setIslogin(true);
+        localStorage.setItem("access_token", response.body.accessToken);
+        localStorage.setItem("refresh_token", response.body.refreshToken);
+        const a_token = localStorage.getItem("access_token");
+        const b_token = localStorage.getItem("refresh_token");
+        let tokens = [a_token, b_token];
+        return tokens;
+      })
+      .then((tokens) => {
+        if (!tokens[0] || !tokens[1]) {
+          throw Error("could not fetch the data for that resource");
+        } else {
+          if (tokens[0] !== null && tokens[1] !== null) {
+            navigate("/main");
+            setIslogin(true);
+          }
         }
       })
       .then((res) => {
-        console.log(res);
+        alert("토큰을 가져왔습니다");
       })
       .catch((error) => {
         alert(error);
-        console.log(error);
       });
   };
 
@@ -191,9 +198,10 @@ export default function Login() {
               <FacebookLoginButton onClick={() => alert("Hello")} />
 
               {/* <GoogleButton/> */}
-              {/* <a className="btn btn-block social-btn google" href={KAKAOPATH}> */}
-              <KakaoButton onClick={() => handleKakao()} />
-              {/* </a> */}
+              {/* onClick={() => handleKakao()} */}
+              <a className="btn btn-block social-btn google" href={KAKAOPATH}>
+              <KakaoButton  />
+              </a>
               <Links to="/main">
                 {" "}
                 <button
@@ -206,7 +214,14 @@ export default function Login() {
               </Links>
               <Links to="/main">
                 {" "}
-                <button> 로그인 안하고 메인가기</button>
+                <button
+                  onClick={() => {
+                    localStorage.clear();
+                  }}
+                >
+                  {" "}
+                  로그인 안하고 메인가기
+                </button>
               </Links>
             </div>
           </Box>

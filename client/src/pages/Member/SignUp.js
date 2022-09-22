@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -36,6 +37,7 @@ const theme = createTheme();
 
 export default function SignUp() {
   const [myip , setMyip] = useState("");
+  let navigate = useNavigate();
 
 
   // 내 아이피 주소 가져오기 
@@ -67,10 +69,12 @@ export default function SignUp() {
     };
     // 'http://14.6.86.98:8080/member/signup' 지훈님
     // `http://59.16.126.210:8080/member/signup?ipAddress=${myip}` 대한님
-    fetch('http://14.6.86.98:8080/member/signup', reqPost)
+    fetch('http://59.16.126.210:8080/member/signup', reqPost)
     .then((response) => response.json())
     .then((response) => {
       console.log(response)
+      navigate("/login")
+      
     })
     .catch((err) => alert(err.message));
   };
