@@ -95,8 +95,8 @@ public class Member {
             @NotNull @Size(max = 512) String profileImageUrl,
             @NotNull ProviderType providerType,
             @NotNull RoleType roleType,
-            @NotNull LocalDateTime createdAt,
-            @NotNull LocalDateTime modifiedAt
+            @NotNull LocalDateTime createdAt
+            //LocalDateTime modifiedAt
     ) {
         this.nickName = nickName;
         this.password = "NO_PASS";
@@ -106,7 +106,7 @@ public class Member {
         this.providerType = providerType;
         this.roleType = roleType;
         this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
+        //this.modifiedAt = modifiedAt;
     }
 
 }
