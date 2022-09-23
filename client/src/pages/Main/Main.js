@@ -8,6 +8,9 @@ import Footer from "./Footer";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
+import { UserInfo } from "../../UserContext";
+import { useContext } from "react";
+
 
 const StyledMain = styled.div`
   .main-container {
@@ -94,6 +97,7 @@ const StyledMain = styled.div`
 
 const Main = ({ list, totall }) => {
   const [cardList, setCardList] = useState([]);
+  const {userInfo} = useContext(UserInfo);
 
   const obsRef = useRef(null); //observer Element
   // const [list, setList] = useState(() => list); //post List
@@ -114,6 +118,8 @@ const Main = ({ list, totall }) => {
   useEffect(() => {
     getPost();
   }, [page]);
+
+console.log(userInfo) 
 
   const obsHandler = (entries) => {
     //옵저버 콜백함수
