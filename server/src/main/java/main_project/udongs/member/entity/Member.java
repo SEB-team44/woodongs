@@ -45,11 +45,6 @@ public class Member {
 //    @Column
 //    private String s3ImageUrl;
 
-    @Column
-    private String longitude;
-
-    @Column
-    private String latitude;
 
     //email 인증 되었는지?? (현재 큰 역할은 X)
     @Column(name = "EMAIL_VERIFIED_YN", length = 1)
@@ -75,6 +70,11 @@ public class Member {
     @NotNull
     private RoleType roleType;
 
+    @Column
+    private String longitude;
+
+    @Column
+    private String latitude;
     //생성일자
     @Column(name = "CREATED_AT")
     @NotNull

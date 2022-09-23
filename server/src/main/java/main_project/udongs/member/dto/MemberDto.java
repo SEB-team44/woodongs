@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
+import main_project.udongs.study.dto.StudyDto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 public class MemberDto {
@@ -96,7 +98,7 @@ public class MemberDto {
 
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-
+        private List<StudyDto.Response> studyResponseDtos;
 
     }
 
