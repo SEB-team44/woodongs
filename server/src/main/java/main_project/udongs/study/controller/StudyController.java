@@ -98,7 +98,7 @@ public class StudyController {
 
         Study study = studyService.findVerifiedStudy(studyId);
 
-        return ResponseEntity.ok(new SingleResponseStudyDto<>(List.of(mapper.studyToStudyResponse(study))));
+        return ResponseEntity.ok(mapper.studyToStudyResponse(study));
     }
 
 
