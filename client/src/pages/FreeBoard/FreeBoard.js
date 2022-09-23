@@ -3,9 +3,13 @@ import Navbar from "../Main/Navbar";
 import Footer from "../Main/Footer";
 import Notice from "../Main/Notice";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
+import Input from "@mui/material/Input";
+import { UserLogin } from "../../UserContext";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 
 const StyledFreeBoard = styled.section`
   .freeborad-container {
@@ -17,34 +21,30 @@ const StyledFreeBoard = styled.section`
   }
   .freeboard-nav-container {
     margin-bottom: 50px;
-    height: 63.5px;
   }
   .freeboard-notice-container {
     margin-bottom: 30px;
   }
   .freeboard-main-container {
-    border: solid black 1px;
-    margin-left: 30px;
-    margin-right: 30px;
-    /* height: 100%; */
+    /* border: solid black 1px; */
+    margin: 30px;
   }
   .main-box {
     display: flex;
     flex-direction: column;
-    background-color: #f1f4f7;
     justify-content: center;
-    text-align: center;
-    /* margin-left: 10%; */
+    margin: 0px auto;
+    width: 1000px;
   }
   .handle-box {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     text-align: center;
-    border: black 1px solid;
+    margin-top: 20px;
   }
   .post {
-    border: black 1px solid;
+    border: #dedede 1px solid;
     margin-top: 20px;
     margin-bottom: 20px;
   }
@@ -59,13 +59,33 @@ const StyledFreeBoard = styled.section`
     height: 60%;
   }
   .submit-button {
-    background-color: #6787f6;
+    color: white;
+  }
+  #filter-demo {
+    padding: 1px;
+  }
+  .search-button {
     color: white;
   }
 `;
 
 const FreeBoard = () => {
+  const { isLogin } = useContext(UserLogin);
   const [boardList, setBoardList] = useState([]);
+  //지역검색필터
+  const filterOptions = createFilterOptions({
+    matchFrom: "start",
+    stringify: (option) => option.title,
+  });
+  //필터목록
+  const stateFilter = [
+    { title: "서울특별시" },
+    { title: "경기도" },
+    { title: "충청도" },
+    { title: "전라도" },
+    { title: "강원도" },
+    { title: "제주도" },
+  ];
 
   // cardList를 요청
   useEffect(() => {
@@ -101,29 +121,46 @@ const FreeBoard = () => {
             <main className="main-box">
               <section className="handle-box">
                 <div>
-                  <p>지역필터</p>
+                  <Autocomplete
+                    id="filter-demo"
+                    options={stateFilter}
+                    getOptionLabel={(option) => option.title}
+                    filterOptions={filterOptions}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
                 </div>
                 <div className="handle-search-box">
-                  <textarea className="handle-search-bar" />
-                  <p>검색</p>
+                  <Input placeholder="Search.." />
+                  <Button variant="contained" className="search-button">
+                    검색
+                  </Button>
                 </div>
                 <div>
-                  <Link to="/AddBoard">
-                    <Button className="submit-button" varient="outlined">
-                      글쓰기
-                    </Button>
-                  </Link>
+                  {isLogin ? (
+                    <Link to="/AddBoard">
+                      <Button className="submit-button" variant="contained">
+                        글쓰기
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link to="/Login">
+                      <Button className="submit-button" variant="contained">
+                        로그인 후 글쓰기
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </section>
 
               <article className="post-box">
                 <div className="post-list">
-                  {boardList.map((el,idx) => {
+                  {boardList.map((el, idx) => {
                     return (
                       <>
                         <div key={idx} className="post">
                           <div>{`#[${el.tag}]`}</div>
-                          <Link to={"/SingleBoard/"+`${el.id}`}>
+                          <Link to={"/SingleBoard/" + `${el.id}`}>
                             <h1>{el.title}</h1>
                           </Link>
                           <body>{el.body}</body>
