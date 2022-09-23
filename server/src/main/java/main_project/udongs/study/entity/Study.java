@@ -63,8 +63,14 @@ public class Study {
     @OneToMany(mappedBy = "study")
     List<Acceptance> acceptances = new ArrayList<>();
 
+    //스터디 모집글 댓글
+    @OneToMany(mappedBy = "study")
+    List<StudyComment> comments = new ArrayList<>();
+
     //스터디 목표 모집 인원
     private Long headCount;
+
+
 
 
 }

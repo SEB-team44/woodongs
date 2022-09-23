@@ -84,7 +84,10 @@ public class StudyService {
 
     //스터디 모집글 질문 작성
     @Transactional
-    public StudyComment studyComment(StudyComment studyComment) {
+    public StudyComment createStudyComment(StudyComment studyComment, Member member) {
+
+        studyComment.setCreatedAt(LocalDateTime.now());
+        studyComment.setCreatedBy(member.getMemberId());
 
         return commentRepository.save(studyComment);
     }

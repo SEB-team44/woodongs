@@ -27,6 +27,7 @@ import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
 import main_project.udongs.study.dto.StudyCommentDto;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
+import main_project.udongs.study.entity.StudyComment;
 import main_project.udongs.study.mapper.StudyMapper;
 import main_project.udongs.study.service.StudyService;
 import org.springframework.data.domain.Page;
@@ -133,14 +134,19 @@ public class StudyController {
     @PostMapping("/{study-id}/comment")
     public ResponseEntity postComment(@Valid @PathVariable("study-id") Long studyId,
                                       @AuthenticationPrincipal UserPrincipal userPrincipal,
-                                      @RequestBody StudyCommentDto studyCommentDto) {
+                                      @RequestBody StudyCommentDto.Post studyCommentDto) {
         log.debug("POST STUDY COMMENTS");
 
+        StudyComment comment = mapper.commentPostToComment(studyCommentDto);
+        Member member = userPrincipal.getMember();
 
+        StudyComment savedComment = studyService.createStudyComment(comment, member);
+        StudyCommentDto.Response response = mapper.commentToCommentResponse(savedComment);
 
-
-        return new ResponseEntity<>("스터디가 삭제 되었습니다.",HttpStatus.OK);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+
 
 
 }

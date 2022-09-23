@@ -7,6 +7,7 @@ import main_project.udongs.oauth2.oauth.entity.RoleType;
 import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
+import main_project.udongs.study.entity.StudyComment;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -100,6 +101,11 @@ public class Member {
     @Builder.Default
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
     private List<Acceptance> acceptances = new ArrayList<>();
+
+    //스터디 모집글 질문(comment)
+    @Builder.Default
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<StudyComment> comments = new ArrayList<>();
 
     //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
     public Member(
