@@ -2,6 +2,7 @@ package main_project.udongs.study.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import main_project.udongs.apply.entity.Acceptance;
 import main_project.udongs.apply.entity.StudyApply;
@@ -54,7 +55,6 @@ public class Study {
     @JoinColumn(name = "memberId")
     private Member member;
 
-//    private List<Member> applicants = new ArrayList<>();
 
     @OneToMany(mappedBy = "study")
     List<StudyApply> studyApplies = new ArrayList<>();
@@ -68,7 +68,18 @@ public class Study {
     List<StudyComment> comments = new ArrayList<>();
 
     //스터디 목표 모집 인원
-    private Long headCount;
+    @Column
+    private int headCount;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private State state = State.Open;
+
+    @Getter
+    public enum State{
+        Open,
+        Closed
+    }
 
 
 

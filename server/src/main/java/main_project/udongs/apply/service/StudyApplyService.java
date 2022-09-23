@@ -43,8 +43,7 @@ public class StudyApplyService {
     }
 
     @Transactional
-    public ResponseEntity accept(Study study, Member member) {
-        study.getAcceptances().add(acceptanceRepository.save(new Acceptance(study, member)));
-        return ResponseEntity.ok("승인했습니다");
+    public void accept(Study study, Member member) {
+        acceptanceRepository.save(new Acceptance(study, member));
     }
 }

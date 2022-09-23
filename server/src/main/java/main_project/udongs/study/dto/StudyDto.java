@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
+import main_project.udongs.study.entity.Study;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -67,6 +68,7 @@ public class StudyDto {
         private String category;
         private String city;
         private Long createdBy;
+        private Study.State state;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private List<MemberDto.Response> memberResponseDtos;

@@ -11,6 +11,7 @@ public enum ExceptionCode {
         TAG_NOT_FOUND(404, "tag not found"),
         STUDY_NOT_FOUND(404, "Study not found"),
         STUDY_EXISTS(409, "Study already exists"),
+        APPLICATION_EXIST(409, "Application already exists"),
         STUDY_BE_FULL(409, "Study Members are already full"),
         MEMBER_EXISTS(409, "Member exists"),
         EMAIL_EXISTS(409, "Email already exists"),

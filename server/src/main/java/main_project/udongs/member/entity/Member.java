@@ -94,12 +94,12 @@ public class Member {
 
     //내가 속한 스터디(그룹장)
     @Builder.Default
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member")
     private List<Study> studies = new ArrayList<>();
 
     //내가 속한 스터디(멤버)
     @Builder.Default
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member")
     private List<Acceptance> acceptances = new ArrayList<>();
 
     //스터디 모집글 질문(comment)

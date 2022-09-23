@@ -28,4 +28,15 @@ public class StudyApply {
     @JoinColumn(name = "memberId")
     private Member member;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private State state = State.WAITING;
+
+    @Getter
+    public enum State {
+        ACCEPT,
+        WAITING,
+        REFUSE
+    }
+
 }
