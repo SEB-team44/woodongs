@@ -39,7 +39,7 @@ public class StudyCommentDto {
     public static class Response {
         private Long commentId;
         private String body;
-        private Long createdBy;
+        private String nickName;
         private LocalDateTime createdAt;
 
     }

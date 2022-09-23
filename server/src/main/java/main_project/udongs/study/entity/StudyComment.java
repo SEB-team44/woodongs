@@ -1,6 +1,7 @@
 package main_project.udongs.study.entity;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import main_project.udongs.member.entity.Member;
@@ -21,7 +22,7 @@ public class StudyComment {
     private String body;
 
     @Column
-    private Long createdBy;
+    private String createdBy;
 
     @Column
     private LocalDateTime createdAt;
@@ -29,10 +30,12 @@ public class StudyComment {
     @Column
     private LocalDateTime modifiedAt;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "studyId")
     private Study study;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "memberId")
     private Member member;
