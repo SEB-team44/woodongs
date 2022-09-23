@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import Footer from "../Main/Footer";
 import Button from "@mui/material/Button";
 import { UserLogin } from "../../UserContext";
+import { TiTrash, TiPencil } from "react-icons/ti";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
 
 const StyledRecruit = styled.section`
   h1 {
@@ -89,6 +91,10 @@ const StyledRecruit = styled.section`
   }
   .recruit-comment-delete-btn {
     border: none;
+  }
+  .update-btn,
+  .delete-btn {
+    float: right;
   }
 `;
 
@@ -187,6 +193,12 @@ const Recruit = () => {
             <section className="recruit-main-box">
               <section className="recruit-main-section">
                 <article>
+                  {/* 수정업데이트 버튼
+                  삭제는 리스트에서 삭제하면되나 */}
+                  <div className="button-container">
+                    <TiTrash className="delete-btn" />
+                    <TiPencil className="update-btn" />
+                  </div>
                   <h2>✔️ 모집현황</h2>
                   <p>프론트 엔드 스터디원 0/3</p>
                 </article>

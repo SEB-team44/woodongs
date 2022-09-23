@@ -71,7 +71,6 @@ export default function Login() {
     alert("현재 위치는 : " + latitude + ", " + longitude);
   });
 
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -200,7 +199,7 @@ export default function Login() {
               {/* <GoogleButton/> */}
               {/* onClick={() => handleKakao()} */}
               <a className="btn btn-block social-btn google" href={KAKAOPATH}>
-              <KakaoButton  />
+                <KakaoButton />
               </a>
               <Links to="/main">
                 {" "}
