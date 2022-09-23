@@ -7,8 +7,6 @@ import main_project.udongs.study.entity.Study;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,7 +19,7 @@ public interface StudyMapper {
 
     Study studyPatchToStudy(StudyDto.Patch requestBody);
 
-    default StudyDto.Response studyToStudyResponse(Study study){
+    default StudyDto.Response studyToStudyResponse(Study study) {
         Member member = study.getMember();
 
         List<MemberDto.Response> iamReader = List.of(MemberDto.Response.builder()
@@ -30,7 +28,12 @@ public interface StudyMapper {
                 .email(member.getEmail())
                 .phoneNumber(member.getPhoneNumber())
                 .city(member.getCity())
+                .emailVerifiedYn(member.getEmailVerifiedYn())
                 .profileImageUrl(member.getProfileImageUrl())
+                .providerType(member.getProviderType())
+                .roleType(member.getRoleType())
+                .latitude(member.getLatitude())
+                .longitude(member.getLongitude())
                 .createdAt(member.getCreatedAt())
                 .modifiedAt(member.getModifiedAt())
                 .build());
@@ -42,7 +45,12 @@ public interface StudyMapper {
                         .email(acceptance.getMember().getEmail())
                         .phoneNumber(acceptance.getMember().getPhoneNumber())
                         .city(acceptance.getMember().getCity())
+                        .emailVerifiedYn(acceptance.getMember().getEmailVerifiedYn())
                         .profileImageUrl(acceptance.getMember().getProfileImageUrl())
+                        .providerType(acceptance.getMember().getProviderType())
+                        .roleType(acceptance.getMember().getRoleType())
+                        .latitude(acceptance.getMember().getLatitude())
+                        .longitude(acceptance.getMember().getLongitude())
                         .createdAt(acceptance.getMember().getCreatedAt())
                         .modifiedAt(acceptance.getMember().getModifiedAt())
                         .build()).collect(Collectors.toList());
@@ -69,7 +77,6 @@ public interface StudyMapper {
         private String modifiedAt;
         private MemberDto.Response member;*/
     }
-
 
 
     List<StudyDto.Response> studiesToStudyResponse(List<Study> studies);
