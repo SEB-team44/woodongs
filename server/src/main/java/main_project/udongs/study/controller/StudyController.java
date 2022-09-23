@@ -24,6 +24,7 @@ import main_project.udongs.study.dto.SingleResponseStudyDto;
 
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
 
+import main_project.udongs.study.dto.StudyCommentDto;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
 import main_project.udongs.study.mapper.StudyMapper;
@@ -61,14 +62,12 @@ public class StudyController {
         log.debug("POST STUDY");
 
         Study study = mapper.studyPostToStudy(requestBody);
-        study.setCreatedAt(LocalDateTime.now());
 
         //등록시 스터디장의 위치정보, 스터디장 id번호 반환
         Member member = userPrincipal.getMember();
-        study.setCity(member.getCity());
-        study.setMember(member);
 
-        Study savedStudy = studyService.createStudy(study);
+
+        Study savedStudy = studyService.createStudy(study, member);
         StudyDto.Response response = mapper.studyToStudyResponse(savedStudy);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -124,6 +123,21 @@ public class StudyController {
         log.debug("DELETE STUDY");
 
         studyService.deleteStudy(studyId);
+
+        return new ResponseEntity<>("스터디가 삭제 되었습니다.",HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "스터디 모집에 대한 질문 작성")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
+    @PostMapping("/{study-id}/comment")
+    public ResponseEntity postComment(@Valid @PathVariable("study-id") Long studyId,
+                                      @AuthenticationPrincipal UserPrincipal userPrincipal,
+                                      @RequestBody StudyCommentDto studyCommentDto) {
+        log.debug("POST STUDY COMMENTS");
+
+
+
 
         return new ResponseEntity<>("스터디가 삭제 되었습니다.",HttpStatus.OK);
     }
