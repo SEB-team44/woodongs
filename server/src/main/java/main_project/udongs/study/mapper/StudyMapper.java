@@ -62,6 +62,7 @@ public interface StudyMapper {
                 .category(study.getCategory())
                 .city(study.getCity())
                 .createdBy(member.getMemberId())
+                .state(study.getState())
                 .createdAt(study.getCreatedAt())
                 .modifiedAt(study.getModifiedAt())
                 .memberResponseDtos(Stream.concat(iamReader.stream(), iamMember.stream()).collect(Collectors.toList()))

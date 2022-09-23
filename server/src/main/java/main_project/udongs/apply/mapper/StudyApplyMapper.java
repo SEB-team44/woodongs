@@ -13,10 +13,4 @@ public interface StudyApplyMapper {
     Study studyApplyPostToStudy(StudyDto.Post requestBody);
 
 
-    Study studyPatchToStudy(StudyDto.Patch requestBody);
-
-    StudyDto.Response studyToStudyResponse(Study study);
-
-    List<StudyDto.Response> studiesToStudyResponse(List<Study> studies);
-
 }

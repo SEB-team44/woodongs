@@ -93,12 +93,12 @@ public class Member {
 
     //내가 속한 스터디(그룹장)
     @Builder.Default
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member")
     private List<Study> studies = new ArrayList<>();
 
     //내가 속한 스터디(멤버)
     @Builder.Default
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member")
     private List<Acceptance> acceptances = new ArrayList<>();
 
     //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
