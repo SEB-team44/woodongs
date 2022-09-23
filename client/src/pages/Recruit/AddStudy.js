@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Navbar from "../Main/Navbar";
-import Checkbox from "@mui/material/Checkbox";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
+// import Checkbox from "@mui/material/Checkbox";
+// import FormGroup from "@mui/material/FormGroup";
+// import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
 
 const AddStudyStyled = styled.div`
@@ -33,61 +33,23 @@ const AddStudyStyled = styled.div`
   textarea {
     resize: none;
   }
+  .innerBox {
+    display: flex;
+    margin-right: 10px;
+  }
+  .checkbox {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+  }
 `;
-const CATEGORY_LIST = [
-  { id: 0, data: "기획 & PO" },
-  { id: 1, data: "디자인 & UX" },
-  { id: 2, data: "프론트엔드" },
-  { id: 3, data: "백엔드" },
-  { id: 4, data: "취업" },
-  { id: 5, data: "어학" },
-  { id: 6, data: "시험 & 고시" },
-  { id: 7, data: "기타" },
-];
 
 const AddStudy = () => {
-  const [checkedList, setCheckedList] = useState([]); //데이터를 넣을 빈배열
-  const onCheckedElement = (checked, item) => {
-    //onChange함수를 사용하여 이벤트 감지, 필요한 값 받아오기
-    if (checked) {
-      setCheckedList([...checkedList]);
-    } else if (!checked) {
-      setCheckedList(checkedList.filter((el) => el !== item));
-    }
-  };
-  // 체크박스 체크 된 부분 어떻게 가져올지..하던부분
-  const [checked,setChecked] = useState(false)
-  // const handleAgree = (event)=>{
-  //   setChecked(event.target.checked)
-  // }
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  // }
-  // const issueList = () => {
-  //   const issue = [...Array(10).keys()];
-  // };
-
-  // const checkHandler = ({ target }) => {
-  //   setChecked(!checked);
-  //   checkedItemHandler(issue.id, target.checked);
-  // };
-
-  const [checkedItems, setCheckedItems] = useState(new Set());
-  const checkedItemHandler = (id, isChecked) => {
-    if (isChecked) {
-      checkedItems.add(id);
-      setCheckedItems(checkedItems);
-    } else if (!isChecked && checkedItems.has(id)) {
-      checkedItems.delete(id);
-      setCheckedItems(checkedItems);
-    }
-  };
   const navigate = useNavigate();
   const [content, setContent] = useState({
     title: "",
     body: "",
   });
-
   const submitButton = () => {
     const access_token = localStorage.getItem("access_token");
     let reqPost = {
@@ -102,11 +64,13 @@ const AddStudy = () => {
         // memberId : id,
         title: content.title,
         body: content.body,
+        category: checkedItems[0],
       }),
     };
     //대한님 59.16.126.210:8080
     //지훈님 14.6.86.98:8080
-    fetch("59.16.126.210:8080/main", reqPost)
+    // fetch(`59.16.126.210:8080/study/${content.memberId}/recruit`, reqPost)
+    fetch(`59.16.126.210:8080/study/5/recruit`, reqPost)
       .then((res) => {
         if (res.ok) {
           // console.log(content.title, content.body);
@@ -125,6 +89,36 @@ const AddStudy = () => {
       [name]: value,
     });
   };
+  const CATEGORY_LIST = [
+    { id: 0, name: "기획 & PO" },
+    { id: 1, name: "디자인 & UX" },
+    { id: 2, name: "프론트엔드" },
+    { id: 3, name: "백엔드" },
+    { id: 4, name: "취업" },
+    { id: 5, name: "어학" },
+    { id: 6, name: "시험 & 고시" },
+    { id: 7, name: "기타" },
+  ];
+  const [isChecked, setIsChecked] = useState(false); //체크여부
+  const [checkedItems, setCheckedItems] = useState(new Set()); //체크된 요소들
+
+  const checkHandler = ({ target }) => {
+    setIsChecked(!isChecked);
+    checkedItemHandler(target.parentNode, target.value, target.checked);
+  };
+  const checkedItemHandler = (box, id, isChecked) => {
+    if (isChecked) {
+      //체크 되었을때
+      checkedItems.add(id); //체크 시 삽입
+      setCheckedItems(checkedItems); //체크 요소 넣어주기
+    } else if (!isChecked && checkedItems.has(id)) {
+      //체크가 안되었고, id가 있을때 (2번클릭시)
+      checkedItems.delete(id); //두번체크 시 삭제
+      setCheckedItems(checkedItems);
+    }
+    return checkedItems;
+  };
+
   return (
     <>
       <AddStudyStyled>
@@ -140,16 +134,18 @@ const AddStudy = () => {
           <h2>*스터디 분야</h2>
           <h4>❗️아래 분야 중 한가지를 선택해주세요.</h4>
           <div className="checkbox">
-            <FormGroup className="form-group">
-              <FormControlLabel control={<Checkbox />} label="기획 & PO" />
-              <FormControlLabel control={<Checkbox />} label="디자인 & UX" />
-              <FormControlLabel control={<Checkbox />} label="프론트엔드" />
-              <FormControlLabel control={<Checkbox />} label="백엔드" />
-              <FormControlLabel control={<Checkbox />} label="취업" />
-              <FormControlLabel control={<Checkbox />} label="어학" />
-              <FormControlLabel control={<Checkbox />} label="시험 & 고시" />
-              <FormControlLabel control={<Checkbox />} label="기타" />
-            </FormGroup>
+            {CATEGORY_LIST.map((item) => (
+              <label key={item.id} className="innerBox">
+                <input
+                  type="checkbox"
+                  value={item.name}
+                  onChange={(e) => checkHandler(e)}
+                />
+                <div>{item.name}</div>
+              </label>
+            ))}
+            {/* {console.log(target.parentNode, target.value, target.checked)}; */}
+            {console.log(checkedItems)}
           </div>
 
           <h2>*모집인원</h2>
