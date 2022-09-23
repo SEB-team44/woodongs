@@ -2,10 +2,17 @@ package main_project.udongs.study.mapper;
 
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
+import main_project.udongs.study.dto.StudyCommentDto;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
+import main_project.udongs.study.entity.StudyComment;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +22,10 @@ import java.util.stream.Stream;
 public interface StudyMapper {
 
     Study studyPostToStudy(StudyDto.Post requestBody);
+
+    StudyComment commentPostToComment(StudyCommentDto.Post requestBody);
+
+    StudyCommentDto.Response commentToCommentResponse(StudyComment studyComment);
 
 
     Study studyPatchToStudy(StudyDto.Patch requestBody);
@@ -54,6 +65,14 @@ public interface StudyMapper {
                         .createdAt(acceptance.getMember().getCreatedAt())
                         .modifiedAt(acceptance.getMember().getModifiedAt())
                         .build()).collect(Collectors.toList());
+
+ /*       List<StudyCommentDto.Response> commentInfo = study.getComments()
+                .stream().map(comment -> StudyCommentDto.Response.builder()
+                        .commentId(comment.getCommentId())
+                        .body(comment.getBody())
+                        .createdBy(member.getMemberId())
+                        .createdAt(LocalDateTime.now())
+                        .build()).collect(Collectors.toList());*/
 
         return StudyDto.Response.builder()
                 .studyId(study.getStudyId())
