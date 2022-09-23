@@ -46,9 +46,9 @@ const AddStudyStyled = styled.div`
 
 const AddStudy = () => {
   const navigate = useNavigate();
+  const [bodyValue, setBodyValue] = useState("");
   const [content, setContent] = useState({
-    title: "",
-    body: "",
+ 
   });
   const submitButton = () => {
     const access_token = localStorage.getItem("access_token");
@@ -65,17 +65,18 @@ const AddStudy = () => {
         title: content.title,
         body: content.body,
         category: checkedItems[0],
+        headCount:0
       }),
     };
     //대한님 59.16.126.210:8080
     //지훈님 14.6.86.98:8080
     // fetch(`59.16.126.210:8080/study/${content.memberId}/recruit`, reqPost)
-    fetch(`59.16.126.210:8080/study/5/recruit`, reqPost)
+    fetch(`http://59.16.126.210:8080/study/recruit`, reqPost)
       .then((res) => {
         if (res.ok) {
           // console.log(content.title, content.body);
           // console.log(res.json());
-          navigate(`/`);
+          navigate(`/main`);
           return res.json();
         }
       })
@@ -83,10 +84,13 @@ const AddStudy = () => {
       .catch((err) => console.log(err));
   };
   const getValue = (e) => {
-    const { name, value } = e.target;
+    // e.preventDefault();
+    const { value } = e.target;
+    console.log(e.target.name);
+    console.log("value" , value)
     setContent({
       ...content,
-      [name]: value,
+      "title" : value,
     });
   };
   const CATEGORY_LIST = [
@@ -129,7 +133,7 @@ const AddStudy = () => {
             type="text"
             placeholder="3~20글자로 적어주세요. 예) 주말 공부 스터디"
             size="100"
-            onChange={getValue}
+            onChange={(e) => getValue(e)}
           />
           <h2>*스터디 분야</h2>
           <h4>❗️아래 분야 중 한가지를 선택해주세요.</h4>
@@ -157,13 +161,15 @@ const AddStudy = () => {
             rows="15"
             cols="97"
             placeholder="내용을 입력해주세요."
-            data=""
+            value={bodyValue}
             onChange={(event) => {
-              const data = event.target.value;
-              this.setContent({
+              let data = event.target.value;
+              setBodyValue(data)
+              setContent({
                 ...content,
-                content: data,
+                "body": bodyValue,
               });
+              console.log(bodyValue);
             }}
           >
             ● 스터디 목표 및 진행방식 [목표] : ( 예: 제이쿼리를 마스터하고자
