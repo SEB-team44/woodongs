@@ -1,6 +1,7 @@
 package main_project.udongs.member.entity;
 
 import lombok.*;
+import main_project.udongs.apply.entity.Acceptance;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
 import main_project.udongs.apply.entity.StudyApply;
@@ -85,14 +86,20 @@ public class Member {
     @NotNull
     private LocalDateTime modifiedAt;
 
+    //스터디 신청 목록
     @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<StudyApply> studyApplies = new ArrayList<>();
 
+    //내가 속한 스터디(그룹장)
     @Builder.Default
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
     private List<Study> studies = new ArrayList<>();
-    
+
+    //내가 속한 스터디(멤버)
+    @Builder.Default
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    private List<Acceptance> acceptances = new ArrayList<>();
 
     //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
     public Member(

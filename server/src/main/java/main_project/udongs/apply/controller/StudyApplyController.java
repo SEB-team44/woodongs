@@ -57,11 +57,11 @@ public class StudyApplyController {
             throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
         }
 
-        if (study.getAcceptanceList().size() == study.getHeadCount()) {
+        if (study.getAcceptances().size() == study.getHeadCount()) {
             throw new BusinessLogicException(ExceptionCode.STUDY_BE_FULL);
         }
 
         StudyApply studyApply = studyApplyService.getStudyApply(applyId);
-        return studyService.accept(study, studyApply);
+        return studyApplyService.accept(study, studyApply.getMember());
     }
 }

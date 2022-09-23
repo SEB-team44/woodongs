@@ -11,6 +11,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class StudyDto {
 
@@ -68,7 +69,7 @@ public class StudyDto {
         private Long createdBy;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private MemberDto.Response memberResponseDto;
+        private List<MemberDto.Response> memberResponseDtos;
 
     }
 }

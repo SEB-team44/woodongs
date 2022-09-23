@@ -7,7 +7,11 @@ import main_project.udongs.study.entity.Study;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface StudyMapper {
@@ -20,7 +24,7 @@ public interface StudyMapper {
     default StudyDto.Response studyToStudyResponse(Study study){
         Member member = study.getMember();
 
-        MemberDto.Response memberResponseDto = MemberDto.Response.builder()
+        List<MemberDto.Response> iamReader = List.of(MemberDto.Response.builder()
                 .memberId(member.getMemberId())
                 .nickName(member.getNickName())
                 .email(member.getEmail())
@@ -29,7 +33,19 @@ public interface StudyMapper {
                 .profileImageUrl(member.getProfileImageUrl())
                 .createdAt(member.getCreatedAt())
                 .modifiedAt(member.getModifiedAt())
-                .build();
+                .build());
+
+        List<MemberDto.Response> iamMember = study.getAcceptances()
+                .stream().map(acceptance -> MemberDto.Response.builder()
+                        .memberId(acceptance.getMember().getMemberId())
+                        .nickName(acceptance.getMember().getNickName())
+                        .email(acceptance.getMember().getEmail())
+                        .phoneNumber(acceptance.getMember().getPhoneNumber())
+                        .city(acceptance.getMember().getCity())
+                        .profileImageUrl(acceptance.getMember().getProfileImageUrl())
+                        .createdAt(acceptance.getMember().getCreatedAt())
+                        .modifiedAt(acceptance.getMember().getModifiedAt())
+                        .build()).collect(Collectors.toList());
 
         return StudyDto.Response.builder()
                 .studyId(study.getStudyId())
@@ -40,7 +56,7 @@ public interface StudyMapper {
                 .createdBy(member.getMemberId())
                 .createdAt(study.getCreatedAt())
                 .modifiedAt(study.getModifiedAt())
-                .memberResponseDto(memberResponseDto)
+                .memberResponseDtos(Stream.concat(iamReader.stream(), iamMember.stream()).collect(Collectors.toList()))
                 .build();
 
 

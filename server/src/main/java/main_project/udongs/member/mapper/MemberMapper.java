@@ -15,6 +15,7 @@ import org.mapstruct.ReportingPolicy;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MemberMapper {
@@ -40,7 +41,7 @@ public interface MemberMapper {
     Member memberPatchToMember(MemberDto.Patch requestBody);
 
     default MemberDto.Response memberToMemberResponse(Member member) {
-        List<StudyDto.Response> studyResponseDtos = member.getStudies()
+        List<StudyDto.Response> iAmReader = member.getStudies()
                 .stream().map(study -> StudyDto.Response.builder()
                         .studyId(study.getStudyId())
                         .title(study.getTitle())
@@ -50,6 +51,19 @@ public interface MemberMapper {
                         .createdBy(member.getMemberId())
                         .createdAt(study.getCreatedAt())
                         .modifiedAt(study.getModifiedAt())
+//                            .memberResponseDto(memberResponseDto)
+                        .build()).collect(Collectors.toList());
+
+        List<StudyDto.Response> iAmMember = member.getAcceptances()
+                .stream().map(acceptance -> StudyDto.Response.builder()
+                        .studyId(acceptance.getStudy().getStudyId())
+                        .title(acceptance.getStudy().getTitle())
+                        .body(acceptance.getStudy().getBody())
+                        .category(acceptance.getStudy().getCategory())
+                        .city(acceptance.getStudy().getCity())
+                        .createdBy(acceptance.getStudy().getMember().getMemberId())
+                        .createdAt(acceptance.getStudy().getCreatedAt())
+                        .modifiedAt(acceptance.getStudy().getModifiedAt())
 //                            .memberResponseDto(memberResponseDto)
                         .build()).collect(Collectors.toList());
 
@@ -67,7 +81,8 @@ public interface MemberMapper {
                 .longitude(member.getLongitude())
                 .createdAt(member.getCreatedAt())
                 .modifiedAt(member.getModifiedAt())
-                .studyResponseDtos(studyResponseDtos)
+                .studyResponseDtos(Stream.concat(iAmMember.stream(), iAmReader.stream())
+                        .collect(Collectors.toList()))
                 .build();
     }
 

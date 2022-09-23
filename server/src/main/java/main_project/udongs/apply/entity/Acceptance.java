@@ -11,9 +11,10 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class Acceptance {
-    public Acceptance(Study study, StudyApply studyApply) {
+
+    public Acceptance(Study study, Member member) {
         this.study = study;
-        this.studyApply = studyApply;
+        this.member = member;
     }
 
     @Id
@@ -24,8 +25,8 @@ public class Acceptance {
     @JoinColumn(name = "studyId")
     private Study study;
 
-    @OneToOne
-    @JoinColumn(name = "studyApplyId")
-    private StudyApply studyApply;
+    @ManyToOne
+    @JoinColumn(name = "memberId")
+    private Member member;
 
 }

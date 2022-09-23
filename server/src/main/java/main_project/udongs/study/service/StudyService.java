@@ -27,8 +27,6 @@ import java.util.Optional;
 public class StudyService {
 
     private final StudyRepository studyRepository;
-    private final MemberRepository memberRepository;
-    private final AcceptanceRepository acceptanceRepository;
 
     //스터디 등록
     @Transactional
@@ -88,8 +86,5 @@ public class StudyService {
         return findStudy;
     }
 
-    public ResponseEntity accept(Study study, StudyApply studyApply) {
-        study.getAcceptanceList().add(acceptanceRepository.save(new Acceptance(study, studyApply)));
-        return ResponseEntity.ok("승인했습니다");
-    }
+
 }

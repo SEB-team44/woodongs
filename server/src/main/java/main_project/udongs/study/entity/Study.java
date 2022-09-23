@@ -61,7 +61,7 @@ public class Study {
 
     //수락한 스터디 신청 리스트
     @OneToMany(mappedBy = "study")
-    List<Acceptance> acceptanceList = new ArrayList<>();
+    List<Acceptance> acceptances = new ArrayList<>();
 
     //스터디 목표 모집 인원
     private Long headCount;
