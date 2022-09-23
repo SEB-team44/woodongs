@@ -1,6 +1,9 @@
-import React from "react";
+import { React, useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { UserLogin } from "../../UserContext";
+import Alert from "@mui/material/Alert";
+import { UserInfo } from "../../UserContext";
 
 const StyledNav = styled.div`
   .nav-container {
@@ -12,15 +15,22 @@ const StyledNav = styled.div`
     height: 50.5px;
     border: black solid 1px;
     border-radius: 3%;
+    background-color: white;
   }
 
-  .notice-box {
+  .notice-box1 {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
     padding-left: 0px;
     width: 60%;
+  }
+  .notice-box2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 0px;
+    width: 20%;
   }
   ol {
     margin: 0px;
@@ -38,8 +48,7 @@ const StyledNav = styled.div`
     height: 63.5px;
   }
 
-
-  .location-container{
+  .location-container {
     width: 25%;
   }
   .location-box {
@@ -64,28 +73,51 @@ const StyledNav = styled.div`
 `;
 
 const Notice = () => {
+  const {userInfo, setUserInfo} = useContext(UserInfo);
+  const { isLogin } = useContext(UserLogin);
+
   return (
     <>
       <StyledNav>
         <nav className="nav-container">
-          <section className="notice-box">
-            <a>공지사항 입니다!!</a>
-            <div className="notice-btn">
+          <section className="notice-box-1">
+            <div className="notice-text">
+              <Alert severity="info">
+                공지사항 입니다!!공지사항입니다! 공지사항 봐주세요! 공지사항
+                전체게시판이랑 연결되야 될 듯?
+              </Alert>
+              {/* <div className="notice-btn">
               <button>Notice</button>
+            </div> */}
             </div>
-            <div>
-              <ol className="profile-box">
-                <li>13 Apr, 2022</li>
-                <li>
-                <Link to="/MyPage">
-                    <img
-                      className="avatarimg"
-                      src={require("../../../src/img/avatar.png")}
-                    />
-                  </Link>
-                </li>
-                <li>kim-young-ha</li>
-              </ol>
+          </section>
+          <section className="profile-box">
+            <div className="avatar-text">
+              {isLogin ? (
+                <ol className="profile-box">
+                  <li>13 Apr, 2022</li>
+                  <li>
+                    <Link to="/MyPage">
+                      <img
+                        className="avatarimg"
+                        src={
+                          userInfo.profileImageUrl
+                            ? userInfo.profileImageUrl:
+                             require("../../../src/img/avatar.png")
+                        }
+                      />
+                    </Link>
+                  </li>
+                  <li>{userInfo.nickName}</li>
+                </ol>
+              ) : (
+                <ol className="profile-box">
+                  <li>13 Apr, 2022</li>
+                  <li>
+                    <Link to="/Login">로그인 후 이용해 주세요</Link>
+                  </li>
+                </ol>
+              )}
             </div>
           </section>
 
@@ -95,7 +127,7 @@ const Notice = () => {
                 <p>현재 위치</p>
               </div>
               <div className="saved-location">
-                <p>서울특별시 서대문구</p>
+                {isLogin ? <p>{userInfo.city}</p> : <p>전국</p>}
               </div>
               <button className="my-location-btn">밑</button>
             </div>

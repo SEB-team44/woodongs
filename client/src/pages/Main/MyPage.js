@@ -9,8 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "antd";
 
-import { useState, useRef } from "react";
-
+import { useState, useRef, useContext } from "react";
+import { UserInfo, UserLogin } from "../../UserContext";
 
 const MyPageStyled = styled.div`
   .mypage_content {
@@ -32,6 +32,8 @@ const MyPageStyled = styled.div`
 `;
 
 const MyPage = () => {
+  const { userInfo, setUserInfo } = useContext(UserInfo);
+  const { setIslogin } = useContext(UserLogin);
   const [file, setFile] = useState();
   const [Image, setImage] = useState("../src/img/avatar.png");
   const fileInput = useRef(null);
@@ -40,8 +42,11 @@ const MyPage = () => {
       setFile(e.target.files[0]);
     } else {
       //업로드 취소할 시
-      setImage("../src/img/avatar.png");
-      return;
+      if (userInfo.profileImageUrl) {
+       return userInfo.profileImageUrl;
+      } else {
+        return require("../../../src/img/avatar.png");
+      }
     }
     //화면에 프로필 사진 표시
     const reader = new FileReader();
@@ -51,6 +56,12 @@ const MyPage = () => {
       }
     };
     reader.readAsDataURL(e.target.files[0]);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setIslogin(false);
+    setUserInfo({});
   };
 
   return (
@@ -72,7 +83,11 @@ const MyPage = () => {
                 />
                 <img
                   className="avatarimg"
-                  src={require("../../../src/img/avatar.png")}
+                  src={
+                    userInfo.profileImageUrl
+                      ? userInfo.profileImageUrl
+                      : require("../../../src/img/avatar.png")
+                  }
                   onClick={() => {
                     fileInput.current.click();
                   }}
@@ -96,20 +111,24 @@ const MyPage = () => {
                   </Button>
                 </div>
               </div>
-              <div className="name">최진영</div>
+              <div className="name">{userInfo.nickName}</div>
             </div>
             <div className="mypage_downcontent">
               User info
               <div className="user_info">
                 <div className="job">직무 : 웹 프론트엔드</div>
-                <div className="career">경력 : N년차</div>
+                <div className="career">경력 : 0년차</div>
                 <div className="introduce">소개 : 열심히하겠습니다!</div>
               </div>
             </div>
             <Link to="/Login">
-              <Button className="submit-button" variant="contained">
-                LogOut
-              </Button>
+            <Button
+    onClick={() => handleLogout()}
+    className="submit-button"
+    variant="contained"
+  >
+    LogOut
+  </Button>
             </Link>
           </div>
         </div>
