@@ -47,9 +47,9 @@ const AddStudyStyled = styled.div`
 const AddStudy = () => {
   const navigate = useNavigate();
   const [bodyValue, setBodyValue] = useState("");
-  const [content, setContent] = useState({
- 
-  });
+  const [headCountValue, setHeadCountValue] = useState("");
+  const [categoryValue, setCategoryValue] = useState("");
+  const [content, setContent] = useState({});
   const submitButton = () => {
     const access_token = localStorage.getItem("access_token");
     let reqPost = {
@@ -61,21 +61,21 @@ const AddStudy = () => {
         Authorization: access_token,
       },
       body: JSON.stringify({
-        // memberId : id,
         title: content.title,
         body: content.body,
-        category: checkedItems[0],
-        headCount:0
+        category: content.category,
+        headCount: content.headCount,
       }),
     };
     //대한님 59.16.126.210:8080
     //지훈님 14.6.86.98:8080
-    // fetch(`59.16.126.210:8080/study/${content.memberId}/recruit`, reqPost)
+    // fetch(`http://59.16.126.210:8080/study/${content.memberId}/recruit`, reqPost)
     fetch(`http://59.16.126.210:8080/study/recruit`, reqPost)
       .then((res) => {
         if (res.ok) {
           // console.log(content.title, content.body);
           // console.log(res.json());
+          alert("새로운 스터디가 성공적으로 등독되었습니다 :D");
           navigate(`/main`);
           return res.json();
         }
@@ -87,10 +87,19 @@ const AddStudy = () => {
     // e.preventDefault();
     const { value } = e.target;
     console.log(e.target.name);
-    console.log("value" , value)
+    console.log("value", value);
     setContent({
       ...content,
-      "title" : value,
+      title: value,
+    });
+  };
+  const getHeadValue = (e) => {
+    const { value } = e.target;
+    console.log(e.target.headCount);
+    console.log("headcount", value);
+    setContent({
+      ...content,
+      headCount: value,
     });
   };
   const CATEGORY_LIST = [
@@ -106,9 +115,16 @@ const AddStudy = () => {
   const [isChecked, setIsChecked] = useState(false); //체크여부
   const [checkedItems, setCheckedItems] = useState(new Set()); //체크된 요소들
 
-  const checkHandler = ({ target }) => {
-    setIsChecked(!isChecked);
-    checkedItemHandler(target.parentNode, target.value, target.checked);
+  const checkHandler = (e) => {
+    // setIsChecked(!isChecked);
+    // checkedItemHandler(target.parentNode, target.value, target.checked);
+    const { value } = e.target;
+    console.log(e.target.category);
+    console.log("category", value);
+    setContent({
+      ...content,
+      category: value,
+    });
   };
   const checkedItemHandler = (box, id, isChecked) => {
     if (isChecked) {
@@ -143,7 +159,17 @@ const AddStudy = () => {
                 <input
                   type="checkbox"
                   value={item.name}
-                  onChange={(e) => checkHandler(e)}
+                  onChange={
+                    (e) => checkHandler(e)
+                    // ,(event) => {
+                    //   let category = event.target.value;
+                    //   setCategoryValue(category);
+                    //   setContent({
+                    //     category: categoryValue,
+                    //   });
+                    //   console.log(categoryValue);
+                    // }
+                  }
                 />
                 <div>{item.name}</div>
               </label>
@@ -154,7 +180,12 @@ const AddStudy = () => {
 
           <h2>*모집인원</h2>
           <h4>❗️3~4명을 추천합니다. (최대 9명, 추후변경가능)</h4>
-          <input type="text" placeholder="숫자만 적어주세요. " size="20" />
+          <input
+            type="text"
+            placeholder="숫자만 적어주세요. "
+            size="20"
+            onChange={(e) => getHeadValue(e)}
+          />
           <h2>*스터디 설명</h2>
           <h4>❗️스터디 참여조건에 대해서 기재해주세요</h4>
           <textarea
@@ -164,10 +195,10 @@ const AddStudy = () => {
             value={bodyValue}
             onChange={(event) => {
               let data = event.target.value;
-              setBodyValue(data)
+              setBodyValue(data);
               setContent({
                 ...content,
-                "body": bodyValue,
+                body: bodyValue,
               });
               console.log(bodyValue);
             }}

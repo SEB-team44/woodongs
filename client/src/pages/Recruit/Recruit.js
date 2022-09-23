@@ -103,7 +103,8 @@ const Recruit = () => {
   const [keyword, setKeyword] = useState([]);
   const [comment, setComment] = useState([]);
   const [inputComment, setInputComment] = useState("");
-  const [getcondition, setgetcontition] = useState(true);
+  const [getcondition, setgetcondition] = useState(true);
+  const [getconditions, setgetconditions] = useState(true);
 
   //카드 리스트와 댓글 리스트를 첫 랜더링 때 받아오자
   useEffect(() => {
@@ -153,10 +154,12 @@ const Recruit = () => {
         content: inputComment,
       }),
     };
+    //`http://59.16.126.210:8080/study/${study-id}/comment`
+    //http://localhost:3001/comment
     fetch("http://localhost:3001/comment", reqPost).then((res) => res.json());
 
     //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
-    setgetcontition(!getcondition);
+    setgetcondition(!getcondition);
     setInputComment("");
   };
 
@@ -176,7 +179,15 @@ const Recruit = () => {
       method: "DELETE",
     });
 
-    setgetcontition(!getcondition);
+    setgetcondition(!getcondition);
+  };
+
+  //게시물 삭제 버튼 클릭 시, 들어온 id값에 맞는 부분 삭제 요청 보냄
+  const handleDeleteRecruit = (id) => {
+    fetch("http://localhost:3001/card/" + `${id}`, {
+      method: "DELETE",
+    });
+    setgetconditions(!getconditions);
   };
   return (
     <>
@@ -197,7 +208,10 @@ const Recruit = () => {
                   삭제는 리스트에서 삭제하면되나 */}
                   <div className="button-container">
                     <TiTrash className="delete-btn" />
-                    <TiPencil className="update-btn" />
+                    <TiPencil
+                      className="update-btn"
+                      // onClick={() => handleDeleteRecruit(el.id)}
+                    />
                   </div>
                   <h2>✔️ 모집현황</h2>
                   <p>프론트 엔드 스터디원 0/3</p>
