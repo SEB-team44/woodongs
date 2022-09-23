@@ -11,19 +11,19 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useState, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import queryString from "query-string";
 
 // import GoogleButton from "./GoogleButton";
 import { FacebookLoginButton } from "react-social-login-buttons";
-import { GoogleLoginButton } from "react-social-login-buttons";
 import KakaoButton from "react-kakao-button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as Links } from "react-router-dom";
 import { UserLogin } from "../../UserContext";
-import { Alert } from "antd";
-//
+import { UserInfo } from "../../UserContext";
+
+
+
 function Copyright(props) {
   return (
     <Typography
@@ -41,13 +41,6 @@ function Copyright(props) {
     </Typography>
   );
 }
-//위도, 경도 받아오는거//
-navigator.geolocation.getCurrentPosition(function (pos) {
-  console.log(pos);
-  let latitude = pos.coords.latitude;
-  let longitude = pos.coords.longitude;
-  alert("현재 위치는 : " + latitude + ", " + longitude);
-});
 
 // 카카오 인증 url
 const KAKAOPATH =
@@ -58,18 +51,37 @@ const theme = createTheme();
 export default function Login() {
   let navigate = useNavigate();
   const { setIslogin } = useContext(UserLogin);
-  const [latitude, setlatitude] = useState(null);
-  const [longitude, setlongitude] = useState(null);
+  const { setUserInfo } = useContext(UserInfo);
+  const [isLoading, setIsLoading] = useState(false);
+  //처음 랜더링 되면 위도, 경도를 받아옴//
+  useEffect(() => {
+    const setget = () => {
+      let latitude;
+      let longitude;
+      setIsLoading(true);
+      getLocation(latitude, longitude);
+    };
 
-  //위도, 경도 받아오는거//
-  navigator.geolocation.getCurrentPosition(function (pos) {
-    console.log(pos);
-    let latitude = pos.coords.latitude;
-    setlatitude(latitude);
-    let longitude = pos.coords.longitude;
-    setlongitude(longitude);
-    alert("현재 위치는 : " + latitude + ", " + longitude);
-  });
+    function getLocation(latitude, longitude) {
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        latitude = pos.coords.latitude;
+        longitude = pos.coords.longitude;
+        if (typeof latitude === typeof 1 && typeof longitude === typeof 1) {
+          alert("현재 위치는 : " + latitude + "," + longitude);
+        }
+        setLocation(latitude, longitude);
+        setIsLoading(false);
+      });
+    }
+    function setLocation(latitude, longitude) {
+      if (latitude && longitude) {
+        localStorage.setItem("latitude", `${latitude}`);
+        localStorage.setItem("longitude", `${longitude}`);
+      }
+    }
+
+    setget();
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -85,7 +97,6 @@ export default function Login() {
       body: JSON.stringify({
         email: data.get("email"),
         password: data.get("password"),
-        // phoneNumber: data.get("PhoneNumber"),
       }),
     };
 
@@ -101,17 +112,47 @@ export default function Login() {
         localStorage.setItem("access_token", response.body.accessToken);
         localStorage.setItem("refresh_token", response.body.refreshToken);
         const a_token = localStorage.getItem("access_token");
-        const b_token = localStorage.getItem("refresh_token");
-        let tokens = [a_token, b_token];
+        const r_token = localStorage.getItem("refresh_token");
+        let tokens = [a_token, r_token];
         return tokens;
       })
       .then((tokens) => {
         if (!tokens[0] || !tokens[1]) {
-          throw Error("could not fetch the data for that resource");
+          throw Error("로그인 실패");
         } else {
           if (tokens[0] !== null && tokens[1] !== null) {
-            navigate("/main");
-            setIslogin(true);
+            reqOAuthPost.headers["Authorization"] = tokens[0];
+            reqOAuthPost.body = JSON.stringify({
+              latitude: localStorage.getItem("latitude"),
+              longitude: localStorage.getItem("longitude"),
+            });
+            fetch("http://59.16.126.210:8080/member/locate", reqOAuthPost)
+              .then((res) => console.log(res.json()))
+              .then((res) => {
+                fetch("http://59.16.126.210:8080/member/me", {
+                  headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    withCredentials: true,
+                    "Access-Control-Allow-Origin": "*",
+                    Authorization: tokens[0],
+                  },
+                })
+                  .then((res) => res.json())
+                  .then((res) => {
+                    console.log("로컬로그인정보 ", res);
+                    setUserInfo({ ...res });
+                  })
+                  .then((res) => {
+                    alert("로그인 성공");
+                    setIslogin(true);
+                    return navigate("/main");
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                    alert("로그인 실패");
+                  });
+              });
           }
         }
       })
@@ -127,6 +168,7 @@ export default function Login() {
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+
         <Box
           sx={{
             marginTop: 8,
@@ -172,14 +214,18 @@ export default function Login() {
               label="Remember me"
             />
             {/* <Links to="/main"> */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Login
-            </Button>
+            {isLoading ? (
+              <div className = "login-loading">Loading.......</div>
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Login
+              </Button>
+            )}
             {/* </Links> */}
             <Grid container>
               <Grid item xs>
@@ -193,38 +239,43 @@ export default function Login() {
                 </Link>
               </Grid>
             </Grid>
-            <div className="social_login">
-              <FacebookLoginButton onClick={() => alert("Hello")} />
+            {isLoading ? (
+              <div className = "login-loading">Loading......</div>
+            ) : (
+              <div className="social_login">
+                <FacebookLoginButton onClick={() => alert("Hello")} />
 
-              {/* <GoogleButton/> */}
-              {/* onClick={() => handleKakao()} */}
-              <a className="btn btn-block social-btn google" href={KAKAOPATH}>
-                <KakaoButton />
-              </a>
-              <Links to="/main">
-                {" "}
-                <button
-                  onClick={() => {
-                    setIslogin(true);
-                  }}
-                >
-                  임시로그인버튼
-                </button>
-              </Links>
-              <Links to="/main">
-                {" "}
-                <button
-                  onClick={() => {
-                    localStorage.clear();
-                  }}
-                >
+                {/* <GoogleButton/> */}
+                {/* onClick={() => handleKakao()} */}
+                <a className="btn btn-block social-btn kakao" href={KAKAOPATH}>
+                  <KakaoButton sx={{ mt: 8, mb: 4 }} />
+                </a>
+                <Links to="/main">
                   {" "}
-                  로그인 안하고 메인가기
-                </button>
-              </Links>
-            </div>
+                  <button
+                    onClick={() => {
+                      setIslogin(true);
+                    }}
+                  >
+                    임시로그인버튼
+                  </button>
+                </Links>
+                <Links to="/main">
+                  {" "}
+                  <button
+                    onClick={() => {
+                      localStorage.clear();
+                    }}
+                  >
+                    {" "}
+                    로그인 안하고 메인가기
+                  </button>
+                </Links>
+              </div>
+            )}
           </Box>
         </Box>
+
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
