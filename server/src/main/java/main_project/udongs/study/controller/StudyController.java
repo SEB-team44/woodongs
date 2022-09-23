@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.apply.service.StudyApplyService;
-import main_project.udongs.exception.BusinessLogicException;
-import main_project.udongs.exception.ExceptionCode;
 
 import main_project.udongs.globaldto.MultiResponseDto;
 
@@ -29,6 +26,7 @@ import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
 import main_project.udongs.study.entity.StudyComment;
 import main_project.udongs.study.mapper.StudyMapper;
+import main_project.udongs.study.repository.StudyRepository;
 import main_project.udongs.study.service.StudyService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,12 +35,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -55,6 +52,7 @@ public class StudyController {
     private final StudyApplyService studyApplyService;
     private final StudyMapper mapper;
     private final MemberService memberService;
+    private final StudyRepository studyRepository;
 
     @Operation(summary = "스터디 모집 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
@@ -140,7 +138,8 @@ public class StudyController {
         StudyComment comment = mapper.commentPostToComment(studyCommentDto);
         Member member = userPrincipal.getMember();
 
-        StudyComment savedComment = studyService.createStudyComment(comment, member);
+        StudyComment savedComment = studyService.createStudyComment(comment, member, studyId);
+
         StudyCommentDto.Response response = mapper.commentToCommentResponse(savedComment);
 
         return new ResponseEntity<>(response,HttpStatus.OK);

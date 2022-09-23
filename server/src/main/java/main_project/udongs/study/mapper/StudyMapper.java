@@ -66,13 +66,13 @@ public interface StudyMapper {
                         .modifiedAt(acceptance.getMember().getModifiedAt())
                         .build()).collect(Collectors.toList());
 
- /*       List<StudyCommentDto.Response> commentInfo = study.getComments()
+           List<StudyCommentDto.Response> commentInfo = study.getComments()
                 .stream().map(comment -> StudyCommentDto.Response.builder()
                         .commentId(comment.getCommentId())
                         .body(comment.getBody())
-                        .createdBy(member.getMemberId())
+                        .nickName(member.getNickName())
                         .createdAt(LocalDateTime.now())
-                        .build()).collect(Collectors.toList());*/
+                        .build()).collect(Collectors.toList());
 
         return StudyDto.Response.builder()
                 .studyId(study.getStudyId())
@@ -84,6 +84,7 @@ public interface StudyMapper {
                 .state(study.getState())
                 .createdAt(study.getCreatedAt())
                 .modifiedAt(study.getModifiedAt())
+                .commentResponseDtos(new ArrayList<>(commentInfo))
                 .memberResponseDtos(Stream.concat(iamReader.stream(), iamMember.stream()).collect(Collectors.toList()))
                 .build();
 

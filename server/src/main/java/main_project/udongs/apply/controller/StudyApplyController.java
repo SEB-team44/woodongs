@@ -14,6 +14,7 @@ import main_project.udongs.apply.mapper.StudyApplyMapper;
 import main_project.udongs.apply.service.StudyApplyService;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
+import main_project.udongs.member.entity.Member;
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
@@ -91,7 +92,8 @@ public class StudyApplyController {
         // 스터디 모집인원을 다 구했으면 마감 처리
         if (study.getAcceptances().size() == study.getHeadCount()) {
             study.setState(Study.State.Closed);
-            studyService.createStudy(study);
+
+            studyService.createStudy(study, userPrincipal.getMember());
         }
 
         return ResponseEntity.ok("승인했습니다");
