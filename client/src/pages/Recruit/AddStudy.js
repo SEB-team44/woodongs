@@ -70,7 +70,8 @@ const AddStudy = () => {
     //대한님 59.16.126.210:8080
     //지훈님 14.6.86.98:8080
     // fetch(`http://59.16.126.210:8080/study/${content.memberId}/recruit`, reqPost)
-    fetch(`http://59.16.126.210:8080/study/recruit`, reqPost)
+    // fetch(`http://59.16.126.210:8080/study/recruit`, reqPost)
+    fetch(`http://localhost:3001/card`, reqPost)
       .then((res) => {
         if (res.ok) {
           // console.log(content.title, content.body);
