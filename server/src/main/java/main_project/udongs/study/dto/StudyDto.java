@@ -71,6 +71,7 @@ public class StudyDto {
         private Study.State state;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
+        private List<StudyCommentDto.Response> commentResponseDtos;
         private List<MemberDto.Response> memberResponseDtos;
 
     }

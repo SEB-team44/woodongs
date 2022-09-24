@@ -2,10 +2,17 @@ package main_project.udongs.study.mapper;
 
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
+import main_project.udongs.study.dto.StudyCommentDto;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
+import main_project.udongs.study.entity.StudyComment;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +22,18 @@ import java.util.stream.Stream;
 public interface StudyMapper {
 
     Study studyPostToStudy(StudyDto.Post requestBody);
+
+    StudyComment commentPostToComment(StudyCommentDto.Post requestBody);
+
+    default StudyCommentDto.Response commentToCommentResponse(StudyComment studyComment){
+
+        return StudyCommentDto.Response.builder()
+                .commentId(studyComment.getCommentId())
+                .nickName(studyComment.getCreatedBy())
+                .body(studyComment.getBody())
+                .createdAt(studyComment.getCreatedAt())
+                .build();
+    }
 
 
     Study studyPatchToStudy(StudyDto.Patch requestBody);
@@ -55,6 +74,14 @@ public interface StudyMapper {
                         .modifiedAt(acceptance.getMember().getModifiedAt())
                         .build()).collect(Collectors.toList());
 
+           List<StudyCommentDto.Response> commentInfo = study.getComments()
+                .stream().map(comment -> StudyCommentDto.Response.builder()
+                        .commentId(comment.getCommentId())
+                        .body(comment.getBody())
+                        .nickName(comment.getCreatedBy())
+                        .createdAt(LocalDateTime.now())
+                        .build()).collect(Collectors.toList());
+
         return StudyDto.Response.builder()
                 .studyId(study.getStudyId())
                 .title(study.getTitle())
@@ -65,6 +92,7 @@ public interface StudyMapper {
                 .state(study.getState())
                 .createdAt(study.getCreatedAt())
                 .modifiedAt(study.getModifiedAt())
+                .commentResponseDtos(new ArrayList<>(commentInfo))
                 .memberResponseDtos(Stream.concat(iamReader.stream(), iamMember.stream()).collect(Collectors.toList()))
                 .build();
 

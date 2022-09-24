@@ -1,25 +1,20 @@
 package main_project.udongs.study.service;
 
 import lombok.AllArgsConstructor;
-import main_project.udongs.apply.entity.Acceptance;
-import main_project.udongs.apply.entity.StudyApply;
-import main_project.udongs.apply.repository.AcceptanceRepository;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
-import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
-import main_project.udongs.member.repository.MemberRepository;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
+import main_project.udongs.study.entity.StudyComment;
+import main_project.udongs.study.repository.StudyCommentRepository;
 import main_project.udongs.study.repository.StudyRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,11 +22,16 @@ import java.util.Optional;
 public class StudyService {
 
     private final StudyRepository studyRepository;
+    private final StudyCommentRepository commentRepository;
 
     //스터디 등록
     @Transactional
-    public Study createStudy(Study study) {
+    public Study createStudy(Study study, Member member) {
 
+        study.setCreatedAt(LocalDateTime.now());
+        study.setCity(member.getCity());
+        study.setMember(member);
+        study.setCreatedBy(member.getMemberId());
         return studyRepository.save(study);
     }
 
@@ -73,6 +73,23 @@ public class StudyService {
         Study findStudy = findVerifiedStudy(studyId);
         studyRepository.delete(findStudy);
     }
+
+
+    //스터디 모집글 질문 작성
+    @Transactional
+    public StudyComment createStudyComment(StudyComment studyComment, Member member, Long studyId) {
+
+        studyComment.setCreatedAt(LocalDateTime.now());
+        studyComment.setMember(member);
+        studyComment.setCreatedBy(member.getNickName());
+
+
+        Study study = studyRepository.findById(studyId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.STUDY_NOT_FOUND));
+        studyComment.setStudy(study);
+
+        return commentRepository.save(studyComment);
+    }
+
 
 
     // 스터디가 존재하는지 검증 처리
