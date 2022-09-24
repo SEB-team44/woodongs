@@ -25,7 +25,15 @@ public interface StudyMapper {
 
     StudyComment commentPostToComment(StudyCommentDto.Post requestBody);
 
-    StudyCommentDto.Response commentToCommentResponse(StudyComment studyComment);
+    default StudyCommentDto.Response commentToCommentResponse(StudyComment studyComment){
+
+        return StudyCommentDto.Response.builder()
+                .commentId(studyComment.getCommentId())
+                .nickName(studyComment.getCreatedBy())
+                .body(studyComment.getBody())
+                .createdAt(studyComment.getCreatedAt())
+                .build();
+    }
 
 
     Study studyPatchToStudy(StudyDto.Patch requestBody);
@@ -70,7 +78,7 @@ public interface StudyMapper {
                 .stream().map(comment -> StudyCommentDto.Response.builder()
                         .commentId(comment.getCommentId())
                         .body(comment.getBody())
-                        .nickName(member.getNickName())
+                        .nickName(comment.getCreatedBy())
                         .createdAt(LocalDateTime.now())
                         .build()).collect(Collectors.toList());
 
