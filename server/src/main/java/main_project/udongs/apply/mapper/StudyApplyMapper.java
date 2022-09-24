@@ -1,5 +1,8 @@
 package main_project.udongs.apply.mapper;
 
+import main_project.udongs.apply.dto.StudyApplyResponseDto;
+import main_project.udongs.apply.entity.StudyApply;
+import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
 import org.mapstruct.Mapper;
@@ -12,5 +15,8 @@ public interface StudyApplyMapper {
 
     Study studyApplyPostToStudy(StudyDto.Post requestBody);
 
+//    default StudyApplyResponseDto StudyApplyToStudyApplyResponseDto(StudyApply studyApply) {
+//        MemberDto.Response.builder()
+//    }
 
 }

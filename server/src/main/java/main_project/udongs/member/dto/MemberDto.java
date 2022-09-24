@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import main_project.udongs.member.entity.Profile;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
 import main_project.udongs.study.dto.StudyDto;
@@ -86,6 +87,7 @@ public class MemberDto {
         private Long memberId;
         private String nickName;
         private String email;
+        private Profile profile;
         private String phoneNumber;
         private ProviderType providerType;
         private String emailVerifiedYn;

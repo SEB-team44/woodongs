@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import main_project.udongs.apply.dto.StudyApplyResponseDto;
 import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.apply.mapper.StudyApplyMapper;
 import main_project.udongs.apply.service.StudyApplyService;
@@ -33,6 +34,7 @@ public class StudyApplyController {
 
     private final StudyApplyService studyApplyService;
     private final StudyService studyService;
+    private final StudyApplyMapper mapper;
 
     @Operation(summary = "스터디 신청")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.class))))})
@@ -99,7 +101,7 @@ public class StudyApplyController {
 
     @Operation(summary = "스터디 신청 거절")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
-    @PostMapping("/{apply-id}/REFUSE")
+    @PostMapping("/{apply-id}/refuse")
     public ResponseEntity rejcetApply(@PathVariable("apply-id") Long applyId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("REFUSE APPLICATION");
         Study study = studyApplyService.getStudyApply(applyId).getStudy();
@@ -115,4 +117,19 @@ public class StudyApplyController {
 
         return ResponseEntity.ok("거절했습니다");
     }
+
+//    @Operation(summary = "스터디 신청 조회")
+//    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
+//    @GetMapping("/{apply-id}")
+//    public ResponseEntity getStudyApply(@PathVariable("apply-id") Long applyId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+//        StudyApply studyApply = studyApplyService.getStudyApply(applyId);
+//
+//        // 스터디 그룹장 or 신청자만 조회 가능
+//        if (userPrincipal.getMember().getMemberId() != studyApply.getStudy().getMember().getMemberId() ||
+//        userPrincipal.getMember().getMemberId() != studyApply.getMember().getMemberId()) {
+//            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+//        }
+//
+//        return ResponseEntity.ok(mapper.StudyApplyToStudyApplyResponseDto(studyApply));
+//    }
 }

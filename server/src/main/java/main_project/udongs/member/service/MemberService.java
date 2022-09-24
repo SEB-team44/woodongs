@@ -5,6 +5,7 @@ import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
+import main_project.udongs.member.entity.Profile;
 import main_project.udongs.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +60,26 @@ public class MemberService {
                 .ifPresent(member::setLatitude);
         Optional.ofNullable(location.getCity())
                 .ifPresent(member::setCity);
+
+        return memberRepository.save(member);
+    }
+
+    @Transactional
+    public Member updateProfile(Member member, Profile profile) {
+
+        Profile memberProfile = member.getProfile();
+
+        memberProfile.setJob(profile.getJob());
+        memberProfile.setCareer(profile.getCareer());
+        memberProfile.setIntroduction(profile.getIntroduction());
+
+        // 이름, 폰번호, 비번 만 변경
+//        Optional.ofNullable(profile.getJob())
+//                .ifPresent(memberProfile::setJob);
+//        Optional.ofNullable(profile.getCareer())
+//                .ifPresent(memberProfile::setCareer);
+//        Optional.ofNullable(profile.getIntroduction())
+//                .ifPresent(memberProfile::setIntroduction);
 
         return memberRepository.save(member);
     }

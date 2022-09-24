@@ -5,6 +5,7 @@ package main_project.udongs.member.mapper;
 
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
+import main_project.udongs.member.entity.Profile;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
 import main_project.udongs.study.dto.StudyDto;
@@ -27,6 +28,7 @@ public interface MemberMapper {
                 .phoneNumber(requestBody.getPhoneNumber())
                 .password(requestBody.getPassword())
 //                .city(requestBody.getCity())
+                .profile(new Profile("","",""))
                 .emailVerifiedYn("Y")
                 .profileImageUrl(requestBody.getProfileImageUrl())
                 .providerType(ProviderType.LOCAL)
@@ -74,6 +76,7 @@ public interface MemberMapper {
                 .email(member.getEmail())
                 .nickName(member.getNickName())
                 .phoneNumber(member.getPhoneNumber())
+                .profile(member.getProfile())
                 .city(member.getCity())
                 .emailVerifiedYn(member.getEmailVerifiedYn())
                 .profileImageUrl(member.getProfileImageUrl())

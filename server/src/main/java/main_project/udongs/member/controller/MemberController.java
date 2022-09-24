@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import main_project.udongs.locationservice.LocationService;
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
+import main_project.udongs.member.entity.Profile;
 import main_project.udongs.member.mapper.MemberMapper;
 import main_project.udongs.member.service.MemberService;
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
@@ -151,6 +152,28 @@ public class MemberController {
         memberService.deleteMember(userPrincipal.getMember().getMemberId());
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Operation(summary = "마이페이지 조회")
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
+    @GetMapping("/mypage")
+    public ResponseEntity getMyPage(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        log.debug("get profile");
+
+        return ResponseEntity.ok(userPrincipal.getMember().getProfile());
+    }
+
+    @Operation(summary = "마이페이지 수정")
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
+    @PatchMapping("/mypage")
+    public ResponseEntity patchMyPage(@RequestBody Profile profile, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        log.debug("patch profile");
+        if (profile != null) {
+            System.out.println("profile : " + profile.toString());
+        }
+        memberService.updateProfile(userPrincipal.getMember(), profile);
+
+        return ResponseEntity.ok("마이페이지 수정 완료");
     }
 }
 

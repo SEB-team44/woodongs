@@ -11,7 +11,9 @@ import main_project.udongs.member.entity.Member;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -76,6 +78,10 @@ public class Study {
         Open,
         Closed
     }
+
+//    public List<StudyApply> getAcceptances() {
+//        return this.studyApplies.stream().filter(studyApplies -> studyApplies.getState() == StudyApply.State.ACCEPT).collect(Collectors.toList());
+//    }
 
 
 }
