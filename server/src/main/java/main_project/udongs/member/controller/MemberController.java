@@ -154,18 +154,18 @@ public class MemberController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @Operation(summary = "마이페이지 조회")
+    @Operation(summary = "프로필 조회")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
-    @GetMapping("/mypage")
+    @GetMapping("/profile")
     public ResponseEntity getMyPage(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("get profile");
 
         return ResponseEntity.ok(userPrincipal.getMember().getProfile());
     }
 
-    @Operation(summary = "마이페이지 수정")
+    @Operation(summary = "프로필 수정")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
-    @PatchMapping("/mypage")
+    @PatchMapping("/profile")
     public ResponseEntity patchMyPage(@RequestBody Profile profile, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("patch profile");
         if (profile != null) {
@@ -173,7 +173,7 @@ public class MemberController {
         }
         memberService.updateProfile(userPrincipal.getMember(), profile);
 
-        return ResponseEntity.ok("마이페이지 수정 완료");
+        return ResponseEntity.ok("프로필 수정 완료");
     }
 }
 
