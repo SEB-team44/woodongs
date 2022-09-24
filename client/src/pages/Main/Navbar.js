@@ -88,7 +88,7 @@ const StyledNav = styled.div`
 `;
 
 const Navbar = () => {
-  const {userInfo, setUserInfo} = useContext(UserInfo); //로그인 한 사용자 정보
+  const { userInfo, setUserInfo } = useContext(UserInfo); //로그인 한 사용자 정보
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { isLogin } = useContext(UserLogin);
 
@@ -136,7 +136,7 @@ const Navbar = () => {
               {isLogin ? (
                 <div className="info-box">
                   <div className="new-study-btn">
-                    <Link to="/AddStudy">
+                    <Link to="/study/recruit">
                       <Button className="submit-button" variant="contained">
                         스터디 생성
                       </Button>
@@ -178,8 +178,8 @@ const Navbar = () => {
                         className="avatarimg"
                         src={
                           userInfo.profileImageUrl
-                            ? userInfo.profileImageUrl:
-                            require("../../../src/img/avatar.png")
+                            ? userInfo.profileImageUrl
+                            : require("../../../src/img/avatar.png")
                         }
                       />
                     </Link>

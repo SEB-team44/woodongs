@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Navbar from "./Navbar";
 import Notice from "./Notice";
+import useFetch from "../useFetch";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
@@ -10,7 +11,6 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import { UserInfo } from "../../UserContext";
 import { useContext } from "react";
-
 
 const StyledMain = styled.div`
   .main-container {
@@ -95,9 +95,10 @@ const StyledMain = styled.div`
   }
 `;
 
-const Main = ({ list, totall }) => {
+const Main = () => {
   const [cardList, setCardList] = useState([]);
-  const {userInfo} = useContext(UserInfo);
+  const { userInfo } = useContext(UserInfo);
+  // const { getdata: getList } = useFetch("http://localhost:3000/main");
 
   const obsRef = useRef(null); //observer Element
   // const [list, setList] = useState(() => list); //post List
@@ -119,7 +120,7 @@ const Main = ({ list, totall }) => {
     getPost();
   }, [page]);
 
-console.log(userInfo) 
+  console.log(userInfo);
 
   const obsHandler = (entries) => {
     //옵저버 콜백함수
@@ -139,7 +140,10 @@ console.log(userInfo)
   // cardList를 요청
   useEffect(() => {
     const getCardList = async () => {
+      //http://59.16.126.210:8080/study
+      //http://localhost:3001/card
       fetch("http://localhost:3001/card")
+        // fetch("http://59.16.126.210:8080/study")
         .then((res) => {
           if (!res.ok) {
             throw Error("could not fetch the data for that resource");
@@ -182,7 +186,8 @@ console.log(userInfo)
                     </CardMedia>
                     <CardContent className="study-info-box">
                       <header className="study-info study-info-header">
-                        <Link to="/recruit">{el.title}</Link>
+                        {/* <Link to="/recruit">{el.title}</Link> */}
+                        <Link to={"/study/" + `${el.id}`}>{el.title}</Link>
                       </header>
                       <a className="study-info">{el.content}</a>
                       <ol className="study-info tags">
@@ -192,7 +197,7 @@ console.log(userInfo)
                       </ol>
                     </CardContent>
                     <div className="count">
-                      <a>모집완료 0/3</a>
+                      <a>모집완료 0/{el.headCount}</a>
                       {/* <div ref={observer} />
                       <>{isLoading && <Loading />}</> */}
                     </div>
