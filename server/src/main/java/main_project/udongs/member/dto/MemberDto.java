@@ -94,8 +94,8 @@ public class MemberDto {
         private RoleType roleType;
         private String profileImageUrl;
 
-        private String latitude;
-        private String longitude;
+        private Double latitude;
+        private Double longitude;
         private String city;
 
         private LocalDateTime createdAt;
@@ -107,8 +107,8 @@ public class MemberDto {
     @Getter
     @Setter
     public static class Location {
-        private String longitude;
-        private String latitude;
+        private Double longitude;
+        private Double latitude;
         private String city;
     }
 

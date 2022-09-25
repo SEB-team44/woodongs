@@ -19,7 +19,7 @@ public class LocationService {
     /*
     받아온 위도 경도로 주소 받아오기
     */
-    public String coordToAddr(String longitude, String latitude){
+    public String coordToAddr(Double longitude, Double latitude){
         String url = "https://dapi.kakao.com/v2/local/geo/coord2address.json?x="+longitude+"&y="+latitude;
         String addr = "";
         try{

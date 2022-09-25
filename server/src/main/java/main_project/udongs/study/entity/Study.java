@@ -34,10 +34,10 @@ public class Study {
     private String category;
 
     @Column
-    private String longitude;
+    private Double longitude;
 
     @Column
-    private String latitude;
+    private Double latitude;
 
     @Column
     private String city;
@@ -71,7 +71,7 @@ public class Study {
 
     //스터디 목표 모집 인원
     @Column
-    private int headCount;
+    private Long headCount;
 
     @Column
     @Enumerated(EnumType.STRING)

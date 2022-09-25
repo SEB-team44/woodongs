@@ -28,10 +28,14 @@ public class StudyDto {
         @NotBlank(message = "공백만 입력할 수 없습니다.")
         private String body;
 
-
+        @NotBlank(message = "공백만 입력할 수 없습니다.")
         private String category;
 
+        @NotBlank(message = "공백만 입력할 수 없습니다.")
         private Long headCount;
+
+        private double latitude;
+        private double longitude;
 
     }
 
@@ -66,13 +70,28 @@ public class StudyDto {
         private String title;
         private String body;
         private String category;
+        private Double latitude;
+        private Double longitude;
         private String city;
         private Long createdBy;
         private Study.State state;
+        private Long nowHeadCount;
+        private Long headCount;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private List<StudyCommentDto.Response> commentResponseDtos;
         private List<MemberDto.Response> memberResponseDtos;
 
+    }
+
+    @Builder
+    public static class CardResponse {
+        private Long studyId;
+        private String title;
+        private String body;
+        private String category;
+        private Long nowHeadCount;
+        private Long headCount;
+        private Study.State state;
     }
 }

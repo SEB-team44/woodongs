@@ -5,6 +5,7 @@ import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.study.dto.StudyDto;
+import main_project.udongs.study.entity.Distance;
 import main_project.udongs.study.entity.Study;
 import main_project.udongs.study.entity.StudyComment;
 import main_project.udongs.study.repository.StudyCommentRepository;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +26,7 @@ public class StudyService {
 
     private final StudyRepository studyRepository;
     private final StudyCommentRepository commentRepository;
+    private final Distance distance;
 
     //스터디 등록
     @Transactional
@@ -104,4 +108,14 @@ public class StudyService {
     }
 
 
+    // 주변 3km이내 스터디 목록 가져오기
+    public List<Study> getAroundStudy(Double nowLat, Double nowLon) {
+        return studyRepository.findAll().stream()
+                .filter(study -> {
+                    Double lat = study.getLatitude();
+                    Double lon = study.getLongitude();
+                    double dist = distance.calculateDistance(nowLat, nowLon, lat, lon, "meter");
+                    return dist < 3000;
+                }).collect(Collectors.toList());
+    }
 }

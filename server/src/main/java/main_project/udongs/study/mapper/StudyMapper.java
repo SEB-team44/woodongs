@@ -87,9 +87,13 @@ public interface StudyMapper {
                 .title(study.getTitle())
                 .body(study.getBody())
                 .category(study.getCategory())
+                .latitude(study.getLatitude())
+                .longitude(study.getLongitude())
                 .city(study.getCity())
                 .createdBy(member.getMemberId())
                 .state(study.getState())
+                .nowHeadCount((long) study.getAcceptances().size())
+                .headCount(study.getHeadCount())
                 .createdAt(study.getCreatedAt())
                 .modifiedAt(study.getModifiedAt())
                 .commentResponseDtos(new ArrayList<>(commentInfo))
@@ -108,6 +112,7 @@ public interface StudyMapper {
     }
 
 
-    List<StudyDto.Response> studiesToStudyResponse(List<Study> studies);
+//    List<StudyDto.CardResponse> studiesToStudyCardResponseDtos(List<Study> studies);
 
+    List<StudyDto.Response> studiesToStudyResponse(List<Study> studies);
 }

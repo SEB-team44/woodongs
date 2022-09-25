@@ -59,11 +59,13 @@ public class StudyController {
     @PostMapping("/recruit")
     public ResponseEntity postStudy(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody StudyDto.Post requestBody) {
         log.debug("POST STUDY");
+        //등록시 스터디장의 위치정보, 스터디장 id번호 반환
+        Member member = userPrincipal.getMember();
+        requestBody.setLatitude(member.getLatitude());
+        requestBody.setLongitude(member.getLongitude());
 
         Study study = mapper.studyPostToStudy(requestBody);
 
-        //등록시 스터디장의 위치정보, 스터디장 id번호 반환
-        Member member = userPrincipal.getMember();
 
 
         Study savedStudy = studyService.createStudy(study, member);
@@ -143,6 +145,19 @@ public class StudyController {
 
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+    @Operation(summary = "주변 스터디 조회")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
+    @GetMapping("/around")
+    public ResponseEntity<List<StudyDto.Response>> getAroundStudy(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        List<Study> studies = studyService.getAroundStudy(userPrincipal.getMember().getLatitude(),
+                userPrincipal.getMember().getLongitude());
+        List<StudyDto.Response> response = mapper.studiesToStudyResponse(studies);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+
 
     //수정기능 추가하기
 

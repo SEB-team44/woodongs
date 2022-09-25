@@ -76,10 +76,10 @@ public class Member {
     private RoleType roleType;
 
     @Column
-    private String longitude;
+    private Double longitude;
 
     @Column
-    private String latitude;
+    private Double latitude;
     //생성일자
     @Column(name = "CREATED_AT")
     @NotNull
