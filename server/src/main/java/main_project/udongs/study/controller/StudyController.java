@@ -159,8 +159,36 @@ public class StudyController {
 
 
 
-    //수정기능 추가하기
+    //스터디 질문 수정기능
+    @Operation(summary = "스터디 모집에 대한 질문 수정")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
+    @PatchMapping("/{study-id}/{comment-id}")
+    public ResponseEntity patchComment(@Valid @PathVariable("study-id") Long studyId, @PathVariable("comment-id") Long commentId,
+                                      @AuthenticationPrincipal UserPrincipal userPrincipal,
+                                      @RequestBody StudyCommentDto.Patch requestBody) {
+        log.debug("PATCH STUDY COMMENTS");
 
+        StudyComment comment = mapper.commentPatchToComment(requestBody);
+        StudyComment patchedComment = studyService.patchStudyComment(comment, commentId);
+
+        StudyCommentDto.Response response = mapper.commentToCommentResponse(patchedComment);
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    //스터디 질문 삭제기능
+    @Operation(summary = "스터디 모집에 대한 질문 삭제")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
+    @DeleteMapping("/{study-id}/{comment-id}")
+    public ResponseEntity deleteComment(@Valid @PathVariable("study-id") Long studyId, @PathVariable("comment-id") Long commentId,
+                                      @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        log.debug("DELETE STUDY COMMENTS");
+
+        studyService.deleteStudyComment(commentId);
+        String ans = "Deletion completed";
+
+        return new ResponseEntity<>(ans,HttpStatus.OK);
+    }
 
 
 

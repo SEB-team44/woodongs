@@ -25,6 +25,7 @@ public class StudyCommentDto {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Patch {
 
         @NotBlank(message = "공백을 등록할 수 없습니다.")
@@ -41,6 +42,7 @@ public class StudyCommentDto {
         private String body;
         private String nickName;
         private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
 
     }
 
