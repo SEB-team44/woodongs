@@ -50,6 +50,8 @@
 <br>
 
 ## 4. ERD 
+<img width="615" alt="스크린샷 2022-09-14 오후 6 20 07" src="https://github.com/codestates-seb/seb39_main_044/blob/BE/server/ERDv2.jpg">
+
 
 
 ## 5. ACTION FLOW

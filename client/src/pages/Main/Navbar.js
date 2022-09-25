@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { UserLogin } from "../../UserContext";
 import { useContext } from "react";
+import { UserInfo } from "../../UserContext";
 
 const StyledNav = styled.div`
   .header-container {
@@ -87,6 +88,7 @@ const StyledNav = styled.div`
 `;
 
 const Navbar = () => {
+  const {userInfo, setUserInfo} = useContext(UserInfo); //로그인 한 사용자 정보
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { isLogin } = useContext(UserLogin);
 
@@ -174,7 +176,11 @@ const Navbar = () => {
                     <Link to="/MyPage">
                       <img
                         className="avatarimg"
-                        src={require("../../../src/img/avatar.png")}
+                        src={
+                          userInfo.profileImageUrl
+                            ? userInfo.profileImageUrl:
+                            require("../../../src/img/avatar.png")
+                        }
                       />
                     </Link>
                   </div>

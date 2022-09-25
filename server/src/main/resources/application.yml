@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: sensitive
+
+springdoc:
+  swagger-ui:
+    path: /api.html
+  version: v0.0.1
+  paths-to-match:
+    - /**
+
+#Sl4fj
+logging:
+  level:
+    root: info
+    main_project:
+      udongs: debug

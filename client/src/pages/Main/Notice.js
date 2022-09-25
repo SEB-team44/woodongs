@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { UserLogin } from "../../UserContext";
 import Alert from "@mui/material/Alert";
+import { UserInfo } from "../../UserContext";
 
 const StyledNav = styled.div`
   .nav-container {
@@ -72,6 +73,7 @@ const StyledNav = styled.div`
 `;
 
 const Notice = () => {
+  const {userInfo, setUserInfo} = useContext(UserInfo);
   const { isLogin } = useContext(UserLogin);
 
   return (
@@ -98,11 +100,15 @@ const Notice = () => {
                     <Link to="/MyPage">
                       <img
                         className="avatarimg"
-                        src={require("../../../src/img/avatar.png")}
+                        src={
+                          userInfo.profileImageUrl
+                            ? userInfo.profileImageUrl:
+                             require("../../../src/img/avatar.png")
+                        }
                       />
                     </Link>
                   </li>
-                  <li>kim-young-ha</li>
+                  <li>{userInfo.nickName}</li>
                 </ol>
               ) : (
                 <ol className="profile-box">
@@ -121,7 +127,7 @@ const Notice = () => {
                 <p>현재 위치</p>
               </div>
               <div className="saved-location">
-                {isLogin ? <p>서울특별시 서대문구</p> : <p>전국</p>}
+                {isLogin ? <p>{userInfo.city}</p> : <p>전국</p>}
               </div>
               <button className="my-location-btn">밑</button>
             </div>
