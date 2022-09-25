@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
 import main_project.udongs.member.entity.Member;
+import main_project.udongs.study.dto.StudyCommentDto;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Distance;
 import main_project.udongs.study.entity.Study;
@@ -87,11 +88,31 @@ public class StudyService {
         studyComment.setMember(member);
         studyComment.setCreatedBy(member.getNickName());
 
-
         Study study = studyRepository.findById(studyId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.STUDY_NOT_FOUND));
         studyComment.setStudy(study);
 
         return commentRepository.save(studyComment);
+    }
+
+    //스터디 모집글 질문 수정
+    @Transactional
+    public StudyComment patchStudyComment(StudyComment comment, Long commentId) {
+
+        StudyComment foundComment = commentRepository.findById(commentId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+
+        Optional.ofNullable(comment.getBody())
+                .ifPresent(foundComment::setBody);
+        foundComment.setModifiedAt(LocalDateTime.now());
+
+        return commentRepository.save(foundComment);
+    }
+
+    //스터디 모집글 질문 삭제
+    @Transactional
+    public void deleteStudyComment(Long commentId) {
+
+        StudyComment foundComment = commentRepository.findById(commentId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+        commentRepository.delete(foundComment);
     }
 
 
