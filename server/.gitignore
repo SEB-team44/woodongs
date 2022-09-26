@@ -25,8 +25,8 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-**/main/resources/application-sensitive.yml
 
+**/main/resources/application-sensitive.yml
 
 ### NetBeans ###
 /nbproject/private/
