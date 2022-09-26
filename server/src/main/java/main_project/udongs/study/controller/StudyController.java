@@ -27,6 +27,7 @@ import main_project.udongs.study.entity.Study;
 import main_project.udongs.study.entity.StudyComment;
 import main_project.udongs.study.mapper.StudyMapper;
 import main_project.udongs.study.repository.StudyRepository;
+import main_project.udongs.study.service.StudySearchService;
 import main_project.udongs.study.service.StudyService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +40,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -53,6 +53,7 @@ public class StudyController {
     private final StudyMapper mapper;
     private final MemberService memberService;
     private final StudyRepository studyRepository;
+    private final StudySearchService studySearchService;
 
     @Operation(summary = "스터디 모집 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
@@ -104,16 +105,21 @@ public class StudyController {
 
     //무한스크롤
     //일단 페이지네이션 적용
+    //검색기능 (필터링) 기능 추가
     @Operation(summary = "전체 스터디 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
     @GetMapping
-    public ResponseEntity getStudies(@PageableDefault(size = 15, sort = "studyId", direction = Sort.Direction.DESC)Pageable pageable) {
+    public ResponseEntity getStudies(@PageableDefault(size = 15, sort = "studyId", direction = Sort.Direction.DESC)Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword ) {
         log.debug("GET ALL STUDIES");
 
-        Page<Study> pageStudies = studyService.getStudies(pageable);
-        List<Study> studies = pageStudies.getContent();
+        //Page<Study> pageStudies = studyService.getStudies(pageable);
 
-        return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(studies),pageStudies), HttpStatus.OK);
+        //검색 메서드 맨 아래쪽에 있음
+        Page<Study> searchedStudies = searchFunction(pageable, titleKeyword, cityKeyword, categoryKeyword);
+
+        List<Study> studies = searchedStudies.getContent();
+
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(studies),searchedStudies), HttpStatus.OK);
     }
 
 
@@ -190,6 +196,30 @@ public class StudyController {
         return new ResponseEntity<>(ans,HttpStatus.OK);
     }
 
+    //조건 검색하는 메서드
+    private Page<Study> searchFunction(Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword) {
 
+        Page<Study> searchedStudies = null;
+        //검색 키워드가 전부 없는경우
+        if(titleKeyword == null && cityKeyword == null && categoryKeyword == null){
+            searchedStudies = studyService.getStudies(pageable);
+        } else if(titleKeyword !=null && cityKeyword == null && categoryKeyword == null) { //제목으로만 검색
+            searchedStudies = studySearchService.getStudyByTitle(pageable, titleKeyword);
+        } else if(titleKeyword == null && cityKeyword != null && categoryKeyword == null) { //도시이름으로만 검색
+            searchedStudies = studySearchService.getStudyByCity(pageable, cityKeyword);
+        } else if(titleKeyword == null && cityKeyword == null && categoryKeyword != null) { //카테고리로만 검색
+            searchedStudies = studySearchService.getStudyByCategory(pageable, categoryKeyword);
+        } else if(titleKeyword != null && cityKeyword != null && categoryKeyword == null) {//제목 + 도시로 검색
+            searchedStudies = studySearchService.getStudyByTitleAndCity(pageable, titleKeyword, cityKeyword);
+        } else if(titleKeyword != null && cityKeyword == null && categoryKeyword !=null) { //제목 + 카테고리로 검색
+            searchedStudies = studySearchService.getStudyByTitleAndCategory(pageable, titleKeyword, categoryKeyword);
+        } else if(titleKeyword == null && cityKeyword != null && categoryKeyword !=null) { //도시 + 카테고리로 검색
+            searchedStudies = studySearchService.getStudyByCityAndCategory(pageable, cityKeyword, categoryKeyword);
+        } else { //전부 필터링 할때
+            searchedStudies = studySearchService.getStudyByAllFilter(pageable, titleKeyword, cityKeyword, categoryKeyword);
+        }
+
+        return searchedStudies;
+    }
 
 }
