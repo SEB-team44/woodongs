@@ -30,6 +30,7 @@ import main_project.udongs.study.repository.StudyRepository;
 import main_project.udongs.study.service.StudyService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -149,7 +150,12 @@ public class StudyController {
     @Operation(summary = "주변 스터디 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @GetMapping("/around")
-    public ResponseEntity<List<StudyDto.Response>> getAroundStudy(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResponseEntity<List<StudyDto.Response>> getAroundStudy(
+//            @PageableDefault(size = 15, sort = "studyId", direction = Sort.Direction.DESC) Pageable pageable,
+//            @RequestParam Long page, @RequestParam(required = false) Long lastId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+//        List<Study> studies = studyService.getAroundStudy(userPrincipal.getMember().getLatitude(),
+//                userPrincipal.getMember().getLongitude(),page,lastId);
         List<Study> studies = studyService.getAroundStudy(userPrincipal.getMember().getLatitude(),
                 userPrincipal.getMember().getLongitude());
         List<StudyDto.Response> response = mapper.studiesToStudyResponse(studies);
