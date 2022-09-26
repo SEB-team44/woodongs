@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Navbar from "./Navbar";
 import Notice from "./Notice";
+import axios from "axios";
 import useFetch from "../useFetch";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
@@ -94,71 +95,90 @@ const StyledMain = styled.div`
     font-size: 1.5rem;
   }
 `;
-
+const access_token = localStorage.getItem("access_token");
 const Main = () => {
   const [cardList, setCardList] = useState([]);
-  const { userInfo } = useContext(UserInfo);
-  // const { getdata: getList } = useFetch("http://localhost:3000/main");
-
-  const obsRef = useRef(null); //observer Element
-  // const [list, setList] = useState(() => list); //post List
-  const [page, setPage] = useState(1); //현재 페이지
-  const [load, setLoad] = useState(false); //로딩 스피너
-  const preventRef = useRef(true); //옵저버 중복 실행 방지
-  const endRef = useRef(false); //모든 글 로드 확인
-
   useEffect(() => {
-    //옵저버 생성
-    const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
-    if (obsRef.current) observer.observe(obsRef.current);
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    getPost();
-  }, [page]);
-
-  console.log(userInfo);
-
-  const obsHandler = (entries) => {
-    //옵저버 콜백함수
-    const target = entries[0];
-    if (!endRef.current && target.isIntersecting && preventRef.current) {
-      //옵저버 중복실행방지
-      preventRef.current = false; //옵저버 중복실행 방지
-      setPage((prev) => prev + 1); //페이지 값 증가
+    function getCardList() {
+      let reqOption = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: access_token,
+        },
+      };
+      fetch("http://59.16.126.210:8080/study", reqOption)
+        .then((res) => res.json())
+        .then((data) => console.log(data))
+        .then((data) => setCardList(data));
     }
-  };
-
-  const getPost = useCallback(async () => {
-    //글 불러오기
-    setLoad(true); //로딩 시작
-  });
-
-  // cardList를 요청
-  useEffect(() => {
-    const getCardList = async () => {
-      //http://59.16.126.210:8080/study
-      //http://localhost:3001/card
-      fetch("http://localhost:3001/card")
-        // fetch("http://59.16.126.210:8080/study")
-        .then((res) => {
-          if (!res.ok) {
-            throw Error("could not fetch the data for that resource");
-          }
-          return res.json();
-        })
-        .then((data) => {
-          setCardList(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
     getCardList();
   }, []);
+  // useEffect(() => {
+  //   function getCardList() {
+  //     let reqOption = {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //         withCredentials: true,
+  //         "Access-Control-Allow-Origin": "*",
+  //         Authorization: access_token,
+  //       },
+  //     };
+  //     fetch("http://59.16.126.210:8080/study", reqOption)
+  //       .then((res) => res.json())
+  //       .then((data) => setCardList(data));
+  //   }
+  //   getCardList();
+  // }, []);
+
+  // const FetchData = () => {
+  //   const url = "http://59.16.126.210:8080/study";
+  //   fetch(url)
+  //     .then((res) => res.json())
+  //     .then((resData) => {
+  //       setCardList(resData);
+  //     });
+  // };
+  // cardList를 요청
+  // useEffect(() => {
+  //   axios
+  //     .get("http://59.16.126.210:8080/study")
+  //     .then((res) => setCardList(res.data))
+  //     .catch((err) => console.log(err));
+  // }, []);
+
+  // useEffect(() => {
+  //   const getCardList = async () => {
+  //     const { data } = await axios.get("http://59.16.126.210:8080/study");
+  //     return data;
+  //   };
+  //현재 페이지에 해당하는 게시물로 상태 변경하기
+  // getCardList().then(result => setCardList(result));
+
+  // //http://59.16.126.210:8080/study
+  // //http://localhost:3001/card
+  // // fetch("http://localhost:3001/card")
+  // fetch("http://59.16.126.210:8080/study")
+  //   .then((res) => {
+  //     if (!res.ok) {
+  //       throw Error("could not fetch the data for that resource");
+  //     }
+  //     return res.json();
+  //   })
+  //   .then((data) => {
+  //     setCardList(data);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+
+  // getCardList();
+  // });
 
   return (
     <>
@@ -167,16 +187,14 @@ const Main = () => {
           <section className="main-nav-container">
             <Navbar />
           </section>
-
           <section className="main-notice-container">
             <Notice />
           </section>
-
           <section className="main-cardlist-container">
             <main className="cardlists-box">
               {cardList.map((el, idx) => {
                 return (
-                  <Card sx={{ maxWidth: 300 }} className="cardlist" key={idx}>
+                  <Card sx={{ maxWidth: 300 }} className="cardlist">
                     {/* <article > */}
                     <CardMedia className="cardimg-box">
                       <img
@@ -187,9 +205,10 @@ const Main = () => {
                     <CardContent className="study-info-box">
                       <header className="study-info study-info-header">
                         {/* <Link to="/recruit">{el.title}</Link> */}
-                        <Link to={"/study/" + `${el.id}`}>{el.title}</Link>
+                        {/* <Link to={"/study/" + `${el.id}`}>{el.title}</Link> */}
+                        {/* <Link to={"/study/" + `${el.studyId}`}>{el.title}</Link> */}
                       </header>
-                      <a className="study-info">{el.content}</a>
+                      {/* <a className="study-info">{el.content}</a> */}
                       <ol className="study-info tags">
                         <li>#JS</li>
                         <li>#React</li>
@@ -197,7 +216,7 @@ const Main = () => {
                       </ol>
                     </CardContent>
                     <div className="count">
-                      <a>모집완료 0/{el.headCount}</a>
+                      {/* <a>모집완료 0/{el.headCount}</a> */}
                       {/* <div ref={observer} />
                       <>{isLoading && <Loading />}</> */}
                     </div>
