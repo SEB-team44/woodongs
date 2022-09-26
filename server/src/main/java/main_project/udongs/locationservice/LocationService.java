@@ -94,10 +94,23 @@ public class LocationService {
 
             //도로명주소 없으면 일반 주소로 찾기
             if(roadAddress == null){
-                JSONObject subsubJobj = (JSONObject) subJobj.get("address");
-                value = (String) subsubJobj.get("region_2depth_name");
+
+                JSONObject address = (JSONObject) subJobj.get("address");
+
+                //서울로 시작하면 바로 반환
+                if("서울".equals((String)address.get("region_1depth_name"))){
+                    return "서울";
+                } else {
+                    value = (String) address.get("region_2depth_name");
+                }
+
             }else{
-                value = (String) roadAddress.get("region_2depth_name");
+
+                if("서울".equals((String)roadAddress.get("region_1depth_name"))){
+                    return "서울";
+                } else {
+                    value = (String) roadAddress.get("region_2depth_name");
+                }
             }
 
             if(value.equals("") || value==null){
