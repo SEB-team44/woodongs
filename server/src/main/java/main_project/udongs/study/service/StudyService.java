@@ -73,6 +73,7 @@ public class StudyService {
     }
 
 
+
     //스터디 삭제
     @Transactional
     public void deleteStudy(Long studyId) {

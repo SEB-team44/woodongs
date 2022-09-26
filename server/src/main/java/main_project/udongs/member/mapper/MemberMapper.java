@@ -33,8 +33,8 @@ public interface MemberMapper {
                 .profileImageUrl(requestBody.getProfileImageUrl())
                 .providerType(ProviderType.LOCAL)
                 .roleType(RoleType.USER)
-//                .longitude("126.76903412977279")
-//                .latitude("37.51018419688551")
+//                .longitude("")
+//                .latitude("")
                 .createdAt(LocalDateTime.now())
 //                .modifiedAt(LocalDateTime.now())
                 .build();
