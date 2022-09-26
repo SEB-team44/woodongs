@@ -84,7 +84,7 @@ public class MemberController {
 
 
     @Operation(summary = "회원 정보 조회")
-    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = MemberDto.Response.class))))
     @GetMapping("/me")
     public ResponseEntity getMember(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         Member member = userPrincipal.getMember();
@@ -115,7 +115,7 @@ public class MemberController {
 
 
     @Operation(summary = "마이페이지 회원사진 업로드")
-    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Member.class))))
     @PostMapping("/imageupload")
     public ResponseEntity<Object> uploadImage(@RequestParam("images") MultipartFile multipartFile, @AuthenticationPrincipal UserPrincipal userPrincipal) throws IOException {
         log.debug("upload image");
@@ -129,7 +129,7 @@ public class MemberController {
 
     @Operation(summary = "회원 정보 수정")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
-    @PatchMapping("")
+    @PatchMapping
     public ResponseEntity patchMember(@RequestBody MemberDto.Patch requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("patch member");
         requestBody.setPassword(passwordEncoder.encode(requestBody.getPassword()));
@@ -155,7 +155,7 @@ public class MemberController {
     }
 
     @Operation(summary = "프로필 조회")
-    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK"))
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Profile.class))))
     @GetMapping("/profile")
     public ResponseEntity getMyPage(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("get profile");
