@@ -18,6 +18,9 @@ const EditeRecruit = () => {
   const [category, setCategory] = useState("");
   const [headCount, setHeadCount] = useState("");
 
+  //사용자가 직전에 등록한 게시물의 상태를 그대로 보여주기위해
+  //컴포넌트가 마운트 되고 uri 파라미터에 해당하는 data를 가져와
+  //title,body,category,headcount의 상태를 바꿔줌
   useEffect(() => {
     const getData = async () => {
       const { data } = await axios.get(`/study/card/${id}`);
@@ -62,7 +65,7 @@ const EditeRecruit = () => {
           <Button
             onClick={handleSubmit}
             className="success-button"
-            variant="outlined"
+            // variant="outlined"
           >
             수정하기
           </Button>

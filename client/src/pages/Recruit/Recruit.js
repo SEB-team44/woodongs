@@ -121,13 +121,14 @@ const Recruit = () => {
 
   //질문목록에 맞는 데이터 받아오기
   //URL 파라미터 받기 card의 id
-  const { id } = useParams();
-  // const { studyId } = useParams(); //studyId입니다.
+  // const { id } = useParams();
+  const { studyId } = useParams(); //studyId입니다.
   const [data, setData] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
     const getData = async () => {
-      const { data } = await axios.get(`/card/${id}`);
+      // const { data } = await axios.get(`/card/${id}`);
+      const { data } = await axios.get(`/study/${studyId}`);
       return data;
     };
     getData()
@@ -140,8 +141,10 @@ const Recruit = () => {
     let reqDelete = {
       method: "DELETE",
     };
-    console.log(id);
-    fetch("http://localhost:3001/card/" + `${id}`, reqDelete)
+    // console.log(id);
+    console.log(studyId);
+    // fetch("http://localhost:3001/card/" + `${id}`, reqDelete)
+    fetch("http://59.16.126.210:8080/study/" + `${studyId}`, reqDelete)
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
@@ -153,8 +156,8 @@ const Recruit = () => {
   //카드 리스트와 댓글 리스트를 첫 랜더링 때 받아오자
   useEffect(() => {
     const getKeywordList = async () => {
-      fetch("http://localhost:3001/keyword")
-        // fetch("http://59.16.126.210:8080/study")
+      // fetch("http://localhost:3001/keyword")
+      fetch("http://59.16.126.210:8080/study")
         .then((res) => {
           if (!res.ok) {
             throw Error("could not fetch the data for that resource");
@@ -169,8 +172,8 @@ const Recruit = () => {
         });
     };
     const getCommentList = async () => {
-      fetch("http://localhost:3001/comment")
-        // fetch(`http://59.16.126.210:8080/study/${studyId}/comment}`)
+      // fetch("http://localhost:3001/comment")
+      fetch(`http://59.16.126.210:8080/study/${studyId}/comment}`)
         .then((res) => {
           if (!res.ok) {
             throw Error("could not fetch the data for that resource");
@@ -185,8 +188,8 @@ const Recruit = () => {
         });
     };
     const getCardList = async () => {
-      fetch("http://localhost:3001/card/" + `${id}`)
-        // fetch("http://59.16.126.210:8080/study")
+      // fetch("http://localhost:3001/card/" + `${id}`)
+      fetch("http://59.16.126.210:8080/study" + `${studyId}`)
         .then((res) => {
           if (!res.ok) {
             throw Error("could not fetch the data for that resource");
@@ -219,10 +222,10 @@ const Recruit = () => {
     };
     //`http://59.16.126.210:8080/study/${study-id}/comment`
     //http://localhost:3001/comment
-    fetch("http://localhost:3001/comment", reqPost).then((res) => res.json());
-    // fetch(`http://59.16.126.210:8080/study/${studyId}/comment`, reqPost).then(
-    //   (res) => res.json()
-    // );
+    // fetch("http://localhost:3001/comment", reqPost).then((res) => res.json());
+    fetch(`http://59.16.126.210:8080/study/${studyId}/comment`, reqPost).then(
+      (res) => res.json()
+    );
     //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
     setgetcondition(!getcondition);
     setInputComment("");
@@ -240,7 +243,10 @@ const Recruit = () => {
 
   //삭제 버튼 클릭시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handeDeleteComment = (id) => {
-    fetch("http://localhost:3001/comment/" + `${id}`, {
+    // fetch("http://localhost:3001/comment/" + `${id}`, {
+    //   method: "DELETE",
+    // });
+    fetch(`http://59.16.126.210:8080/study/${studyId}/comment`, {
       method: "DELETE",
     });
 
@@ -249,7 +255,10 @@ const Recruit = () => {
 
   //게시물 삭제 버튼 클릭 시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handleDeleteRecruit = (id) => {
-    fetch("http://localhost:3001/card/" + `${id}`, {
+    // fetch("http://localhost:3001/card/" + `${id}`, {
+    //   method: "DELETE",
+    // });
+    fetch(`http://59.16.126.210:8080/study/${studyId}/comment`, {
       method: "DELETE",
     });
     setgetconditions(!getconditions);
@@ -285,7 +294,7 @@ const Recruit = () => {
                       className="update-btn"
                       // onClick={() => handleDeleteRecruit(el.id)}
                     >
-                      <Link to={`/study/edite`}>
+                      <Link to="/study/EditRecruit">
                         <TiPencil />
                       </Link>
                     </button>
