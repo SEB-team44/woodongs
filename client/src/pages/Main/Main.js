@@ -95,8 +95,9 @@ const StyledMain = styled.div`
     font-size: 1.5rem;
   }
 `;
-const access_token = localStorage.getItem("access_token");
+
 const Main = () => {
+  const access_token = localStorage.getItem("access_token");
   const [cardList, setCardList] = useState([]);
   useEffect(() => {
     function getCardList() {
@@ -110,76 +111,18 @@ const Main = () => {
           Authorization: access_token,
         },
       };
+
       fetch("http://59.16.126.210:8080/study", reqOption)
         .then((res) => res.json())
-        .then((data) => console.log(data))
-        .then((data) => setCardList(data));
+        .then((data) => {
+          console.log(data);
+          return data
+        })
+        .then((data) => setCardList(data.data));
     }
     getCardList();
   }, []);
-  // useEffect(() => {
-  //   function getCardList() {
-  //     let reqOption = {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Accept: "application/json",
-  //         withCredentials: true,
-  //         "Access-Control-Allow-Origin": "*",
-  //         Authorization: access_token,
-  //       },
-  //     };
-  //     fetch("http://59.16.126.210:8080/study", reqOption)
-  //       .then((res) => res.json())
-  //       .then((data) => setCardList(data));
-  //   }
-  //   getCardList();
-  // }, []);
-
-  // const FetchData = () => {
-  //   const url = "http://59.16.126.210:8080/study";
-  //   fetch(url)
-  //     .then((res) => res.json())
-  //     .then((resData) => {
-  //       setCardList(resData);
-  //     });
-  // };
-  // cardList를 요청
-  // useEffect(() => {
-  //   axios
-  //     .get("http://59.16.126.210:8080/study")
-  //     .then((res) => setCardList(res.data))
-  //     .catch((err) => console.log(err));
-  // }, []);
-
-  // useEffect(() => {
-  //   const getCardList = async () => {
-  //     const { data } = await axios.get("http://59.16.126.210:8080/study");
-  //     return data;
-  //   };
-  //현재 페이지에 해당하는 게시물로 상태 변경하기
-  // getCardList().then(result => setCardList(result));
-
-  // //http://59.16.126.210:8080/study
-  // //http://localhost:3001/card
-  // // fetch("http://localhost:3001/card")
-  // fetch("http://59.16.126.210:8080/study")
-  //   .then((res) => {
-  //     if (!res.ok) {
-  //       throw Error("could not fetch the data for that resource");
-  //     }
-  //     return res.json();
-  //   })
-  //   .then((data) => {
-  //     setCardList(data);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
-
-  // getCardList();
-  // });
-
+  
   return (
     <>
       <StyledMain>
@@ -194,7 +137,7 @@ const Main = () => {
             <main className="cardlists-box">
               {cardList.map((el, idx) => {
                 return (
-                  <Card sx={{ maxWidth: 300 }} className="cardlist">
+                  <Card key = {el.studyId} sx={{ maxWidth: 300 }} className="cardlist">
                     {/* <article > */}
                     <CardMedia className="cardimg-box">
                       <img
@@ -204,11 +147,11 @@ const Main = () => {
                     </CardMedia>
                     <CardContent className="study-info-box">
                       <header className="study-info study-info-header">
-                        {/* <Link to="/recruit">{el.title}</Link> */}
-                        {/* <Link to={"/study/" + `${el.id}`}>{el.title}</Link> */}
-                        {/* <Link to={"/study/" + `${el.studyId}`}>{el.title}</Link> */}
+                        <Link to="/recruit">{el.title}</Link>
+                        <Link to={"/study/" + `${el.id}`}>{el.title}</Link>
+                        <Link to={"/study/" + `${el.studyId}`}>{el.title}</Link>
                       </header>
-                      {/* <a className="study-info">{el.content}</a> */}
+                      <a className="study-info">{el.content}</a>
                       <ol className="study-info tags">
                         <li>#JS</li>
                         <li>#React</li>
@@ -216,7 +159,7 @@ const Main = () => {
                       </ol>
                     </CardContent>
                     <div className="count">
-                      {/* <a>모집완료 0/{el.headCount}</a> */}
+                      <a>모집완료 0/{el.headCount}</a>
                       {/* <div ref={observer} />
                       <>{isLoading && <Loading />}</> */}
                     </div>
