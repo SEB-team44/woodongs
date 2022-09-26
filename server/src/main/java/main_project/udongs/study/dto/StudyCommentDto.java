@@ -1,5 +1,6 @@
 package main_project.udongs.study.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;

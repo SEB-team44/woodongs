@@ -3,6 +3,7 @@ spring:
     active: sensitive
 
 springdoc:
+  use-fqn: true
   swagger-ui:
     path: /api.html
   version: v0.0.1
@@ -15,3 +16,4 @@ logging:
     root: info
     main_project:
       udongs: debug
+

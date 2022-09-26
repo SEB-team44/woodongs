@@ -14,6 +14,7 @@ import main_project.udongs.apply.service.StudyApplyService;
 
 import main_project.udongs.globaldto.MultiResponseDto;
 
+import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.service.MemberService;
 
@@ -56,9 +57,9 @@ public class StudyController {
     private final StudyRepository studyRepository;
 
     @Operation(summary = "스터디 모집 등록")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "CREATED", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
     @PostMapping("/recruit")
-    public ResponseEntity postStudy(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody StudyDto.Post requestBody) {
+    public ResponseEntity postStudy(@RequestBody StudyDto.Post requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("POST STUDY");
         //등록시 스터디장의 위치정보, 스터디장 id번호 반환
         Member member = userPrincipal.getMember();
@@ -94,7 +95,7 @@ public class StudyController {
     @Operation(summary = "단일 스터디 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
     @GetMapping("/{study-id}")
-    public ResponseEntity postStudy(@Valid @PathVariable("study-id") Long studyId) {
+    public ResponseEntity postStudy(@Valid @PathVariable("study-id") Long studyId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("GET STUDY");
 
         Study study = studyService.findVerifiedStudy(studyId);
@@ -134,8 +135,8 @@ public class StudyController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @PostMapping("/{study-id}/comment")
     public ResponseEntity postComment(@Valid @PathVariable("study-id") Long studyId,
-                                      @AuthenticationPrincipal UserPrincipal userPrincipal,
-                                      @RequestBody StudyCommentDto.Post studyCommentDto) {
+                                      @RequestBody StudyCommentDto.Post studyCommentDto,
+                                      @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("POST STUDY COMMENTS");
 
         StudyComment comment = mapper.commentPostToComment(studyCommentDto);
@@ -170,8 +171,8 @@ public class StudyController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @PatchMapping("/{study-id}/{comment-id}")
     public ResponseEntity patchComment(@Valid @PathVariable("study-id") Long studyId, @PathVariable("comment-id") Long commentId,
-                                      @AuthenticationPrincipal UserPrincipal userPrincipal,
-                                      @RequestBody StudyCommentDto.Patch requestBody) {
+                                       @RequestBody StudyCommentDto.Patch requestBody,
+                                      @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("PATCH STUDY COMMENTS");
 
         StudyComment comment = mapper.commentPatchToComment(requestBody);
@@ -181,6 +182,7 @@ public class StudyController {
 
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
 
     //스터디 질문 삭제기능
     @Operation(summary = "스터디 모집에 대한 질문 삭제")

@@ -1,5 +1,8 @@
 package main_project.udongs.member.controller;
+
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,7 +25,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.Valid;
+import java.awt.print.Book;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -68,11 +73,10 @@ public class MemberController {
     }
 
 
-
     //경도, 위도 프론트에서 받기
     //로그인시 바로 위치 요청 받기
     @Operation(summary = "회원 위치 등록")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MemberDto.Location.class))))})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @PostMapping("/locate")
     public ResponseEntity locate(@RequestBody MemberDto.Location requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) throws Exception {
         log.debug("locate member");
@@ -117,10 +121,10 @@ public class MemberController {
     @Operation(summary = "마이페이지 회원사진 업로드")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Member.class))))
     @PostMapping("/imageupload")
-    public ResponseEntity<Object> uploadImage(@RequestParam("images") MultipartFile multipartFile, @AuthenticationPrincipal UserPrincipal userPrincipal) throws IOException {
+    public ResponseEntity<Object> uploadImage(@RequestBody MultipartFile images, @AuthenticationPrincipal UserPrincipal userPrincipal) throws IOException {
         log.debug("upload image");
 
-        String savedImagePath = s3Upload.upload(multipartFile);
+        String savedImagePath = s3Upload.upload(images);
 
         Member imageupdated = memberService.uploadImage(userPrincipal.getMember(), savedImagePath);
 
@@ -137,7 +141,7 @@ public class MemberController {
         Member verifiedMember = userPrincipal.getMember();
         verifiedMember.setModifiedAt(LocalDateTime.now());
 
-        Member member = memberService.updateMember(verifiedMember,requestBody);
+        Member member = memberService.updateMember(verifiedMember, requestBody);
 
         return new ResponseEntity(mapper.memberToMemberResponse(member), HttpStatus.OK);
     }

@@ -158,7 +158,6 @@ public class StudyService {
 //    }
 
     public List<Study> getAroundStudy(Double nowLat, Double nowLon) {
-        // 처음 페이지 조회시
         return studyRepository.findAll((Sort.by(Sort.Direction.DESC, "studyId"))).stream()
                 .filter(study -> {
                     Double lat = study.getLatitude();
