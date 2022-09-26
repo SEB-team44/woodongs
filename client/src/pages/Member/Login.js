@@ -21,8 +21,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as Links } from "react-router-dom";
 import { UserLogin } from "../../UserContext";
 import { UserInfo } from "../../UserContext";
-
-
+import LogOut from "./Logout";
 
 function Copyright(props) {
   return (
@@ -50,29 +49,51 @@ const theme = createTheme();
 
 export default function Login() {
   let navigate = useNavigate();
-  const { setIslogin } = useContext(UserLogin);
+  const { isLogin, setIslogin } = useContext(UserLogin);
   const { setUserInfo } = useContext(UserInfo);
   const [isLoading, setIsLoading] = useState(false);
+
   //처음 랜더링 되면 위도, 경도를 받아옴//
   useEffect(() => {
+    // if (isLogin === false) {
+    //   localStorage.clear();
+    // }
+
     const setget = () => {
-      let latitude;
-      let longitude;
+      //위도 경도를 담을 변수
+      let latitude = null;
+      let longitude = null;
+
       setIsLoading(true);
       getLocation(latitude, longitude);
     };
 
     function getLocation(latitude, longitude) {
-      navigator.geolocation.getCurrentPosition(function (pos) {
-        latitude = pos.coords.latitude;
-        longitude = pos.coords.longitude;
-        if (typeof latitude === typeof 1 && typeof longitude === typeof 1) {
-          alert("현재 위치는 : " + latitude + "," + longitude);
-        }
-        setLocation(latitude, longitude);
-        setIsLoading(false);
-      });
+
+      
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (pos) {
+          console.log(navigator);
+          latitude = pos.coords.latitude;
+          longitude = pos.coords.longitude;
+
+          if (typeof latitude === typeof 1 && typeof longitude === typeof 1) {
+            alert("현재 위치는 : " + latitude + "," + longitude);
+            setLocation(latitude, longitude);
+            setIsLoading(false);
+          }
+        });
+      } else {
+            alert(
+              "현재 위치를 받아올 수 없습니다. 내 주변 스터디를 열람하려면 위치 엑세스를 허용해주세요."
+            );
+            setIsLoading(false);
+      }
     }
+
+
+
+
     function setLocation(latitude, longitude) {
       if (latitude && longitude) {
         localStorage.setItem("latitude", `${latitude}`);
@@ -183,97 +204,107 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Login
           </Typography>
-          <Box
-            component="form"
-            onSubmit={(e) => handleSubmit(e)}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            {/* <Links to="/main"> */}
-            {isLoading ? (
-              <div className = "login-loading">Loading.......</div>
-            ) : (
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Login
-              </Button>
-            )}
-            {/* </Links> */}
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="http://localhost:3000/SignUp" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-            {isLoading ? (
-              <div className = "login-loading">Loading......</div>
-            ) : (
-              <div className="social_login">
-                <FacebookLoginButton onClick={() => alert("Hello")} />
 
-                {/* <GoogleButton/> */}
-                {/* onClick={() => handleKakao()} */}
-                <a className="btn btn-block social-btn kakao" href={KAKAOPATH}>
-                  <KakaoButton sx={{ mt: 8, mb: 4 }} />
-                </a>
-                <Links to="/main">
-                  {" "}
-                  <button
-                    onClick={() => {
-                      setIslogin(true);
-                    }}
+          {isLogin ? (
+            <div>
+              <LogOut />
+            </div>
+          ) : (
+            <Box
+              component="form"
+              onSubmit={(e) => handleSubmit(e)}
+              noValidate
+              sx={{ mt: 1 }}
+            >
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              {/* <Links to="/main"> */}
+              {isLoading ? (
+                <div className="login-loading">Loading.......</div>
+              ) : (
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Login
+                </Button>
+              )}
+              {/* </Links> */}
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="http://localhost:3000/SignUp" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+              {isLoading ? (
+                <div className="login-loading">Loading......</div>
+              ) : (
+                <div className="social_login">
+                  <FacebookLoginButton onClick={() => alert("Hello")} />
+
+                  {/* <GoogleButton/> */}
+                  {/* onClick={() => handleKakao()} */}
+                  <a
+                    className="btn btn-block social-btn kakao"
+                    href={KAKAOPATH}
                   >
-                    임시로그인버튼
-                  </button>
-                </Links>
-                <Links to="/main">
-                  {" "}
-                  <button
-                    onClick={() => {
-                      localStorage.clear();
-                    }}
-                  >
+                    <KakaoButton sx={{ mt: 8, mb: 4 }} />
+                  </a>
+                  <Links to="/main">
                     {" "}
-                    로그인 안하고 메인가기
-                  </button>
-                </Links>
-              </div>
-            )}
-          </Box>
+                    <button
+                      onClick={() => {
+                        setIslogin(true);
+                      }}
+                    >
+                      임시로그인버튼
+                    </button>
+                  </Links>
+                  <Links to="/main">
+                    {" "}
+                    <button
+                      onClick={() => {
+                        localStorage.clear();
+                      }}
+                    >
+                      {" "}
+                      로그인 안하고 메인가기
+                    </button>
+                  </Links>
+                </div>
+              )}
+            </Box>
+          )}
         </Box>
 
         <Copyright sx={{ mt: 8, mb: 4 }} />
