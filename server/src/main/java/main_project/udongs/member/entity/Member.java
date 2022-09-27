@@ -15,7 +15,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -94,22 +96,22 @@ public class Member {
     //스터디 신청 목록
     @Builder.Default
     @OneToMany(mappedBy = "member")
-    private List<StudyApply> studyApplies = new ArrayList<>();
+    private Set<StudyApply> studyApplies = new HashSet<>();
 
     //내가 속한 스터디(그룹장)
     @Builder.Default
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
-    private List<Study> studies = new ArrayList<>();
+    private Set<Study> studies = new HashSet<>();
 
     //내가 속한 스터디(멤버)
     @Builder.Default
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
-    private List<Acceptance> acceptances = new ArrayList<>();
+    private Set<Acceptance> acceptances = new HashSet<>();
 
     //스터디 모집글 질문(comment)
     @Builder.Default
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<StudyComment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private Set<StudyComment> comments = new HashSet<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "member")
