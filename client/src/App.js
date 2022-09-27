@@ -32,8 +32,8 @@ function App() {
               <Route path="/" element={<Initial />} />
               <Route path="/login" element={<Login />} />
               <Route path="/SignUp" element={<SignUp />} />
-              <Route path="/study/stydyId" element={<Recruit />} />
-              {/* <Route path="/study/:id" element={<Recruit />} /> */}
+              {/* <Route path="/study/stydyId" element={<Recruit />} /> */}
+              <Route path="/study/:id" element={<Recruit />} />
               <Route path="/study/recruit" element={<AddStudy />} />
               <Route path="/study/edite" element={<EditeRecruit />} />
               <Route path="/MyPage" element={<MyPage />} />
