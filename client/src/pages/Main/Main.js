@@ -116,13 +116,13 @@ const Main = () => {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          return data
+          return data;
         })
         .then((data) => setCardList(data.data));
     }
     getCardList();
   }, []);
-  
+
   return (
     <>
       <StyledMain>
@@ -137,7 +137,11 @@ const Main = () => {
             <main className="cardlists-box">
               {cardList.map((el, idx) => {
                 return (
-                  <Card key = {el.studyId} sx={{ maxWidth: 300 }} className="cardlist">
+                  <Card
+                    key={el.studyId}
+                    sx={{ maxWidth: 300 }}
+                    className="cardlist"
+                  >
                     {/* <article > */}
                     <CardMedia className="cardimg-box">
                       <img
@@ -147,8 +151,8 @@ const Main = () => {
                     </CardMedia>
                     <CardContent className="study-info-box">
                       <header className="study-info study-info-header">
-                        <Link to="/recruit">{el.title}</Link>
-                        <Link to={"/study/" + `${el.id}`}>{el.title}</Link>
+                        {/* <Link to="/recruit">{el.title}</Link> */}
+                        {/* <Link to={"/study/" + `${el.id}`}>{el.title}</Link> */}
                         <Link to={"/study/" + `${el.studyId}`}>{el.title}</Link>
                       </header>
                       <a className="study-info">{el.content}</a>
@@ -160,8 +164,6 @@ const Main = () => {
                     </CardContent>
                     <div className="count">
                       <a>모집완료 0/{el.headCount}</a>
-                      {/* <div ref={observer} />
-                      <>{isLoading && <Loading />}</> */}
                     </div>
                     {/* </article> */}
                   </Card>

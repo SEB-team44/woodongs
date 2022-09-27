@@ -105,6 +105,7 @@ const Recruit = () => {
   const navigate = useNavigate();
   const { isLogin } = useContext(UserLogin);
   const [keyword, setKeyword] = useState([]);
+  //댓글리스트
   const [comment, setComment] = useState([]);
   const [card, setCard] = useState([]);
   const [inputComment, setInputComment] = useState("");
@@ -112,6 +113,7 @@ const Recruit = () => {
   const [getconditions, setgetconditions] = useState(true);
 
   const [recruitContent, setRecruitContent] = useState({
+    // studyId: "",
     id: "",
     title: "",
     body: "",
@@ -121,30 +123,58 @@ const Recruit = () => {
 
   //질문목록에 맞는 데이터 받아오기
   //URL 파라미터 받기 card의 id
-  // const { id } = useParams();
+  const { id } = useParams();
   const { studyId } = useParams(); //studyId입니다.
   const [data, setData] = useState({});
+  const [content, setContent] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const access_token = localStorage.getItem("access_token");
+
   useEffect(() => {
-    const getData = async () => {
-      // const { data } = await axios.get(`/card/${id}`);
-      const { data } = await axios.get(`/study/${studyId}`);
-      return data;
-    };
-    getData()
-      .then((result) => setData(result))
-      .then(() => setIsLoaded(true));
+    function getContent() {
+      let reqOption = {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: access_token,
+        },
+      };
+      fetch("http://59.16.126.210:8080/study/" + `${id}`, reqOption)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          return data;
+        })
+        .then((data) => setContent(data));
+    }
+    getContent();
   }, []);
+
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     // const { data } = await axios.get(`/card/${id}`);
+  //     const { data } = await axios.get(`/study/${studyId}`);
+  //     return data;
+  //   };
+  //   getData()
+  //     .then((result) => setData(result))
+  //     .then(console.log(data))
+  //     .then(() => setIsLoaded(true));
+  // }, []);
 
   //삭제메소드
   const handledelete = () => {
     let reqDelete = {
       method: "DELETE",
     };
-    // console.log(id);
+    console.log(id);
     console.log(studyId);
     // fetch("http://localhost:3001/card/" + `${id}`, reqDelete)
-    fetch("http://59.16.126.210:8080/study/" + `${studyId}`, reqDelete)
+    fetch("http://59.16.126.210:8080/study/" + `${id}`, reqDelete)
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
@@ -155,84 +185,112 @@ const Recruit = () => {
 
   //카드 리스트와 댓글 리스트를 첫 랜더링 때 받아오자
   useEffect(() => {
-    const getKeywordList = async () => {
-      // fetch("http://localhost:3001/keyword")
-      fetch("http://59.16.126.210:8080/study")
-        .then((res) => {
-          if (!res.ok) {
-            throw Error("could not fetch the data for that resource");
-          }
-          return res.json();
-        })
+    // const getKeywordList = async () => {
+    //   // fetch("http://localhost:3001/keyword")
+    //   fetch("http://59.16.126.210:8080/study")
+    //     .then((res) => {
+    //       if (!res.ok) {
+    //         throw Error("could not fetch the data for that resource");
+    //       }
+    //       return res.json();
+    //     })
+    //     .then((data) => {
+    //       setKeyword(data);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // };
+
+    function getCommentList() {
+      let reqOption = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: access_token,
+        },
+      };
+      fetch(`http://59.16.126.210:8080/study/${id}`, reqOption)
+        .then((res) => res.json())
         .then((data) => {
-          setKeyword(data);
+          console.log(data); //댓글배열로나옴
+          return data;
         })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    const getCommentList = async () => {
-      // fetch("http://localhost:3001/comment")
-      fetch(`http://59.16.126.210:8080/study/${studyId}/comment}`)
-        .then((res) => {
-          if (!res.ok) {
-            throw Error("could not fetch the data for that resource");
-          }
-          return res.json();
-        })
+        .then((data) => setComment(data.commentResponseDtos));
+    }
+    // const getCommentList = async () => {
+    //   // fetch("http://localhost:3001/comment")
+    //   fetch(`http://59.16.126.210:8080/study/${id}/comment`)
+    //     .then((res) => {
+    //       if (!res.ok) {
+    //         throw Error("could not fetch the data for that resource");
+    //       }
+    //       return res.json();
+    //     })
+    //     .then((data) => {
+    //       console.log(data);
+    //       setComment(data);
+    //     });
+    //   // .catch((err) => {
+    //   //   console.log(err);
+    //   // });
+    // };
+
+    function getCardList() {
+      let reqOption = {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: access_token,
+        },
+      };
+      fetch(`http://59.16.126.210:8080/study/${id}`, reqOption)
+        .then((res) => res.json())
         .then((data) => {
-          setComment(data);
+          console.log(data); //나옴
+          return data;
         })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    const getCardList = async () => {
-      // fetch("http://localhost:3001/card/" + `${id}`)
-      fetch("http://59.16.126.210:8080/study" + `${studyId}`)
-        .then((res) => {
-          if (!res.ok) {
-            throw Error("could not fetch the data for that resource");
-          }
-          return res.json();
-        })
-        .then((data) => {
-          setCard(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    getKeywordList();
+        .then((data) => setCard(data));
+    }
+
     getCommentList();
     getCardList();
   }, [getcondition]);
 
   // 댓글 입력을 누르면, 그 내용을 post요청
   const postCommentData = () => {
+    const access_token = localStorage.getItem("access_token");
     let reqPost = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
       },
       body: JSON.stringify({
-        name: "김영하",
-        content: inputComment,
+        body: comment.body,
       }),
     };
     //`http://59.16.126.210:8080/study/${study-id}/comment`
     //http://localhost:3001/comment
     // fetch("http://localhost:3001/comment", reqPost).then((res) => res.json());
-    fetch(`http://59.16.126.210:8080/study/${studyId}/comment`, reqPost).then(
+    fetch(`http://59.16.126.210:8080/study/${id}/comment`, reqPost).then(
       (res) => res.json()
     );
     //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
     setgetcondition(!getcondition);
     setInputComment("");
   };
-
+  //댓글 구현 메소드
   const handleSumit = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     postCommentData();
     e.target.value = null;
   };
@@ -246,7 +304,7 @@ const Recruit = () => {
     // fetch("http://localhost:3001/comment/" + `${id}`, {
     //   method: "DELETE",
     // });
-    fetch(`http://59.16.126.210:8080/study/${studyId}/comment`, {
+    fetch(`http://59.16.126.210:8080/study/${id}/comment`, {
       method: "DELETE",
     });
 
@@ -258,7 +316,7 @@ const Recruit = () => {
     // fetch("http://localhost:3001/card/" + `${id}`, {
     //   method: "DELETE",
     // });
-    fetch(`http://59.16.126.210:8080/study/${studyId}/comment`, {
+    fetch(`http://59.16.126.210:8080/study/${id}/comment`, {
       method: "DELETE",
     });
     setgetconditions(!getconditions);
@@ -270,6 +328,11 @@ const Recruit = () => {
           <section className="header-box">
             <Navbar />
           </section>
+          {/* {card.map((el,idx)=>{
+            return(
+              
+            )
+          })} */}
           <section className="recruit-main-container">
             <section className="recruit-title-box">
               <button>스터디 네트워킹</button>
@@ -370,9 +433,7 @@ const Recruit = () => {
                     <>
                       <div key={el.id} className="recruit-comment">
                         <div className="recruit-comment-name">{el.name}</div>
-                        <div className="recruit-comment-content">
-                          {el.content}
-                        </div>
+                        <div className="recruit-comment-content">{el.body}</div>
                         <button
                           className="recruit-comment-delete-btn"
                           onClick={() => handeDeleteComment(el.id)}
