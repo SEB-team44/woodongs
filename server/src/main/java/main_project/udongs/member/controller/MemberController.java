@@ -124,11 +124,12 @@ public class MemberController {
     public ResponseEntity<Object> uploadImage(@RequestBody MultipartFile images, @AuthenticationPrincipal UserPrincipal userPrincipal) throws IOException {
         log.debug("upload image");
 
-        String savedImagePath = s3Upload.upload(images);
+        Member member = userPrincipal.getMember();
+        String savedImagePath = s3Upload.upload(images, member);
 
-        Member imageupdated = memberService.uploadImage(userPrincipal.getMember(), savedImagePath);
+        Member imageUpdated = memberService.uploadImage(member, savedImagePath);
 
-        return new ResponseEntity<>(imageupdated, HttpStatus.OK);
+        return new ResponseEntity<>(imageUpdated, HttpStatus.OK);
     }
 
     @Operation(summary = "회원 정보 수정")
