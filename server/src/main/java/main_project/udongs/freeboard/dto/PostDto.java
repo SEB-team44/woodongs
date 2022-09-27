@@ -16,7 +16,6 @@ public class PostDto {
     public static class Post {
         private String title;
         private String body;
-        private String city;
     }
 
     @Getter
