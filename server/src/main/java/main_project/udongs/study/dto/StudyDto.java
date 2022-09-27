@@ -1,5 +1,6 @@
 package main_project.udongs.study.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,12 +15,14 @@ import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Schema
 public class StudyDto {
 
     //스터디 모집 글 작성
     @Getter
     @Setter
     @AllArgsConstructor
+    @Schema(description = "post")
     public static class Post {
 
         @NotBlank(message = "공백만 입력할 수 없습니다.")
@@ -42,6 +45,7 @@ public class StudyDto {
     //스터디 모집 글 수정
     @Getter
     @AllArgsConstructor
+    @Schema
     public static class Patch {
 
         private long studyId;
@@ -64,6 +68,7 @@ public class StudyDto {
     @AllArgsConstructor
     @Getter
     @Builder
+    @Schema
     public static class Response {
 
         private long studyId;
@@ -85,6 +90,7 @@ public class StudyDto {
     }
 
     @Builder
+    @Schema
     public static class CardResponse {
         private Long studyId;
         private String title;

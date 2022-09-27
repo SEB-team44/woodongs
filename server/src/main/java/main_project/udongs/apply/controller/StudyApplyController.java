@@ -38,7 +38,7 @@ public class StudyApplyController {
     private final StudyApplyMapper mapper;
 
     @Operation(summary = "스터디 신청")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.class))))})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @PostMapping("/{study-id}/apply")
     public ResponseEntity applyStudy(@PathVariable("study-id") Long studyId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("APPLY STUDY");

@@ -1,5 +1,6 @@
 package main_project.udongs.study.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
@@ -25,6 +26,7 @@ public class StudyCommentDto {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Patch {
 
         @NotBlank(message = "공백을 등록할 수 없습니다.")
@@ -41,6 +43,7 @@ public class StudyCommentDto {
         private String body;
         private String nickName;
         private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
 
     }
 
