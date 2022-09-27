@@ -1,6 +1,11 @@
 spring:
   profiles:
     active: sensitive
+  #파일 업로드 사이즈 2MB로 수정
+  servlet:
+    multipart:
+      maxFileSize=2MB
+      maxRequestSize=2MB
 
 springdoc:
   use-fqn: true
