@@ -2,6 +2,7 @@ package main_project.udongs.member.entity;
 
 import lombok.*;
 import main_project.udongs.apply.entity.Acceptance;
+import main_project.udongs.freeboard.entity.Post;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
 import main_project.udongs.apply.entity.StudyApply;
@@ -109,6 +110,10 @@ public class Member {
     @Builder.Default
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<StudyComment> comments = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member")
+    private List<Post> posts = new ArrayList<>();
 
     //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
     public Member(
