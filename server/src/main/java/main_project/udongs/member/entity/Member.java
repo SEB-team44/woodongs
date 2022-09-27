@@ -2,11 +2,10 @@ package main_project.udongs.member.entity;
 
 import lombok.*;
 import main_project.udongs.apply.entity.Acceptance;
+import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.freeboard.entity.Post;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
-import main_project.udongs.apply.entity.StudyApply;
-import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
 import main_project.udongs.study.entity.StudyComment;
 
@@ -123,6 +122,7 @@ public class Member {
             @NotNull @Size(max = 512) String email,
             @NotNull @Size(max = 1) String emailVerifiedYn,
             @NotNull @Size(max = 512) String profileImageUrl,
+            @NotNull Profile profile,
             @NotNull ProviderType providerType,
             @NotNull RoleType roleType,
             @NotNull LocalDateTime createdAt
@@ -133,6 +133,7 @@ public class Member {
         this.email = email != null ? email : "NO_EMAIL";
         this.emailVerifiedYn = emailVerifiedYn;
         this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
+        this.profile = profile;
         this.providerType = providerType;
         this.roleType = roleType;
         this.createdAt = createdAt;
