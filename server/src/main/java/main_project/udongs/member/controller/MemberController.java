@@ -136,7 +136,9 @@ public class MemberController {
     @PatchMapping
     public ResponseEntity patchMember(@RequestBody MemberDto.Patch requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("patch member");
-        requestBody.setPassword(passwordEncoder.encode(requestBody.getPassword()));
+        if (requestBody.getPassword() != null) {
+            requestBody.setPassword(passwordEncoder.encode(requestBody.getPassword()));
+        }
 
         Member verifiedMember = userPrincipal.getMember();
         verifiedMember.setModifiedAt(LocalDateTime.now());
