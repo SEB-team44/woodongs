@@ -64,8 +64,17 @@ public class StudyController {
         log.debug("POST STUDY");
         //등록시 스터디장의 위치정보, 스터디장 id번호 반환
         Member member = userPrincipal.getMember();
-        requestBody.setLatitude(member.getLatitude());
-        requestBody.setLongitude(member.getLongitude());
+
+        //위치정보가 안들어올시 예외 처리
+        try {
+            requestBody.setLatitude(member.getLatitude());
+            requestBody.setLongitude(member.getLongitude());
+        }  catch (Exception e) {
+            e.printStackTrace();
+            log.error("Exception ERROR: {} ", e.getMessage());
+            throw e;
+        }
+
 
         Study study = mapper.studyPostToStudy(requestBody);
 
@@ -111,7 +120,7 @@ public class StudyController {
     @Operation(summary = "전체 스터디 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
     @GetMapping
-    public ResponseEntity getStudies(@PageableDefault(size = 15, sort = "studyId", direction = Sort.Direction.DESC)Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword ) {
+    public ResponseEntity getStudies(@PageableDefault(size = 10, sort = "studyId", direction = Sort.Direction.DESC)Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword ) {
         log.debug("GET ALL STUDIES");
 
         //Page<Study> pageStudies = studyService.getStudies(pageable);
