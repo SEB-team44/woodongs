@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.repository.MemberRepository;
+import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +35,11 @@ public class AwsS3Upload {
     public String upload(MultipartFile multipartFile, Member member) throws IOException {
 
         //이미 이미지가 등록되있으면 그거 삭제후 등록
-        if(member.getProfileImageUrl() != null) {
-            delete(member);
+        //카카오는 처음에는 그냥 진행
+        if(!member.getProfileImageUrl().contains("kakaocdn")) {
+            if (member.getProfileImageUrl() != null) {
+                delete(member);
+            }
         }
 
         //파일이름 중복 방지 {UUID랜덤값 + 파일 원래 이름}
