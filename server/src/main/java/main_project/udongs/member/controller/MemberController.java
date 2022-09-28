@@ -122,11 +122,10 @@ public class MemberController {
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Member.class))))
     @PostMapping("/imageupload")
     public ResponseEntity<Object> uploadImage(@RequestBody MultipartFile images, @AuthenticationPrincipal UserPrincipal userPrincipal) throws IOException {
-        log.debug("upload image");
 
         Member member = userPrincipal.getMember();
-        String savedImagePath = s3Upload.upload(images, member);
 
+        String savedImagePath = s3Upload.upload(images, member);
         Member imageUpdated = memberService.uploadImage(member, savedImagePath);
 
         return new ResponseEntity<>(imageUpdated, HttpStatus.OK);
