@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, redirect } from "react-router-dom";
 import Initial from "./Initial";
+import EntireMain from "./pages/Main/EntireMain";
 import Main from "./pages/Main/Main";
 import Login from "./pages/Member/Login";
 import SignUp from "./pages/Member/SignUp";
@@ -28,11 +29,11 @@ function App() {
         <UserLogin.Provider value={{ isLogin, setIslogin }}>
           <BrowserRouter>
             <Routes>
+              <Route path="/EntireMain" element={<EntireMain />} />
               <Route path="/main" element={<Main />} />
               <Route path="/" element={<Initial />} />
               <Route path="/login" element={<Login />} />
               <Route path="/SignUp" element={<SignUp />} />
-              {/* <Route path="/study/stydyId" element={<Recruit />} /> */}
               <Route path="/study/:id" element={<Recruit />} />
               <Route path="/study/recruit" element={<AddStudy />} />
               <Route path="/study/edite" element={<EditeRecruit />} />
