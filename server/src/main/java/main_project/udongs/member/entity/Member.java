@@ -2,11 +2,11 @@ package main_project.udongs.member.entity;
 
 import lombok.*;
 import main_project.udongs.apply.entity.Acceptance;
+import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.freeboard.entity.Post;
+import main_project.udongs.freeboard.entity.PostComment;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
-import main_project.udongs.apply.entity.StudyApply;
-import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
 import main_project.udongs.study.entity.StudyComment;
 
@@ -117,12 +117,17 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "post")
+    List<PostComment> postComments = new ArrayList<>();
+
     //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
     public Member(
             @NotNull @Size(max = 100) String nickName,
             @NotNull @Size(max = 512) String email,
             @NotNull @Size(max = 1) String emailVerifiedYn,
             @NotNull @Size(max = 512) String profileImageUrl,
+            @NotNull Profile profile,
             @NotNull ProviderType providerType,
             @NotNull RoleType roleType,
             @NotNull LocalDateTime createdAt
@@ -133,6 +138,7 @@ public class Member {
         this.email = email != null ? email : "NO_EMAIL";
         this.emailVerifiedYn = emailVerifiedYn;
         this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
+        this.profile = profile;
         this.providerType = providerType;
         this.roleType = roleType;
         this.createdAt = createdAt;

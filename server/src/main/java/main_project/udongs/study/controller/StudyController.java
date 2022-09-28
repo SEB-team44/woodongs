@@ -9,19 +9,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import main_project.udongs.apply.service.StudyApplyService;
-
 import main_project.udongs.globaldto.MultiResponseDto;
-
-import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.service.MemberService;
-
-import main_project.udongs.study.dto.SingleResponseStudyDto;
-
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
-
+import main_project.udongs.study.dto.SingleResponseStudyDto;
 import main_project.udongs.study.dto.StudyCommentDto;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
@@ -32,7 +25,6 @@ import main_project.udongs.study.service.StudySearchService;
 import main_project.udongs.study.service.StudyService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -114,6 +106,7 @@ public class StudyController {
     }
 
 
+
     //무한스크롤
     //일단 페이지네이션 적용
     //검색기능 (필터링) 기능 추가
@@ -168,12 +161,11 @@ public class StudyController {
     @GetMapping("/around")
     public ResponseEntity<List<StudyDto.Response>> getAroundStudy(
 //            @PageableDefault(size = 15, sort = "studyId", direction = Sort.Direction.DESC) Pageable pageable,
-//            @RequestParam Long page, @RequestParam(required = false) Long lastId,
+//            @RequestParam(required = false) Long lastId,
+            @RequestParam Long page,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
-//        List<Study> studies = studyService.getAroundStudy(userPrincipal.getMember().getLatitude(),
-//                userPrincipal.getMember().getLongitude(),page,lastId);
         List<Study> studies = studyService.getAroundStudy(userPrincipal.getMember().getLatitude(),
-                userPrincipal.getMember().getLongitude());
+                userPrincipal.getMember().getLongitude(), page);
         List<StudyDto.Response> response = mapper.studiesToStudyResponse(studies);
 
         return ResponseEntity.ok().body(response);
@@ -237,6 +229,44 @@ public class StudyController {
         }
 
         return searchedStudies;
+    }
+
+
+    @Operation(summary = "스터디 더미데이터 삽입")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "CREATED")})
+    @PostMapping("/recruit/dummy")
+    public ResponseEntity insertData(@RequestBody StudyDto.Post requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        log.debug("POST STUDY");
+        //등록시 스터디장의 위치정보, 스터디장 id번호 반환
+        Member member = userPrincipal.getMember();
+
+        //위치정보가 안들어올시 예외 처리
+        try {
+            requestBody.setLatitude(member.getLatitude());
+            requestBody.setLongitude(member.getLongitude());
+        }  catch (Exception e) {
+            e.printStackTrace();
+            log.error("Exception ERROR: {} ", e.getMessage());
+            throw e;
+        }
+
+        for (int i = 0; i < 50; i++) {
+            Study study = Study.builder()
+                    .title(requestBody.getTitle() + i)
+                    .body(requestBody.getBody() + i)
+                    .category(requestBody.getCategory())
+                    .longitude(requestBody.getLongitude())
+                    .latitude(requestBody.getLatitude())
+                    .headCount(requestBody.getHeadCount())
+                    .build();
+
+
+            studyService.createStudy(study, member);
+//            StudyDto.Response response = mapper.studyToStudyResponse(savedStudy);
+        }
+
+
+        return new ResponseEntity<>("스터디 50개 생성 완료", HttpStatus.CREATED);
     }
 
 }

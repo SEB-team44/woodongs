@@ -1,7 +1,9 @@
 package main_project.udongs.freeboard.mapper;
 
+import main_project.udongs.freeboard.dto.PostCommentDto;
 import main_project.udongs.freeboard.dto.PostDto;
 import main_project.udongs.freeboard.entity.Post;
+import main_project.udongs.freeboard.entity.PostComment;
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import org.mapstruct.Mapper;
@@ -21,6 +23,7 @@ public interface PostMapper {
                 .memberId(member.getMemberId())
                 .nickName(member.getNickName())
                 .email(member.getEmail())
+                .profile(member.getProfile())
                 .phoneNumber(member.getPhoneNumber())
                 .city(member.getCity())
                 .emailVerifiedYn(member.getEmailVerifiedYn())
@@ -33,6 +36,9 @@ public interface PostMapper {
                 .modifiedAt(member.getModifiedAt())
                 .build();
 
+        List<PostCommentDto.Response> commentResponseDtos = this.commentsToCommentResponse(post.getComments());
+
+
         return PostDto.Response.builder()
                 .postId(post.getPostId())
                 .title(post.getTitle())
@@ -42,8 +48,27 @@ public interface PostMapper {
                 .createdAt(post.getCreatedAt())
                 .modifiedAt(post.getModifiedAt())
                 .memberResponseDto(memberResponseDto)
+                .commentResponseDtos(commentResponseDtos)
                 .build();
     }
 
     List<PostDto.Response> postsToPostResponse(List<Post> posts);
+
+
+    PostComment commentPostToComment(PostCommentDto.Post requestBody);
+
+    PostComment commentPatchToComment(PostCommentDto.Patch requestBody);
+
+
+    default PostCommentDto.Response commentToCommentResponse(PostComment postComment){
+        return PostCommentDto.Response.builder()
+                .commentId(postComment.getCommentId())
+                .nickName(postComment.getCreatedBy())
+                .body(postComment.getBody())
+                .createdAt(postComment.getCreatedAt())
+                .modifiedAt(postComment.getModifiedAt())
+                .build();
+    }
+
+    List<PostCommentDto.Response> commentsToCommentResponse(List<PostComment> postComments);
 }

@@ -1,8 +1,6 @@
 package main_project.udongs.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.awt.print.Book;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -122,13 +119,13 @@ public class MemberController {
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Member.class))))
     @PostMapping("/imageupload")
     public ResponseEntity<Object> uploadImage(@RequestBody MultipartFile images, @AuthenticationPrincipal UserPrincipal userPrincipal) throws IOException {
-        log.debug("upload image");
 
-        String savedImagePath = s3Upload.upload(images);
+        Member member = userPrincipal.getMember();
 
-        Member imageupdated = memberService.uploadImage(userPrincipal.getMember(), savedImagePath);
+        String savedImagePath = s3Upload.upload(images, member);
+        Member imageUpdated = memberService.uploadImage(member, savedImagePath);
 
-        return new ResponseEntity<>(imageupdated, HttpStatus.OK);
+        return new ResponseEntity<>(imageUpdated, HttpStatus.OK);
     }
 
     @Operation(summary = "회원 정보 수정")
@@ -181,6 +178,7 @@ public class MemberController {
 
         return ResponseEntity.ok("프로필 수정 완료");
     }
+
 }
 
 

@@ -3,6 +3,7 @@ package main_project.udongs.oauth2.oauth.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import main_project.udongs.member.entity.Member;
+import main_project.udongs.member.entity.Profile;
 import main_project.udongs.member.repository.MemberRepository;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
@@ -74,6 +75,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 userInfo.getEmail(),
                 "Y",
                 userInfo.getImageUrl(),
+                new Profile("","",""),
                 providerType,
                 RoleType.USER,
                 now

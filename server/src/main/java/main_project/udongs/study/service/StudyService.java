@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
 import main_project.udongs.member.entity.Member;
-import main_project.udongs.study.dto.StudyCommentDto;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Distance;
 import main_project.udongs.study.entity.Study;
@@ -73,7 +72,6 @@ public class StudyService {
     }
 
 
-
     //스터디 삭제
     @Transactional
     public void deleteStudy(Long studyId) {
@@ -133,38 +131,24 @@ public class StudyService {
     // 주변 3km이내 스터디 목록 가져오기
     // cursor 방식의 페이지네이션 사용 아래로 스크롤 할때마다 가장 마지막에 본 studyId보다 작은 스터디만 표시
     // 일단 주석처리
-//    public List<Study> getAroundStudy(Double nowLat, Double nowLon, Long page, Long lastId) {
-//        // 처음 페이지 조회시
-//        if (page == 0 || lastId == 0) {
-//            return studyRepository.findAll((Sort.by(Sort.Direction.DESC, "studyId"))).stream()
-//                    .filter(study -> {
-//                        Double lat = study.getLatitude();
-//                        Double lon = study.getLongitude();
-//                        double dist = distance.calculateDistance(nowLat, nowLon, lat, lon, "meter");
-//                        return dist < 3000;
-//                    }).limit(15).collect(Collectors.toList());
-//        }
-//
-//        // 스크롤 내려서 페이지 조회시
-//        return studyRepository.findAll((Sort.by(Sort.Direction.DESC, "studyId"))).stream()
-//                .filter(study -> {
-//                    return study.getStudyId() < lastId;
-//                })
-//                .filter(study -> {
-//                    Double lat = study.getLatitude();
-//                    Double lon = study.getLongitude();
-//                    double dist = distance.calculateDistance(nowLat, nowLon, lat, lon, "meter");
-//                    return dist < 3000;
-//                }).limit(15*page).collect(Collectors.toList());
-//    }
-
-    public List<Study> getAroundStudy(Double nowLat, Double nowLon) {
+    public List<Study> getAroundStudy(Double nowLat, Double nowLon, Long page) {
+        // 처음 페이지 조회시
         return studyRepository.findAll((Sort.by(Sort.Direction.DESC, "studyId"))).stream()
                 .filter(study -> {
                     Double lat = study.getLatitude();
                     Double lon = study.getLongitude();
                     double dist = distance.calculateDistance(nowLat, nowLon, lat, lon, "meter");
                     return dist < 3000;
-                }).collect(Collectors.toList());
+                }).skip(15 * page).limit(15 * (page + 1)).collect(Collectors.toList());
     }
+
+//    public List<Study> getAroundStudy(Double nowLat, Double nowLon) {
+//        return studyRepository.findAll((Sort.by(Sort.Direction.DESC, "studyId"))).stream()
+//                .filter(study -> {
+//                    Double lat = study.getLatitude();
+//                    Double lon = study.getLongitude();
+//                    double dist = distance.calculateDistance(nowLat, nowLon, lat, lon, "meter");
+//                    return dist < 3000;
+//                }).collect(Collectors.toList());
+//    }
 }

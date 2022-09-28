@@ -7,6 +7,7 @@ import main_project.udongs.member.dto.MemberDto;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class PostDto {
 
@@ -43,5 +44,6 @@ public class PostDto {
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private MemberDto.Response memberResponseDto;
+        private List<PostCommentDto.Response> commentResponseDtos;
     }
 }

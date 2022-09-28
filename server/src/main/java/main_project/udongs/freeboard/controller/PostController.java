@@ -8,10 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import main_project.udongs.freeboard.dto.PostCommentDto;
 import main_project.udongs.freeboard.dto.PostDto;
 import main_project.udongs.freeboard.entity.Post;
+import main_project.udongs.freeboard.entity.PostComment;
 import main_project.udongs.freeboard.mapper.PostMapper;
 import main_project.udongs.freeboard.service.PostService;
+import main_project.udongs.member.entity.Member;
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -101,5 +104,53 @@ public class PostController {
         List<Post> studies = searchedPosts.getContent();
 
         return new ResponseEntity<>(mapper.postsToPostResponse(studies), HttpStatus.OK);
+    }
+
+    @Operation(summary = "게시글에 대한 댓글 작성")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
+    @PostMapping("/{post-id}/comment")
+    public ResponseEntity postComment(@Valid @PathVariable("post-id") Long postId,
+                                      @RequestBody PostCommentDto.Post postCommentDto,
+                                      @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        log.debug("POST STUDY COMMENTS");
+
+        PostComment comment = mapper.commentPostToComment(postCommentDto);
+        Member member = userPrincipal.getMember();
+
+        PostComment savedComment = postService.createPostComment(comment, member, postId);
+        PostCommentDto.Response response = mapper.commentToCommentResponse(savedComment);
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @Operation(summary = "게시글에 대한 댓글 수정")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
+    @PatchMapping("/{post-id}/{comment-id}")
+    public ResponseEntity patchComment(@Valid @PathVariable("post-id") Long postId, @PathVariable("comment-id") Long commentId,
+                                       @RequestBody PostCommentDto.Patch requestBody,
+                                       @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        log.debug("PATCH STUDY COMMENTS");
+
+        PostComment comment = mapper.commentPatchToComment(requestBody);
+        PostComment patchedComment = postService.patchPostComment(comment, commentId);
+
+        PostCommentDto.Response response = mapper.commentToCommentResponse(patchedComment);
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
+    //게시글 댓글 삭제기능
+    @Operation(summary = "게시글에 대한 댓글 삭제")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
+    @DeleteMapping("/{post-id}/{comment-id}")
+    public ResponseEntity deleteComment(@Valid @PathVariable("post-id") Long postId, @PathVariable("comment-id") Long commentId,
+                                        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        log.debug("DELETE STUDY COMMENTS");
+
+        postService.deletePostComment(commentId);
+        String ans = "Deletion completed";
+
+        return new ResponseEntity<>(ans,HttpStatus.OK);
     }
 }
