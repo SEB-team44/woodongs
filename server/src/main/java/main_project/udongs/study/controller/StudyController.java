@@ -161,12 +161,11 @@ public class StudyController {
     @GetMapping("/around")
     public ResponseEntity<List<StudyDto.Response>> getAroundStudy(
 //            @PageableDefault(size = 15, sort = "studyId", direction = Sort.Direction.DESC) Pageable pageable,
-//            @RequestParam Long page, @RequestParam(required = false) Long lastId,
+//            @RequestParam(required = false) Long lastId,
+            @RequestParam Long page,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
-//        List<Study> studies = studyService.getAroundStudy(userPrincipal.getMember().getLatitude(),
-//                userPrincipal.getMember().getLongitude(),page,lastId);
         List<Study> studies = studyService.getAroundStudy(userPrincipal.getMember().getLatitude(),
-                userPrincipal.getMember().getLongitude());
+                userPrincipal.getMember().getLongitude(), page);
         List<StudyDto.Response> response = mapper.studiesToStudyResponse(studies);
 
         return ResponseEntity.ok().body(response);
@@ -251,7 +250,7 @@ public class StudyController {
             throw e;
         }
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 50; i++) {
             Study study = Study.builder()
                     .title(requestBody.getTitle() + i)
                     .body(requestBody.getBody() + i)

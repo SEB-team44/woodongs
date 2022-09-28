@@ -1,33 +1,26 @@
 package main_project.udongs.freeboard.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import main_project.udongs.member.entity.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Setter
-@Getter
-public class Post {
+@Data
+@NoArgsConstructor
+public class PostComment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
-
-    @Column
-    private String title;
+    private Long commentId;
 
     @Column
     private String body;
 
     @Column
-    private String city;
-
-    @Column
-    private Long createdBy;
+    private String createdBy;
 
     @Column
     private LocalDateTime createdAt;
@@ -36,8 +29,11 @@ public class Post {
     private LocalDateTime modifiedAt;
 
     @ManyToOne
+    @JoinColumn(name = "postId")
+    private Post post;
+
+    @ManyToOne
+    @JoinColumn(name = "memberId")
     private Member member;
 
-    @OneToMany(mappedBy = "post")
-    List<PostComment> comments = new ArrayList<>();
 }

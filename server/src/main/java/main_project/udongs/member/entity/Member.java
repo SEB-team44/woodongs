@@ -4,6 +4,7 @@ import lombok.*;
 import main_project.udongs.apply.entity.Acceptance;
 import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.freeboard.entity.Post;
+import main_project.udongs.freeboard.entity.PostComment;
 import main_project.udongs.oauth2.oauth.entity.ProviderType;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
 import main_project.udongs.study.entity.Study;
@@ -115,6 +116,10 @@ public class Member {
     @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "post")
+    List<PostComment> postComments = new ArrayList<>();
 
     //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
     public Member(
