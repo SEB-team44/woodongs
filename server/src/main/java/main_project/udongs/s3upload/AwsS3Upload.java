@@ -36,8 +36,8 @@ public class AwsS3Upload {
 
         //이미 이미지가 등록되있으면 그거 삭제후 등록
         //카카오는 처음에는 그냥 진행
-        if(!member.getProfileImageUrl().contains("kakaocdn")) {
-            if (member.getProfileImageUrl() != null) {
+        if (member.getProfileImageUrl() != null) {
+            if (!member.getProfileImageUrl().contains("kakaocdn")) {
                 delete(member);
             }
         }
@@ -52,7 +52,7 @@ public class AwsS3Upload {
         //이미지 업로드
         amazonS3.putObject(bucket, s3FileName, multipartFile.getInputStream(), objMeta);
 
-        log.debug("Successfully uploaded:{} ", s3FileName );
+        log.debug("Successfully uploaded:{} ", s3FileName);
 
         //업로드 된 이미지의 url 정보 String으로 반환
         return amazonS3.getUrl(bucket, s3FileName).toString();
@@ -61,21 +61,21 @@ public class AwsS3Upload {
 
     private void delete(Member member) {
 
-            String s = member.getProfileImageUrl();
-            AmazonS3URI s3URI = new AmazonS3URI(s);
+        String s = member.getProfileImageUrl();
+        AmazonS3URI s3URI = new AmazonS3URI(s);
 
-            String key = URLDecoder.decode((s3URI.getKey().toString()), StandardCharsets.UTF_8);
+        String key = URLDecoder.decode((s3URI.getKey().toString()), StandardCharsets.UTF_8);
 
-                try {
-                    DeleteObjectRequest deleteRequest = new DeleteObjectRequest(bucket, key);
-                    amazonS3.deleteObject(deleteRequest);
-                    log.debug("Deleted previous image:{} ", key );
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    log.error("Exception ERROR: {} ", e.getMessage());
-                    throw e;
-                }
-
+        try {
+            DeleteObjectRequest deleteRequest = new DeleteObjectRequest(bucket, key);
+            amazonS3.deleteObject(deleteRequest);
+            log.debug("Deleted previous image:{} ", key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Exception ERROR: {} ", e.getMessage());
+            throw e;
         }
+
     }
+}
 

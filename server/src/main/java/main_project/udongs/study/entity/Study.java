@@ -57,15 +57,17 @@ public class Study {
     @JoinColumn(name = "memberId")
     private Member member;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "study")
     List<StudyApply> studyApplies = new ArrayList<>();
 
     //수락한 스터디 신청 리스트
+    @JsonIgnore
     @OneToMany(mappedBy = "study")
     List<Acceptance> acceptances = new ArrayList<>();
 
     //스터디 모집글 댓글
+    @JsonIgnore
     @OneToMany(mappedBy = "study")
     List<StudyComment> comments = new ArrayList<>();
 
