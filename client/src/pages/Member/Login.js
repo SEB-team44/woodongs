@@ -43,7 +43,7 @@ function Copyright(props) {
 
 // 카카오 인증 url
 const KAKAOPATH =
-  "http://59.16.126.210:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/Redirect";
+  "http://3.35.188.110:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/Redirect";
 
 const theme = createTheme();
 
@@ -69,8 +69,6 @@ export default function Login() {
     };
 
     function getLocation(latitude, longitude) {
-
-      
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (pos) {
           console.log(navigator);
@@ -84,15 +82,12 @@ export default function Login() {
           }
         });
       } else {
-            alert(
-              "현재 위치를 받아올 수 없습니다. 내 주변 스터디를 열람하려면 위치 엑세스를 허용해주세요."
-            );
-            setIsLoading(false);
+        alert(
+          "현재 위치를 받아올 수 없습니다. 내 주변 스터디를 열람하려면 위치 엑세스를 허용해주세요."
+        );
+        setIsLoading(false);
       }
     }
-
-
-
 
     function setLocation(latitude, longitude) {
       if (latitude && longitude) {
@@ -121,9 +116,9 @@ export default function Login() {
       }),
     };
 
-    //59.16.126.210:8080대한님
+    //3.35.188.110:8080대한님
     //14.6.86.98:8080 지훈님
-    fetch("http://59.16.126.210:8080/login", reqOAuthPost)
+    fetch("http://3.35.188.110:8080/login", reqOAuthPost)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -147,10 +142,10 @@ export default function Login() {
               latitude: localStorage.getItem("latitude"),
               longitude: localStorage.getItem("longitude"),
             });
-            fetch("http://59.16.126.210:8080/member/locate", reqOAuthPost)
+            fetch("http://3.35.188.110:8080/member/locate", reqOAuthPost)
               .then((res) => console.log(res.json()))
               .then((res) => {
-                fetch("http://59.16.126.210:8080/member/me", {
+                fetch("http://3.35.188.110:8080/member/me", {
                   headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",

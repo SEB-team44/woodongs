@@ -2,8 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import Navbar from "./Navbar";
 import Notice from "./Notice";
-import axios from "axios";
-import useFetch from "../useFetch";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
@@ -13,7 +11,7 @@ import CardContent from "@mui/material/CardContent";
 import { UserInfo } from "../../UserContext";
 import { useContext } from "react";
 
-const StyledMain = styled.div`
+const StyledEntireMain = styled.div`
   .main-container {
     position: absolute;
     display: flex;
@@ -96,7 +94,7 @@ const StyledMain = styled.div`
   }
 `;
 
-const Main = () => {
+const EntireMain = () => {
   const access_token = localStorage.getItem("access_token");
   const [cardList, setCardList] = useState([]);
   useEffect(() => {
@@ -111,7 +109,6 @@ const Main = () => {
           Authorization: access_token,
         },
       };
-
       fetch("http://3.35.188.110:8080/study", reqOption)
         .then((res) => res.json())
         .then((data) => {
@@ -125,7 +122,7 @@ const Main = () => {
 
   return (
     <>
-      <StyledMain>
+      <StyledEntireMain>
         <section className="main-container">
           <section className="main-nav-container">
             <Navbar />
@@ -176,9 +173,8 @@ const Main = () => {
             <Footer />
           </section>
         </section>
-      </StyledMain>
+      </StyledEntireMain>
     </>
   );
 };
-
-export default Main;
+export default EntireMain;

@@ -60,7 +60,7 @@ const MyPage = () => {
   const [changeInfo, setChangeInfo] = useState({
     job: "직무를 입력해 주세요",
     career: "경력을 입력해 주세요",
-    introduce : "자기소개를 해주세요"
+    introduce: "자기소개를 해주세요",
   });
   const [Image, setImage] = useState(userInfo.profileImageUrl);
   const [isEdit, setIsEdit] = useState(false);
@@ -77,7 +77,7 @@ const MyPage = () => {
   //사용자 정보가 바뀌면 get 받아오기
   useEffect(() => {
     const getMyPageInfo = async () => {
-      fetch("http://59.16.126.210:8080/member/me", {
+      fetch("http://3.35.188.110:8080/member/me", {
         headers: header,
       })
         .then((res) => res.json())
@@ -136,42 +136,34 @@ const MyPage = () => {
     // 바뀐부분 patch요청 보내기
 
     const PatchImgChanges = async () => {
-    //   fetch("http://59.16.126.210:8080/member/imageupload", {
-    //     method: "POST",
-    //     headers: header,
-    //     body: JSON.stringify({
-    //       images: Image,
-    //     }),
-    //   }).then((res) => {
-    //    console.log(res);
-    //   }). catch((error) => {
-    //     console.log(error);
-    //   })
-
-
-
-
+      //   fetch("http://3.35.188.110:8080/member/imageupload", {
+      //     method: "POST",
+      //     headers: header,
+      //     body: JSON.stringify({
+      //       images: Image,
+      //     }),
+      //   }).then((res) => {
+      //    console.log(res);
+      //   }). catch((error) => {
+      //     console.log(error);
+      //   })
     };
 
     const PatchInfoChanges = async () => {
-      fetch("http://59.16.126.210:8080/member/profile", {
+      fetch("http://3.35.188.110:8080/member/profile", {
         method: "PATCH",
         headers: header,
         body: JSON.stringify({
-            job: changeInfo.job,
-            career: changeInfo.career,
-            introduction: changeInfo.introduce,
+          job: changeInfo.job,
+          career: changeInfo.career,
+          introduction: changeInfo.introduce,
         }),
-      }).then((res) => {
-        console.log(res.status);
-      }).catch((error) => console.log(error))
-      ;
+      })
+        .then((res) => {
+          console.log(res.status);
+        })
+        .catch((error) => console.log(error));
     };
-
-
-
-
-
 
     PatchInfoChanges();
     // PatchImgChanges();
@@ -179,9 +171,9 @@ const MyPage = () => {
   };
 
   const onImgChange = async (e) => {
-    console.log(e.target.files[0])
+    console.log(e.target.files[0]);
     if (e.target.files[0]) {
-      setFile({...e.target.files[0]});
+      setFile({ ...e.target.files[0] });
     } else {
       //업로드 취소할 시
       if (userInfo.profileImageUrl) {
@@ -192,21 +184,21 @@ const MyPage = () => {
     }
 
     const formData = new FormData();
-    formData.append('file', e.target.files[0]);
-    console.log(e.target.files[0])
+    formData.append("file", e.target.files[0]);
+    console.log(e.target.files[0]);
     // 서버의 upload API 호출
-    const res = fetch("http://59.16.126.210:8080/member/imageupload", {
+    const res = fetch("http://3.35.188.110:8080/member/imageupload", {
       method: "POST",
       headers: header,
-        images: formData
-    }).then((res) => {
-     console.log(res);
-    }). catch((error) => {
-      console.log(error);
+      images: formData,
     })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     console.log(res);
-
-
 
     //화면에 프로필 사진 표시
     const reader = new FileReader();

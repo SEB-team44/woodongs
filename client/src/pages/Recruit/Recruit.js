@@ -143,7 +143,7 @@ const Recruit = () => {
           Authorization: access_token,
         },
       };
-      fetch("http://59.16.126.210:8080/study/" + `${id}`, reqOption)
+      fetch("http://3.35.188.110:8080/study/" + `${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -174,7 +174,7 @@ const Recruit = () => {
     console.log(id);
     console.log(studyId);
     // fetch("http://localhost:3001/card/" + `${id}`, reqDelete)
-    fetch("http://59.16.126.210:8080/study/" + `${id}`, reqDelete)
+    fetch("http://3.35.188.110:8080/study/" + `${id}`, reqDelete)
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
@@ -187,7 +187,7 @@ const Recruit = () => {
   useEffect(() => {
     // const getKeywordList = async () => {
     //   // fetch("http://localhost:3001/keyword")
-    //   fetch("http://59.16.126.210:8080/study")
+    //   fetch("http://3.35.188.110:8080/study")
     //     .then((res) => {
     //       if (!res.ok) {
     //         throw Error("could not fetch the data for that resource");
@@ -213,7 +213,7 @@ const Recruit = () => {
           Authorization: access_token,
         },
       };
-      fetch(`http://59.16.126.210:8080/study/${id}`, reqOption)
+      fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data); //댓글배열로나옴
@@ -223,7 +223,7 @@ const Recruit = () => {
     }
     // const getCommentList = async () => {
     //   // fetch("http://localhost:3001/comment")
-    //   fetch(`http://59.16.126.210:8080/study/${id}/comment`)
+    //   fetch(`http://3.35.188.110:8080/study/${id}/comment`)
     //     .then((res) => {
     //       if (!res.ok) {
     //         throw Error("could not fetch the data for that resource");
@@ -250,7 +250,7 @@ const Recruit = () => {
           Authorization: access_token,
         },
       };
-      fetch(`http://59.16.126.210:8080/study/${id}`, reqOption)
+      fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data); //나옴
@@ -278,11 +278,11 @@ const Recruit = () => {
         body: comment.body,
       }),
     };
-    //`http://59.16.126.210:8080/study/${study-id}/comment`
+    //`http://3.35.188.110:8080/study/${study-id}/comment`
     //http://localhost:3001/comment
     // fetch("http://localhost:3001/comment", reqPost).then((res) => res.json());
-    fetch(`http://59.16.126.210:8080/study/${id}/comment`, reqPost).then(
-      (res) => res.json()
+    fetch(`http://3.35.188.110:8080/study/${id}/comment`, reqPost).then((res) =>
+      res.json()
     );
     //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
     setgetcondition(!getcondition);
@@ -304,7 +304,7 @@ const Recruit = () => {
     // fetch("http://localhost:3001/comment/" + `${id}`, {
     //   method: "DELETE",
     // });
-    fetch(`http://59.16.126.210:8080/study/${id}/comment`, {
+    fetch(`http://3.35.188.110:8080/study/${id}/comment`, {
       method: "DELETE",
     });
 
@@ -316,7 +316,7 @@ const Recruit = () => {
     // fetch("http://localhost:3001/card/" + `${id}`, {
     //   method: "DELETE",
     // });
-    fetch(`http://59.16.126.210:8080/study/${id}/comment`, {
+    fetch(`http://3.35.188.110:8080/study/${id}/comment`, {
       method: "DELETE",
     });
     setgetconditions(!getconditions);
