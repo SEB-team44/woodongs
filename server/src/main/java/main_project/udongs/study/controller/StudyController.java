@@ -232,4 +232,42 @@ public class StudyController {
         return searchedStudies;
     }
 
+
+    @Operation(summary = "스터디 더미데이터 삽입")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "CREATED")})
+    @PostMapping("/recruit/dummy")
+    public ResponseEntity insertData(@RequestBody StudyDto.Post requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        log.debug("POST STUDY");
+        //등록시 스터디장의 위치정보, 스터디장 id번호 반환
+        Member member = userPrincipal.getMember();
+
+        //위치정보가 안들어올시 예외 처리
+        try {
+            requestBody.setLatitude(member.getLatitude());
+            requestBody.setLongitude(member.getLongitude());
+        }  catch (Exception e) {
+            e.printStackTrace();
+            log.error("Exception ERROR: {} ", e.getMessage());
+            throw e;
+        }
+
+        for (int i = 0; i < 100; i++) {
+            Study study = Study.builder()
+                    .title(requestBody.getTitle() + i)
+                    .body(requestBody.getBody() + i)
+                    .category(requestBody.getCategory())
+                    .longitude(requestBody.getLongitude())
+                    .latitude(requestBody.getLatitude())
+                    .headCount(requestBody.getHeadCount())
+                    .build();
+
+
+            studyService.createStudy(study, member);
+//            StudyDto.Response response = mapper.studyToStudyResponse(savedStudy);
+        }
+
+
+        return new ResponseEntity<>("스터디 50개 생성 완료", HttpStatus.CREATED);
+    }
+
 }

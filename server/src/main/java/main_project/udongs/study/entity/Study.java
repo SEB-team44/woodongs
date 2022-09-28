@@ -1,9 +1,7 @@
 package main_project.udongs.study.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import main_project.udongs.apply.entity.Acceptance;
 import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.member.entity.Member;
@@ -11,13 +9,13 @@ import main_project.udongs.member.entity.Member;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Study {
 
     @Id
@@ -59,16 +57,19 @@ public class Study {
 
     @JsonIgnore
     @OneToMany(mappedBy = "study")
+    @Builder.Default
     List<StudyApply> studyApplies = new ArrayList<>();
 
     //수락한 스터디 신청 리스트
     @JsonIgnore
     @OneToMany(mappedBy = "study")
+    @Builder.Default
     List<Acceptance> acceptances = new ArrayList<>();
 
     //스터디 모집글 댓글
     @JsonIgnore
     @OneToMany(mappedBy = "study")
+    @Builder.Default
     List<StudyComment> comments = new ArrayList<>();
 
     //스터디 목표 모집 인원
@@ -77,6 +78,7 @@ public class Study {
 
     @Column
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private State state = State.Open;
 
     @Getter

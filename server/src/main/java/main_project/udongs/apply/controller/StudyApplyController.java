@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import main_project.udongs.apply.dto.StudyApplyDto;
 import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.apply.mapper.StudyApplyMapper;
 import main_project.udongs.apply.repository.StudyApplyRepository;
@@ -16,7 +17,6 @@ import main_project.udongs.apply.service.StudyApplyService;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
-import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Study;
 import main_project.udongs.study.repository.StudyRepository;
 import main_project.udongs.study.service.StudyService;
@@ -124,7 +124,7 @@ public class StudyApplyController {
     }
 
     @Operation(summary = "스터디 신청 조회 - 승인,거절 페이지")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyApplyDto.Response.class))))})
     @GetMapping("/{study-id}/admin")
     public ResponseEntity getStudyApplies(@Valid @PathVariable("study-id") Long studyId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("GET STUDY");
@@ -139,6 +139,9 @@ public class StudyApplyController {
 
         return ResponseEntity.ok(mapper.studyAppliesToStudyApplyResponse(studyApplies));
     }
+
+
+
 
 //    @Operation(summary = "스터디 신청 조회")
 //    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
