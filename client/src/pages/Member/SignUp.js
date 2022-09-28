@@ -66,14 +66,15 @@ export default function SignUp() {
       }),
     };
     // 'http://14.6.86.98:8080/member/signup' 지훈님
-    // `http://3.35.188.110:8080/member/signup?ipAddress=${myip}` 대한님
-    fetch("http://3.35.188.110:8080/member/signup", reqPost)
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-        navigate("/login");
-      })
-      .catch((err) => alert(err.message));
+    // `http://59.16.126.210:8080/member/signup?ipAddress=${myip}` 대한님
+    fetch('http://3.35.188.110:8080/member/signup', reqPost)
+    .then((response) => response.json())
+    .then((response) => {
+      console.log(response)
+      navigate("/login")
+      
+    })
+    .catch((err) => alert(err.message));
   };
 
   return (

@@ -12,6 +12,7 @@ import { Avatar } from "antd";
 import { useState, useRef, useContext } from "react";
 import { UserInfo } from "../../UserContext";
 import LogOut from "../Member/Logout";
+import axios from "axios";
 
 const MyPageStyled = styled.div`
   .mypage_content {
@@ -30,9 +31,9 @@ const MyPageStyled = styled.div`
     justify-content: center;
     text-align: center;
   }
-  .avatorimg {
-    height: 20px;
-    width: 20px;
+  .avatarimg {
+    height: 150px;
+    width: 150px;
   }
   .user_info {
     display: flex;
@@ -55,17 +56,24 @@ const MyPageStyled = styled.div`
 // 4. post가 성공하면 get요청을 통해 회원정보를 받아와 출력한다.
 
 const MyPage = () => {
-  const { userInfo, setUserInfo } = useContext(UserInfo);
-  const [file, setFile] = useState();
-  const [changeInfo, setChangeInfo] = useState({
-    job: "직무를 입력해 주세요",
-    career: "경력을 입력해 주세요",
-    introduce: "자기소개를 해주세요",
-  });
-  const [Image, setImage] = useState(userInfo.profileImageUrl);
-  const [isEdit, setIsEdit] = useState(false);
-  const fileInput = useRef(null);
   const access_token = localStorage.getItem("access_token");
+  const [isEdit, setIsEdit] = useState(false);
+
+  // 회원 관련 state
+  const { userInfo } = useContext(UserInfo);
+  const [reRender, setRerender] = useState(false);
+  const [changeInfo, setChangeInfo] = useState({
+    nickName: "이름",
+    job: "경력", 
+    career: "커리어",
+    introduction: "소개",
+  });
+
+  // 이미지 관련 state
+  const [file, setFile] = useState();
+  const [Image, setImage] = useState(userInfo.profileImageUrl);
+  const fileInput = useRef(null);
+
   const header = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -76,24 +84,44 @@ const MyPage = () => {
 
   //사용자 정보가 바뀌면 get 받아오기
   useEffect(() => {
-    const getMyPageInfo = async () => {
+    const getMemberInfo = async () => {
+        // {이름 , 인덱스, 소속된 스터디, 프로필{job, career, introduction}, 등급 }
       fetch("http://3.35.188.110:8080/member/me", {
         headers: header,
       })
         .then((res) => res.json())
         .then((res) => {
-          setUserInfo({ ...res });
+          console.log("me", res);
+          setChangeInfo({ ...changeInfo, nickName: res.nickName });
         });
     };
-
+    // {job, career, introduction}
+    const getMyPageInfo = async () => {
+      fetch("http://3.35.188.110:8080/member/profile", {
+        headers: header,
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("profile", res);
+          setChangeInfo({ ...changeInfo, ...res });
+        });
+    };
     getMyPageInfo();
-  }, []);
+    getMemberInfo();
+  }, [reRender]);
+
+  
+  // useEffect(()=>{
+  //   getMemberInfo()},[updateMemberInfo]}
+
+
 
   //edit아이콘을 클릭하면 편집모드로 전환
   const handleEdit = () => {
     setIsEdit(true);
   };
 
+  //회원정보 수정 handler
   const handleEditContents = (e) => {
     // e.preventDefault();
     if (e.target.className === "edit-nickname edit-infos") {
@@ -101,7 +129,6 @@ const MyPage = () => {
         ...changeInfo,
         nickName: e.target.value,
       });
-      console.log(changeInfo);
       return changeInfo;
     }
 
@@ -110,7 +137,6 @@ const MyPage = () => {
         ...changeInfo,
         job: e.target.value,
       });
-      console.log(changeInfo);
       return changeInfo;
     }
 
@@ -119,34 +145,37 @@ const MyPage = () => {
         ...changeInfo,
         career: e.target.value,
       });
-      console.log(changeInfo);
       return changeInfo;
     }
-    if (e.target.className === "edit-introduce edit-infos") {
+    if (e.target.className === "edit-introduction edit-infos") {
       setChangeInfo({
         ...changeInfo,
-        introduce: e.target.value,
+        introduction: e.target.value,
       });
-      console.log(changeInfo);
       return changeInfo;
     }
   };
 
+  //완료버튼 누르면 수정한 데이터 전송
   const handleDoneEdit = () => {
-    // 바뀐부분 patch요청 보내기
-
-    const PatchImgChanges = async () => {
-      //   fetch("http://3.35.188.110:8080/member/imageupload", {
-      //     method: "POST",
-      //     headers: header,
-      //     body: JSON.stringify({
-      //       images: Image,
-      //     }),
-      //   }).then((res) => {
-      //    console.log(res);
-      //   }). catch((error) => {
-      //     console.log(error);
-      //   })
+    const PatchNickName = async () => {
+      fetch("http://3.35.188.110:8080/member", {
+        method: "PATCH",
+        headers: header,
+        body: JSON.stringify({
+          nickName: changeInfo.nickName,
+        }),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.ok) {
+            console.log("이름 수정 성공");
+            // setRerender(!reRender);
+          } else {
+            console.log("이름 수정 안 됌");
+          }
+        })
+        .catch((error) => console.log(`${error}, 정보를 수정할 수 없습니다.`));
     };
 
     const PatchInfoChanges = async () => {
@@ -156,24 +185,33 @@ const MyPage = () => {
         body: JSON.stringify({
           job: changeInfo.job,
           career: changeInfo.career,
-          introduction: changeInfo.introduce,
+          introduction: changeInfo.introduction,
         }),
       })
+        // .then((res) => res.json())
         .then((res) => {
-          console.log(res.status);
+          if (res.ok) {
+            console.log("소개 수정 성공", res.status);
+          }
+          // 여기서 setmemeber의 인포를 업데이트를 해준다.
+          setRerender(!reRender);
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.log(`${error}, 정보를 수정할 수 없습니다.`));
     };
 
+    PatchNickName();
     PatchInfoChanges();
+
     // PatchImgChanges();
+    //편집을 끝냄
     setIsEdit(false);
+    // 편집 끝내고 리랜더링
+    setRerender(!reRender);
   };
 
   const onImgChange = async (e) => {
-    console.log(e.target.files[0]);
     if (e.target.files[0]) {
-      setFile({ ...e.target.files[0] });
+      setFile(e.target.files[0]);
     } else {
       //업로드 취소할 시
       if (userInfo.profileImageUrl) {
@@ -184,21 +222,27 @@ const MyPage = () => {
     }
 
     const formData = new FormData();
-    formData.append("file", e.target.files[0]);
-    console.log(e.target.files[0]);
-    // 서버의 upload API 호출
-    const res = fetch("http://3.35.188.110:8080/member/imageupload", {
+    formData.append("images", e.target.files[0]);
+    axios({
+      // baseURL: "http://3.35.188.110:8080/member/imageupload",
+      url: "http://3.35.188.110:8080/member/imageupload",
       method: "POST",
-      headers: header,
-      images: formData,
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Accept: "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
+      },
     })
-      .then((res) => {
-        console.log(res);
+      .then((response) => {
+        console.log("업로드 성공", response);
       })
       .catch((error) => {
-        console.log(error);
+        alert(`${error} , 사진업로드 실패`);
+        setRerender(!reRender);
       });
-    console.log(res);
 
     //화면에 프로필 사진 표시
     const reader = new FileReader();
@@ -279,31 +323,28 @@ const MyPage = () => {
                       className="edit-job edit-infos"
                       onChange={(e) => handleEditContents(e)}
                       value={changeInfo.job}
-                    >
-                      직무 : 웹 프론트엔드
-                    </textarea>
+                      placeholder="job"
+                    ></textarea>
                   </div>
                   <textarea
                     className="edit-career edit-infos"
                     onChange={(e) => handleEditContents(e)}
                     value={changeInfo.career}
-                  >
-                    경력 : 0년차
-                  </textarea>
+                    placeholder="career"
+                  ></textarea>
                   <textarea
-                    className="edit-introduce edit-infos"
+                    className="edit-introduction edit-infos"
                     onChange={(e) => handleEditContents(e)}
-                    value={changeInfo.introduce}
-                  >
-                    소개 : 열심히하겠습니다!
-                  </textarea>
+                    value={changeInfo.introduction}
+                    placeholder="introduction"
+                  ></textarea>
                   <button onClick={() => handleDoneEdit()}>완료</button>
                 </div>
               ) : (
                 <div className="user_info">
                   <div className="job">{changeInfo.job}</div>
                   <div className="career">{changeInfo.career}</div>
-                  <div className="introduce">{changeInfo.introduce}</div>
+                  <div className="introduction">{changeInfo.introduction}</div>
                 </div>
               )}
             </div>

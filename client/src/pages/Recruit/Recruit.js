@@ -146,7 +146,7 @@ const Recruit = () => {
       fetch("http://3.35.188.110:8080/study/" + `${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          console.log("댓글 입력한거 출력", data);
           return data;
         })
         .then((data) => setContent(data));
@@ -167,20 +167,30 @@ const Recruit = () => {
   // }, []);
 
   //삭제메소드
-  const handledelete = () => {
+  const handleDeleteRecruit = () => {
     let reqDelete = {
       method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+        Accept: "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
+      },
     };
-    console.log(id);
-    console.log(studyId);
+
     // fetch("http://localhost:3001/card/" + `${id}`, reqDelete)
     fetch("http://3.35.188.110:8080/study/" + `${id}`, reqDelete)
-      .then((res) => res.json())
       .then((res) => {
+        if (res.ok) {
+          alert("해당 스터디가 삭제 되었습니다.");
+          navigate(`/main`);
+          return res.json();
+        }
         console.log(res);
+        return res;
       })
       .catch((err) => console.log(err.message));
-    navigate(`/main`);
   };
 
   //카드 리스트와 댓글 리스트를 첫 랜더링 때 받아오자
@@ -221,23 +231,6 @@ const Recruit = () => {
         })
         .then((data) => setComment(data.commentResponseDtos));
     }
-    // const getCommentList = async () => {
-    //   // fetch("http://localhost:3001/comment")
-    //   fetch(`http://3.35.188.110:8080/study/${id}/comment`)
-    //     .then((res) => {
-    //       if (!res.ok) {
-    //         throw Error("could not fetch the data for that resource");
-    //       }
-    //       return res.json();
-    //     })
-    //     .then((data) => {
-    //       console.log(data);
-    //       setComment(data);
-    //     });
-    //   // .catch((err) => {
-    //   //   console.log(err);
-    //   // });
-    // };
 
     function getCardList() {
       let reqOption = {
@@ -275,18 +268,19 @@ const Recruit = () => {
         Authorization: access_token,
       },
       body: JSON.stringify({
-        body: comment.body,
+        body: inputComment,
       }),
     };
     //`http://3.35.188.110:8080/study/${study-id}/comment`
     //http://localhost:3001/comment
     // fetch("http://localhost:3001/comment", reqPost).then((res) => res.json());
-    fetch(`http://3.35.188.110:8080/study/${id}/comment`, reqPost).then((res) =>
-      res.json()
-    );
+    fetch(`http://3.35.188.110:8080/study/${id}/comment`, reqPost)
+      .then((res) => res.json())
+      .then(() => {
+        setgetcondition(!getcondition);
+        setInputComment("");
+      });
     //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
-    setgetcondition(!getcondition);
-    setInputComment("");
   };
   //댓글 구현 메소드
   const handleSumit = (e) => {
@@ -296,26 +290,27 @@ const Recruit = () => {
   };
 
   const handleChangeInput = (e) => {
+    // e.preventDefault();
     setInputComment(e.target.value);
   };
 
   //삭제 버튼 클릭시, 들어온 id값에 맞는 부분 삭제 요청 보냄
-  const handeDeleteComment = (id) => {
-    // fetch("http://localhost:3001/comment/" + `${id}`, {
-    //   method: "DELETE",
-    // });
-    fetch(`http://3.35.188.110:8080/study/${id}/comment`, {
+  const handeDeleteComment = (elID) => {
+    fetch(`http://3.35.188.110:8080/study/${id}/${elID}`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
+      },
+    }).then(() => {
+      setgetcondition(!getcondition);
     });
-
-    setgetcondition(!getcondition);
   };
 
   //게시물 삭제 버튼 클릭 시, 들어온 id값에 맞는 부분 삭제 요청 보냄
-  const handleDeleteRecruit = (id) => {
-    // fetch("http://localhost:3001/card/" + `${id}`, {
-    //   method: "DELETE",
-    // });
+  const handleEditRecruit = (id) => {
     fetch(`http://3.35.188.110:8080/study/${id}/comment`, {
       method: "DELETE",
     });
@@ -349,18 +344,19 @@ const Recruit = () => {
                   <div className="button-container">
                     <button
                       className="delete-btn"
-                      onClick={() => handledelete()}
+                      onClick={() => handleDeleteRecruit(card.studyId)}
                     >
                       <TiTrash />
                     </button>
                     <button
                       className="update-btn"
-                      // onClick={() => handleDeleteRecruit(el.id)}
+                      onClick={() => handleEditRecruit()}
                     >
                       <Link to="/study/EditRecruit">
                         <TiPencil />
                       </Link>
                     </button>
+                    {console.log("card", card)}
                   </div>
                   <h2>✔️ 모집현황</h2>
                   <p>프론트 엔드 스터디원 0/{card.headCount}</p>
@@ -431,12 +427,12 @@ const Recruit = () => {
                 {comment.map((el, idx) => {
                   return (
                     <>
-                      <div key={el.id} className="recruit-comment">
+                      <div key={el.commentId} className="recruit-comment">
                         <div className="recruit-comment-name">{el.name}</div>
                         <div className="recruit-comment-content">{el.body}</div>
                         <button
                           className="recruit-comment-delete-btn"
-                          onClick={() => handeDeleteComment(el.id)}
+                          onClick={() => handeDeleteComment(el.commentId)}
                         >
                           ✖️ 삭제
                         </button>
