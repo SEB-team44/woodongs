@@ -76,8 +76,8 @@ const StyledNav = styled.div`
     resize: none;
   }
   .avatarimg {
-    width: 30px;
-    height: 30px;
+    width: 30px !important;
+    height: 30px !important;
   }
   .group-btn {
     border: 0;
