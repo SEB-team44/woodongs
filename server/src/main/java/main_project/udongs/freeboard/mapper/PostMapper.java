@@ -21,6 +21,7 @@ public interface PostMapper {
                 .memberId(member.getMemberId())
                 .nickName(member.getNickName())
                 .email(member.getEmail())
+                .profile(member.getProfile())
                 .phoneNumber(member.getPhoneNumber())
                 .city(member.getCity())
                 .emailVerifiedYn(member.getEmailVerifiedYn())
