@@ -12,6 +12,7 @@ import main_project.udongs.study.repository.StudyCommentRepository;
 import main_project.udongs.study.repository.StudyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +69,7 @@ public class StudyService {
 
     //전체 스터디 조회
     @Transactional
-    public Page<Study> getStudies(Pageable pageable) {
+    public Slice<Study> getStudies(Pageable pageable) {
         return studyRepository.findAll(pageable);
     }
 

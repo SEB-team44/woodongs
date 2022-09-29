@@ -2,6 +2,7 @@ package main_project.udongs.globaldto;
 
 import lombok.Getter;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
@@ -9,11 +10,11 @@ import java.util.List;
 public class MultiResponseDto<T> {
 
     private List<T> data;
-    private PageInfo pageInfo;
+    private SliceInfo sliceInfo;
 
-    public MultiResponseDto(List<T> data, Page page) {
+    public MultiResponseDto(List<T> data, Slice slice) {
         this.data = data;
-        this.pageInfo = new PageInfo(page.getNumber() + 1,
-                page.getSize(), page.getTotalElements(), page.getTotalPages());
+        this.sliceInfo = new SliceInfo(slice.getNumber() + 1,
+                slice.getSize(), slice.getNumberOfElements(), slice.hasNext());
     }
 }
