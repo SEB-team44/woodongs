@@ -73,7 +73,12 @@ const Redirect = () => {
             .then((res) => {
               alert("로그인 성공");
               setIslogin(true);
-              return navigate("/main");
+              if(getlat && getlong){
+                return navigate("/main");
+              } else {
+                return navigate("/EntireMain");
+              }
+              
             })
             .catch((error) => {
               console.log(error);

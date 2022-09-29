@@ -55,9 +55,10 @@ export default function Login() {
 
   //처음 랜더링 되면 위도, 경도를 받아옴//
   useEffect(() => {
-    if (isLogin === false) {
-      localStorage.clear();
-    }
+    // if (isLogin === false) {
+    //   localStorage.clear();
+    // }
+
     const setget = () => {
       //위도 경도를 담을 변수
       let latitude = null;
@@ -66,26 +67,31 @@ export default function Login() {
       setIsLoading(true);
       getLocation(latitude, longitude);
     };
-    function getLocation(latitude, longitude) {
-      console.log(navigator.geolocation)
-      if (navigator.geolocation) {
-        console.log("동작")
-        navigator.geolocation.getCurrentPosition(function (pos) {
-          console.log(navigator);
-          latitude = pos.coords.latitude;
-          longitude = pos.coords.longitude;
 
-          if (typeof latitude === typeof 1 && typeof longitude === typeof 1) {
-            alert("현재 위치는 : " + latitude + "," + longitude);
-            setLocation(latitude, longitude);
+    function getLocation(latitude, longitude) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (pos) {
+            console.log(navigator);
+            latitude = pos.coords.latitude;
+            longitude = pos.coords.longitude;
+
+            if (typeof latitude === typeof 1 && typeof longitude === typeof 1) {
+              alert("현재 위치는 : " + latitude + "," + longitude);
+              setLocation(latitude, longitude);
+              setIsLoading(false);
+            }
+          },
+          function (error) {
+            alert(
+              `현재 위치를 받아올 수 없습니다. 내 주변 스터디를 열람하려면 위치 엑세스를 허용해주세요.`
+            );
+            localStorage.removeItem("latitude");
+            localStorage.removeItem("longitude");
+
             setIsLoading(false);
           }
-        });
-      } else {
-        alert(
-          "현재 위치를 받아올 수 없습니다. 내 주변 스터디를 열람하려면 위치 엑세스를 허용해주세요."
         );
-        setIsLoading(false);
       }
     }
 
@@ -118,7 +124,6 @@ export default function Login() {
 
     //3.35.188.110:8080대한님
     //14.6.86.98:8080 지훈님
-    //3.35.188.110
     fetch("http://3.35.188.110:8080/login", reqOAuthPost)
       .then((response) => {
         if (response.ok) {
@@ -158,7 +163,6 @@ export default function Login() {
                   .then((res) => res.json())
                   .then((res) => {
                     console.log("로컬로그인정보 ", res);
-                    console.log(res)
                     setUserInfo({ ...res });
                   })
                   .then((res) => {

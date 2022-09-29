@@ -97,6 +97,8 @@ const StyledEntireMain = styled.div`
 const EntireMain = () => {
   const access_token = localStorage.getItem("access_token");
   const [cardList, setCardList] = useState([]);
+  const [reRender, setRerender] = useState(false);
+
   useEffect(() => {
     function getCardList() {
       let reqOption = {
@@ -118,17 +120,23 @@ const EntireMain = () => {
         .then((data) => setCardList(data.data));
     }
     getCardList();
-  }, []);
+  }, [reRender]);
 
   return (
     <>
       <StyledEntireMain>
         <section className="main-container">
           <section className="main-nav-container">
-            <Navbar />
+            <Navbar
+              currentLocation={"전체 스터디"}
+              cardList={cardList}
+              setCardList={setCardList}
+              setRerender={setRerender}
+              reRender={reRender}
+            />
           </section>
           <section className="main-notice-container">
-            <Notice />
+            <Notice title="전국" />
           </section>
           <section className="main-cardlist-container">
             <main className="cardlists-box">
@@ -150,13 +158,13 @@ const EntireMain = () => {
                       <header className="study-info study-info-header">
                         {/* <Link to="/recruit">{el.title}</Link> */}
                         {/* <Link to={"/study/" + `${el.id}`}>{el.title}</Link> */}
-                        <Link to={"/study/" + `${el.studyId}`}>{el.title}</Link>
+                        <Link to={"/study/" + `${el.studyId}`}>{`[${
+                          el.city === "" ? "전국" : el.city
+                        }]${el.title}`}</Link>
                       </header>
                       <a className="study-info">{el.content}</a>
                       <ol className="study-info tags">
-                        <li>#JS</li>
-                        <li>#React</li>
-                        <li>#CSS</li>
+                        <li>{el.category}</li>
                       </ol>
                     </CardContent>
                     <div className="count">
