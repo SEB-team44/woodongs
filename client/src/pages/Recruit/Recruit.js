@@ -68,7 +68,7 @@ const StyledRecruit = styled.section`
     padding: 20px;
   }
   .inputbox-textarea {
-    width: 70vh;
+    width: 52vw;
   }
   .recruit-comment {
     margin-bottom: 20px;
@@ -131,6 +131,7 @@ const Recruit = () => {
 
   const access_token = localStorage.getItem("access_token");
 
+  //댓글
   useEffect(() => {
     function getContent() {
       let reqOption = {
@@ -153,18 +154,6 @@ const Recruit = () => {
     }
     getContent();
   }, []);
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     // const { data } = await axios.get(`/card/${id}`);
-  //     const { data } = await axios.get(`/study/${studyId}`);
-  //     return data;
-  //   };
-  //   getData()
-  //     .then((result) => setData(result))
-  //     .then(console.log(data))
-  //     .then(() => setIsLoaded(true));
-  // }, []);
 
   //삭제메소드
   const handleDeleteRecruit = () => {
@@ -271,9 +260,7 @@ const Recruit = () => {
         body: inputComment,
       }),
     };
-    //`http://3.35.188.110:8080/study/${study-id}/comment`
-    //http://localhost:3001/comment
-    // fetch("http://localhost:3001/comment", reqPost).then((res) => res.json());
+
     fetch(`http://3.35.188.110:8080/study/${id}/comment`, reqPost)
       .then((res) => res.json())
       .then(() => {
@@ -339,8 +326,6 @@ const Recruit = () => {
             <section className="recruit-main-box">
               <section className="recruit-main-section">
                 <article>
-                  {/* 수정업데이트 버튼
-                  삭제는 리스트에서 삭제하면되나 */}
                   <div className="button-container">
                     <button
                       className="delete-btn"
@@ -428,7 +413,9 @@ const Recruit = () => {
                   return (
                     <>
                       <div key={el.commentId} className="recruit-comment">
-                        <div className="recruit-comment-name">{el.name}</div>
+                        <div className="recruit-comment-name">
+                          {el.nickName}
+                        </div>
                         <div className="recruit-comment-content">{el.body}</div>
                         <button
                           className="recruit-comment-delete-btn"
