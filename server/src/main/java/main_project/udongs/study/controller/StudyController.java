@@ -199,7 +199,8 @@ public class StudyController {
                                       @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("DELETE STUDY COMMENTS");
 
-        studyService.deleteStudyComment(commentId);
+        Member member = userPrincipal.getMember();
+        studyService.deleteStudyComment(commentId, member);
         String ans = "Deletion completed";
 
         return new ResponseEntity<>(ans,HttpStatus.OK);

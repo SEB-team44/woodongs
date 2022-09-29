@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -109,10 +110,14 @@ public class StudyService {
 
     //스터디 모집글 질문 삭제
     @Transactional
-    public void deleteStudyComment(Long commentId) {
+    public void deleteStudyComment(Long commentId, Member member) {
 
         StudyComment foundComment = commentRepository.findById(commentId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
-        commentRepository.delete(foundComment);
+        if (Objects.equals(foundComment.getMember().getMemberId(), member.getMemberId())) {
+            commentRepository.delete(foundComment);
+        } else {
+            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED_ACTION);
+        }
     }
 
 
