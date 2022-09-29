@@ -87,10 +87,22 @@ const FreeBoard = () => {
     { title: "제주도" },
   ];
 
-  // cardList를 요청
+  // 게시판list를 요청
+  const access_token = localStorage.getItem("access_token");
+
   useEffect(() => {
     const getBoardList = async () => {
-      fetch("http://localhost:3001/board")
+      let reqOption = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: access_token,
+        },
+      };
+      fetch("http://3.35.188.110:8080/post", reqOption)
         .then((res) => {
           if (!res.ok) {
             throw Error("could not fetch the data for that resource");
@@ -157,21 +169,19 @@ const FreeBoard = () => {
                 <div className="post-list">
                   {boardList.map((el, idx) => {
                     return (
-                      <>
-                        <div key={idx} className="post">
-                          <div>{`#[${el.tag}]`}</div>
-                          <Link to={"/SingleBoard/" + `${el.id}`}>
-                            <h1>{el.title}</h1>
-                          </Link>
-                          <body>{el.body}</body>
-                        </div>
-                      </>
+                      <div key={idx} className="post">
+                        <Link to={"/SingleBoard/" + `${el.postId}`}>
+                          <h1>{el.title}</h1>
+                          <div>{el.body.slice(0, 180)}</div>
+                        </Link>
+                      </div>
                     );
                   })}
                 </div>
               </article>
             </main>
           </section>
+
           <section className="freeboard-footer-container">
             <Footer />
           </section>

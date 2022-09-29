@@ -43,8 +43,10 @@ const StyledAddBoard = styled.div`
 `;
 
 const AddBoard = () => {
-  // const [title, setTitle] = useState("");
-  // const [content, setContent] = useState("");
+  const navigate = useNavigate();
+  const [bodyValue, setBodyValue] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   // const changeTitle = (event) => {
   //   setTitle(event.target.value);
@@ -53,24 +55,42 @@ const AddBoard = () => {
   //   setContent(event.target.value);
   // };
   //[post]게시글작성
-  // const createBoard = async () => {
-  //   const req = {
-  //     id: localStorage.getItem("id"),
-  //     title: title,
-  //     content: content,
-  //   };
-  //   await axios
-  //     .post("http://localhost:3000/FreeBoard", req)
-  //     .then((res) => {
-  //       console.log("success!");
-  //       console.log(res.data);
-  //       alert("새로운 게시글을 성공적으로 등록했습니다.");
-  //       Navigate(`/SingleBoard/${res.data}`); //새롭게 등록한 글 상세페이지로 이동
-  //     })
-  //     .catch((err) => {
-  //       console.log("error");
-  //       console.log(err);
-  //     });
+  const submitButton = () => {
+    const access_token = localStorage.getItem("access_token");
+    const reqPost = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
+      },
+      body: JSON.stringify({
+        title: content.title,
+        body: content.body,
+      }),
+    };
+    fetch("http://3.35.188.110:8080/post", reqPost)
+      .then((res) => {
+        if (res.ok) {
+          alert("새로운 게시물이 성공적으로 등록되었습니다 :-D");
+          navigate("/FreeBoard");
+          return res.json();
+        }
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
+
+  const getValue = (e) => {
+    const { value } = e.target;
+    console.log(e.target.name);
+    console.log("value", value);
+    setContent({
+      ...content,
+      title: value,
+    });
+  };
   return (
     <>
       <StyledAddBoard>
@@ -86,17 +106,26 @@ const AddBoard = () => {
             <input
               className="addboard-textarea title-textarea"
               placeholder="최대 30자까지 입력 가능합니다."
-              // value={title}
-              // onChange={changeTitle}
+              onChange={(e) => getValue(e)}
             />
           </section>
 
           <section className="addboard-body-box">
             <h1>글쓰기</h1>
             <textarea
+              rows="15"
+              cols="97"
               className="addboard-textarea body-textarea"
-              // value={content}
-              // onChange={changeContent}
+              value={bodyValue}
+              onChange={(event) => {
+                let data = event.target.value;
+                setBodyValue(data);
+                setContent({
+                  ...content,
+                  body: bodyValue,
+                });
+                console.log(bodyValue);
+              }}
             />
           </section>
 
@@ -108,7 +137,7 @@ const AddBoard = () => {
             <Button
               className="submit-button"
               variant="contained"
-              // onClick={createBoard}
+              onClick={(e) => submitButton(e)}
             >
               게시하기
             </Button>
@@ -121,6 +150,6 @@ const AddBoard = () => {
     </>
   );
 };
-// }
+// };
 
 export default AddBoard;

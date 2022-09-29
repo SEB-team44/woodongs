@@ -50,6 +50,7 @@ const AddStudy = () => {
   const [headCountValue, setHeadCountValue] = useState("");
   const [categoryValue, setCategoryValue] = useState("");
   const [content, setContent] = useState({});
+  
   const submitButton = () => {
     const access_token = localStorage.getItem("access_token");
     let reqPost = {
@@ -76,7 +77,7 @@ const AddStudy = () => {
         if (res.ok) {
           // console.log(content.title, content.body);
           // console.log(res.json());
-          alert("새로운 스터디가 성공적으로 등독되었습니다 :D");
+          alert("새로운 스터디가 성공적으로 등록되었습니다 :D");
           navigate(`/main`);
           return res.json();
         }
