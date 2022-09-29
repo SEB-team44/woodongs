@@ -70,6 +70,11 @@ public class MemberController {
     }
 
 
+    /*
+    * at main_project.udongs.locationservice.LocationService.getRegionAddress(LocationService.java:88)
+        at main_project.udongs.locationservice.LocationService.coordToAddr(LocationService.java:26)
+        at main_project.udongs.member.controller.MemberController.locate(MemberController.java:80)
+*/
     //경도, 위도 프론트에서 받기
     //로그인시 바로 위치 요청 받기
     @Operation(summary = "회원 위치 등록")
@@ -77,7 +82,7 @@ public class MemberController {
     @PostMapping("/locate")
     public ResponseEntity locate(@RequestBody MemberDto.Location requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) throws Exception {
         log.debug("locate member");
-        requestBody.setCity(locationService.coordToAddr(requestBody.getLongitude(), requestBody.getLatitude()));
+        requestBody.setCity(locationService.coordToAddr(requestBody.getLongitude(), requestBody.getLatitude())); //위치정보 받은상태에서 로그아웃하고 다시 로그인해서 위치받으면 도시 갱신 실패  NPE
         memberService.updateLocation(userPrincipal.getMember(), requestBody);
 
         return ResponseEntity.ok("위치정보 갱신 성공");
