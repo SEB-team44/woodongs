@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import main_project.udongs.apply.service.StudyApplyService;
 import main_project.udongs.globaldto.MultiResponseDto;
+import main_project.udongs.globaldto.SliceInfo;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.service.MemberService;
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
@@ -23,9 +24,7 @@ import main_project.udongs.study.mapper.StudyMapper;
 import main_project.udongs.study.repository.StudyRepository;
 import main_project.udongs.study.service.StudySearchService;
 import main_project.udongs.study.service.StudyService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,14 +63,9 @@ public class StudyController {
         }  catch (Exception e) {
             e.printStackTrace();
             log.error("Exception ERROR: {} ", e.getMessage());
-            throw e;
-        }
-
+            throw e;}
 
         Study study = mapper.studyPostToStudy(requestBody);
-
-
-
         Study savedStudy = studyService.createStudy(study, member);
         StudyDto.Response response = mapper.studyToStudyResponse(savedStudy);
 
@@ -105,25 +99,22 @@ public class StudyController {
         return ResponseEntity.ok(mapper.studyToStudyResponse(study));
     }
 
-
-
     //무한스크롤
-    //일단 페이지네이션 적용
     //검색기능 (필터링) 기능 추가
     @Operation(summary = "전체 스터디 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
     @GetMapping
-    public ResponseEntity getStudies(@PageableDefault(size = 10, sort = "studyId", direction = Sort.Direction.DESC)Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword ) {
+    public ResponseEntity getStudies(String titleKeyword, String cityKeyword, String categoryKeyword, int size ) {
         log.debug("GET ALL STUDIES");
 
         //Page<Study> pageStudies = studyService.getStudies(pageable);
-
         //검색 메서드 맨 아래쪽에 있음
-        Page<Study> searchedStudies = searchFunction(pageable, titleKeyword, cityKeyword, categoryKeyword);
-
+        Pageable pageable = PageRequest.of(0,size,Sort.Direction.DESC, "studyId");
+        // 클라에서 size에 초기값을 넣고 스크롤이 다 내려가면 size를 증가해서 다시 요청하는식으로??
+        Slice<Study> searchedStudies = searchFunction(pageable, titleKeyword, cityKeyword, categoryKeyword);
         List<Study> studies = searchedStudies.getContent();
 
-        return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(studies),searchedStudies), HttpStatus.OK);
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(studies), searchedStudies),HttpStatus.OK);
     }
 
 
@@ -199,16 +190,17 @@ public class StudyController {
                                       @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("DELETE STUDY COMMENTS");
 
-        studyService.deleteStudyComment(commentId);
+        Member member = userPrincipal.getMember();
+        studyService.deleteStudyComment(commentId, member);
         String ans = "Deletion completed";
 
         return new ResponseEntity<>(ans,HttpStatus.OK);
     }
 
     //조건 검색하는 메서드
-    private Page<Study> searchFunction(Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword) {
+    private Slice<Study> searchFunction(Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword) {
 
-        Page<Study> searchedStudies = null;
+        Slice<Study> searchedStudies = null;
         //검색 키워드가 전부 없는경우
         if(titleKeyword == null && cityKeyword == null && categoryKeyword == null){
             searchedStudies = studyService.getStudies(pageable);
