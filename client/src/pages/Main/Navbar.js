@@ -6,7 +6,7 @@ import Popover from "@mui/material/Popover";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { UserLogin } from "../../UserContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserInfo } from "../../UserContext";
 
 const StyledNav = styled.div`
@@ -58,6 +58,9 @@ const StyledNav = styled.div`
     align-items: center;
     padding-right: 10px;
   }
+  .search-box {
+    padding-right: 20px;
+  }
   .info-box {
     display: flex;
     flex-direction: row;
@@ -97,11 +100,13 @@ const StyledNav = styled.div`
   }
 `;
 
-const Navbar = () => {
+const Navbar = ({myAround,  cardList, setCardList, setRerender, reRender }) => {
   const { userInfo, setUserInfo } = useContext(UserInfo); //로그인 한 사용자 정보
   const [anchorEl1, setAnchorEl1] = React.useState(null);
   const [anchorEl2, setAnchorEl2] = React.useState(null);
+  const [searchInput, setSearchInput] = useState("");
   const { isLogin } = useContext(UserLogin);
+  const [searchOption, setSearchOption] = useState("제목");
 
   const handleClick1 = (event) => {
     setAnchorEl1(anchorEl1 ? null : event.currentTarget);
@@ -114,6 +119,27 @@ const Navbar = () => {
   };
   const handleClose2 = () => {
     setAnchorEl2(null);
+  };
+  const handleSearchOptions = (e) => {
+    setSearchOption(() => e.target.value);
+  };
+  const handleInputChange = (e) => {
+    e.preventDefault();
+    setSearchInput(() => e.target.value);
+  };
+
+  const handleInputSubmit = (e) => {
+    console.log(searchOption);
+    if (searchOption === "제목") {
+      let filtered = cardList.filter((el) => {
+        return el.title.includes(searchInput);
+      });
+      setCardList([...filtered]);
+    }
+  };
+
+  const handleClearSubmit = () => {
+    setRerender(!reRender);
   };
 
   const open1 = Boolean(anchorEl1);
@@ -138,6 +164,7 @@ const Navbar = () => {
               <Link to="/EntireMain">
                 <li>전체 스터디</li>
               </Link>
+
               {isLogin ? (
                 <Link to="/main">
                   <li>내 주변 스터디</li>
@@ -152,116 +179,140 @@ const Navbar = () => {
               </Link>
             </ol>
             <section className="other-box">
-              <div className="search-box">
-                <Input placeholder="스터디를 검색해주세요." />
-                <Button>검색</Button>
-              </div>
               {isLogin ? (
-                <div className="info-box">
-                  <div className="new-study-btn">
-                    <Link to="/study/recruit">
-                      <Button className="submit-button" variant="contained">
-                        스터디 생성
-                      </Button>
-                    </Link>
-                  </div>
-                  {/* 알림버튼 */}
-                  <div className="alert-img">
-                    <button
-                      className="alert-btn"
-                      type="button"
-                      onClick={handleClick1}
-                    >
-                      <img
-                        className="myinfo-img myinfo-ball-img"
-                        src={require("../../../src/img/ball.png")}
-                      />
-                    </button>
-                    <Popover
-                      id={id1}
-                      open={open1}
-                      anchorEl={anchorEl1}
-                      onClose={handleClose1}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "left",
-                      }}
-                    >
-                      <Typography
-                        sx={{
-                          borderRadius: 7,
-                          p: 1,
-                          bgcolor: "background.paper",
-                          textDecoration: "none",
-                        }}
-                      >
-                        <div className="alert">
-                          <Link to="/MyPage">
-                            <ul>
-                              <li>🔔 새소식 🔔</li>
-                              <li>@대한님으로부터 스터디 신청이 있습니다. </li>
-                              <li>@지훈님으로부터 스터디 신청이 있습니다.</li>
-                            </ul>
-                          </Link>
-                        </div>
-                      </Typography>
-                    </Popover>
-                  </div>
-                  {/* 내그룹버튼 */}
-                  <div className="group-img">
-                    <button
-                      className="group-btn"
-                      aria-describedby={id2}
-                      type="button"
-                      onClick={handleClick2}
-                    >
-                      <img
-                        className="myinfo-img myinfo-group-img"
-                        src={require("../../../src/img/group.png")}
-                      />
-                    </button>
-                    <Popover
-                      id={id2}
-                      open={open2}
-                      anchorEl={anchorEl2}
-                      onClose={handleClose2}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "left",
-                      }}
-                    >
-                      <Typography
-                        sx={{
-                          borderRadius: 7,
-                          p: 1,
-                          bgcolor: "background.paper",
-                        }}
-                      >
-                        <div>
-                          <Link to="/MyGroup">
-                            <ul>
-                              <li>1번스터디</li>
-                              <li>2번스터디</li>
-                            </ul>
-                          </Link>
-                        </div>
-                      </Typography>
-                    </Popover>
-                  </div>
+                <>
+                  {myAround ? (
+                    <div></div>
+                  ) : (
+                    <div className="search-box">
+                      <select onChange={(e) => handleSearchOptions(e)}>
+                        <option value="제목">제목</option>
+                        <option value="지역">지역</option>
+                      </select>
 
-                  <div className="my-info-btn">
-                    <Link to="/MyPage">
-                      <img
-                        className="avatarimg"
-                        src={
-                          userInfo.profileImageUrl
-                            ? userInfo.profileImageUrl
-                            : require("../../../src/img/avatar.png")
-                        }
+                      <Input
+                        onChange={(e) => handleInputChange(e)}
+                        placeholder="스터디를 검색해주세요."
+                        value={searchInput}
                       />
-                    </Link>
+
+                      <Button onClick={(e) => handleInputSubmit(e)}>
+                        검색
+                      </Button>
+                      <Button onClick={(e) => handleClearSubmit(e)}>
+                        초기화
+                      </Button>
+                    </div>
+                  )} 
+
+                  <div className="info-box">
+                    <div className="new-study-btn">
+                      <Link to="/study/recruit">
+                        <Button className="submit-button" variant="contained">
+                          스터디 생성
+                        </Button>
+                      </Link>
+                    </div>
+                    {/* 알림버튼 */}
+                    <div className="alert-img">
+                      <button
+                        className="alert-btn"
+                        type="button"
+                        onClick={handleClick1}
+                      >
+                        <img
+                          className="myinfo-img myinfo-ball-img"
+                          src={require("../../../src/img/ball.png")}
+                        />
+                      </button>
+                      <Popover
+                        id={id1}
+                        open={open1}
+                        anchorEl={anchorEl1}
+                        onClose={handleClose1}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            borderRadius: 7,
+                            p: 1,
+                            bgcolor: "background.paper",
+                            textDecoration: "none",
+                          }}
+                        >
+                          <div className="alert">
+                            <Link to="/MyPage">
+                              <ul>
+                                <li>🔔 새소식 🔔</li>
+                                <li>
+                                  @대한님으로부터 스터디 신청이 있습니다.{" "}
+                                </li>
+                                <li>@지훈님으로부터 스터디 신청이 있습니다.</li>
+                              </ul>
+                            </Link>
+                          </div>
+                        </Typography>
+                      </Popover>
+                    </div>
+                    {/* 내그룹버튼 */}
+                    <div className="group-img">
+                      <button
+                        className="group-btn"
+                        aria-describedby={id2}
+                        type="button"
+                        onClick={handleClick2}
+                      >
+                        <img
+                          className="myinfo-img myinfo-group-img"
+                          src={require("../../../src/img/group.png")}
+                        />
+                      </button>
+                      <Popover
+                        id={id2}
+                        open={open2}
+                        anchorEl={anchorEl2}
+                        onClose={handleClose2}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            borderRadius: 7,
+                            p: 1,
+                            bgcolor: "background.paper",
+                          }}
+                        >
+                          <div>
+                            <Link to="/MyGroup">
+                              <ul>
+                                <li>1번스터디</li>
+                                <li>2번스터디</li>
+                              </ul>
+                            </Link>
+                          </div>
+                        </Typography>
+                      </Popover>
+                    </div>
+
+                    <div className="my-info-btn">
+                      <Link to="/MyPage">
+                        <img
+                          className="avatarimg"
+                          src={
+                            userInfo.profileImageUrl
+                              ? userInfo.profileImageUrl
+                              : require("../../../src/img/avatar.png")
+                          }
+                        />
+                      </Link>
+                    </div>
                   </div>
-                </div>
+                </>
               ) : (
                 <Link to="/Login">
                   <Button>로그인</Button>
