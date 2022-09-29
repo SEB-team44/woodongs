@@ -5,9 +5,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PageInfo {
-    private int page;
+public class SliceInfo {
+    private int number;
     private int size;
-    private long totalElements;
-    private int totalPages;
+    private long numberOfElements;
+    private boolean nextAvailable;
+
 }
+

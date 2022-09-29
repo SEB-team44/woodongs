@@ -5,6 +5,7 @@ import lombok.Getter;
 public enum ExceptionCode {
 
         UNAUTHORIZED(404, "Unauthorized"),
+        UNAUTHORIZED_ACTION(404, "Unauthorized, cannot delete the comment created by other users."),
         MEMBER_NOT_FOUND(404, "Member not found"),
         QUESTION_NOT_FOUND(404, "Question not found"),
         ANSWER_NOT_FOUND(404, "Answer not found"),
