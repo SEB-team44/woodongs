@@ -13,13 +13,15 @@ import main_project.udongs.freeboard.dto.PostDto;
 import main_project.udongs.freeboard.entity.Post;
 import main_project.udongs.freeboard.entity.PostComment;
 import main_project.udongs.freeboard.mapper.PostMapper;
+import main_project.udongs.freeboard.repository.PostRepository;
 import main_project.udongs.freeboard.service.PostService;
+import main_project.udongs.globaldto.MultiResponseDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,6 +36,7 @@ import java.util.List;
 @Slf4j
 public class PostController {
     private final PostService postService;
+    private final PostRepository postRepository;
     private final PostMapper mapper;
 
     @Operation(summary = "게시글 등록")
@@ -89,25 +92,25 @@ public class PostController {
 
         Post verifiedPost = postService.findVerifiedPost(postId);
         postService.isWriterOrAdmin(userPrincipal.getMember(), verifiedPost.getMember());
+        verifiedPost.delete();
         postService.deletePost(verifiedPost);
 
         return new ResponseEntity<>("게시글이 삭제 되었습니다.",HttpStatus.OK);
     }
 
     @Operation(summary = "전체 게시글 조회")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
     @GetMapping
-    public ResponseEntity getPosts(@PageableDefault(size = 15, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable, String titleKeyword, String bodyKeyword, String cityKeyword ) {
-        log.debug("GET ALL STUDIES");
+    public ResponseEntity getPosts(Long cursorId, Integer size, String titleKeyword, String bodyKeyword, String cityKeyword ) {
+        log.debug("GET ALL POSTS");
 
-        //Page<Post> pageStudies = postService.getStudies(pageable);
-
+        Pageable pageable = PageRequest.of(0,size, Sort.by("postId").descending());
         //검색 메서드 맨 아래쪽에 있음
-        Slice<Post> searchedPosts = postService.searchFunction(pageable, titleKeyword, cityKeyword, bodyKeyword);
+        Slice<Post> searchedPosts = postService.searchFunction(cursorId, pageable, titleKeyword, cityKeyword, bodyKeyword);
 
         List<Post> studies = searchedPosts.getContent();
-
-        return new ResponseEntity<>(mapper.postsToPostResponse(studies), HttpStatus.OK);
+        Long lastIdx = studies.get(studies.size() - 1).getPostId();
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.postsToPostResponse(studies),searchedPosts, lastIdx), HttpStatus.OK);
     }
 
     @Operation(summary = "게시글에 대한 댓글 작성")

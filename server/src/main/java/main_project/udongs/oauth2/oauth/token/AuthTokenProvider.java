@@ -63,4 +63,5 @@ public class AuthTokenProvider {
             throw new TokenValidFailedException();
         }
     }
+
 }

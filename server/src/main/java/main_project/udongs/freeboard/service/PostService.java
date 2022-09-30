@@ -122,9 +122,16 @@ public class PostService {
 
 
     @Transactional
-    public Slice<Post> searchFunction(Pageable pageable, String titleKeyword, String cityKeyword, String bodyKeyword) {
+    public Slice<Post> searchFunction(Long id, Pageable pageable, String titleKeyword, String cityKeyword, String bodyKeyword) {
+        return id == null ?
+                ifFirstpage(pageable, titleKeyword, cityKeyword, bodyKeyword) :
+                ifNotFirstpage(id, pageable, titleKeyword, cityKeyword, bodyKeyword);
+    }
+
+    // 처음 페이지 조회시 lastIdx가 없을때.
+    public Slice<Post> ifFirstpage(Pageable pageable, String titleKeyword, String cityKeyword, String bodyKeyword) {
         Slice<Post> searchedPosts = null;
-        //검색 키워드가 전부 없는경우
+
         if(titleKeyword == null && cityKeyword == null && bodyKeyword == null){
             searchedPosts = getPosts(pageable);
         } else if(titleKeyword !=null && cityKeyword == null && bodyKeyword == null) { //제목으로만 검색
@@ -133,15 +140,21 @@ public class PostService {
             searchedPosts = getPostByCity(pageable, cityKeyword);
         } else if(titleKeyword == null && cityKeyword == null && bodyKeyword != null) { //본문으로만 검색
             searchedPosts = getPostByBody(pageable, bodyKeyword);}
-//        } else if(titleKeyword != null && cityKeyword != null && bodyKeyword == null) {//제목 + 도시로 검색
-//            searchedPosts = getPostByTitleAndCity(pageable, titleKeyword, cityKeyword);
-//        } else if(titleKeyword != null && cityKeyword == null && bodyKeyword !=null) { //제목 + 카테고리로 검색
-//            searchedPosts = getPostByTitleAndBody(pageable, titleKeyword, bodyKeyword);
-//        } else if(titleKeyword == null && cityKeyword != null && bodyKeyword !=null) { //도시 + 카테고리로 검색
-//            searchedPosts = getPostByCityBody(pageable, cityKeyword, bodyKeyword);
-//        } else { //전부 필터링 할때
-//            searchedPosts = getPostByAllFilter(pageable, titleKeyword, cityKeyword, bodyKeyword);
-//        }
+
+        return searchedPosts;
+    }
+
+    public Slice<Post> ifNotFirstpage(Long id, Pageable pageable, String titleKeyword, String cityKeyword, String bodyKeyword) {
+        Slice<Post> searchedPosts = null;
+
+        if(titleKeyword == null && cityKeyword == null && bodyKeyword == null){
+            searchedPosts = postRepository.findByPostIdLessThan(id, pageable);
+        } else if(titleKeyword !=null && cityKeyword == null && bodyKeyword == null) { //제목으로만 검색
+            searchedPosts = postRepository.findByPostIdLessThanAndTitleContaining(id, titleKeyword, pageable);
+        } else if(titleKeyword == null && cityKeyword != null && bodyKeyword == null) { //도시이름으로만 검색
+            searchedPosts = postRepository.findByPostIdLessThanAndCityContaining(id, cityKeyword, pageable);
+        } else if(titleKeyword == null && cityKeyword == null && bodyKeyword != null) { //본문으로만 검색
+            searchedPosts = postRepository.findByPostIdLessThanAndBodyContaining(id, bodyKeyword, pageable);}
 
         return searchedPosts;
     }

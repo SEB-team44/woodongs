@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import main_project.udongs.alram.dto.MessageDto;
+import main_project.udongs.alram.service.AlarmService;
 import main_project.udongs.apply.dto.StudyApplyDto;
 import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.apply.mapper.StudyApplyMapper;
@@ -25,6 +27,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -38,6 +41,7 @@ public class StudyApplyController {
     private final StudyRepository studyRepository;
     private final StudyApplyRepository studyApplyRepository;
     private final StudyApplyMapper mapper;
+    private final AlarmService alarmService;
 
     @Operation(summary = "스터디 신청")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
@@ -65,6 +69,9 @@ public class StudyApplyController {
         }
 
         studyApplyService.createStudyApply(study,userPrincipal.getMember());
+
+        // 알람 전송 추가
+        alarmService.alarmByMessage(new MessageDto(userPrincipal.getMember().getMemberId(), study.getMember().getMemberId(), "스터디 신청이 왔습니다", LocalDateTime.now()));
         return ResponseEntity.ok("신청했습니다");
     }
 
