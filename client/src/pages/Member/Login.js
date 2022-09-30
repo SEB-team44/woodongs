@@ -42,8 +42,11 @@ function Copyright(props) {
 }
 
 // 카카오 인증 url
+// woodongs.site:3000
+// localhost:3000
+// 3.35.188.110:8080
 const KAKAOPATH =
-  "http://3.35.188.110:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/Redirect";
+  "http://woodongs.site:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/Redirect";
 
 const theme = createTheme();
 
@@ -262,9 +265,9 @@ export default function Login() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="http://localhost:3000/SignUp" variant="body2">
+                  <Links to = "/SignUp" variant="body2">
                     {"Don't have an account? Sign Up"}
-                  </Link>
+                  </Links>
                 </Grid>
               </Grid>
               {isLoading ? (

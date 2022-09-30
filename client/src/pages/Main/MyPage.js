@@ -259,7 +259,7 @@ const MyPage = () => {
     // 서버의 upload API 호출
     axios({
       // baseURL: "http://59.16.126.210:8080/member/imageupload",
-      url: "http://59.16.126.210:8080/member/imageupload",
+      url: "http://3.35.188.110:8080/member/imageupload",
       method: "POST",
       data: formData,
       headers: {
@@ -271,7 +271,10 @@ const MyPage = () => {
       },
     })
       .then((response) => {
-        console.log(response.status);
+        if(response.ok){
+          console.log(response.status , "업로드 성공");
+        }
+       
       })
       .catch((error) => {
         console.error(error);

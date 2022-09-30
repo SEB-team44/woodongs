@@ -430,8 +430,8 @@ const Recruit = () => {
                   </div>
                 </article>
                 <article className="innertext">
-                  <h2>-스터디 기간</h2>
-                  <p>22.09.02 ~23.03.02</p>
+                  <h2>-모집 기간</h2>
+                  <p>22.10.07 ~23.11.07</p>
                 </article>
                 <article className="innertext">
                   <h2>-스터디 분야</h2>
