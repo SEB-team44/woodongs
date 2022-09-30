@@ -150,7 +150,7 @@ const Main = () => {
         //   })
         //   .catch((error) => console.log("error",error))
       } else {
-        fetch("http://3.35.188.110:8080/study", reqOption)
+        fetch("http://3.35.188.110:8080/study?size=20", reqOption)
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
@@ -182,40 +182,41 @@ const Main = () => {
           </section>
           <section className="main-cardlist-container">
             <main className="cardlists-box">
-              {cardList.map((el, idx) => {
-                return (
-                  <Card
-                    key={el.studyId}
-                    sx={{ maxWidth: 300 }}
-                    className="cardlist"
-                  >
-                    {/* <article > */}
-                    <CardMedia className="cardimg-box">
-                      <img
-                        className="cardimg"
-                        src={require("../../../src/img/businessplan.png")}
-                      ></img>
-                    </CardMedia>
-                    <CardContent className="study-info-box">
-                      <header className="study-info study-info-header">
-                        {/* <Link to="/recruit">{el.title}</Link> */}
-                        {/* <Link to={"/study/" + `${el.id}`}>{el.title}</Link> */}
-                        <Link to={"/study/" + `${el.studyId}`}>{`[${
-                          el.city === "" ? "전국" : el.city
-                        }]${el.title}`}</Link>
-                      </header>
-                      <a className="study-info">{el.content}</a>
-                      <ol className="study-info tags">
-                        <li>{el.category}</li>
-                      </ol>
-                    </CardContent>
-                    <div className="count">
-                      <a>모집완료 0/{el.headCount}</a>
-                    </div>
-                    {/* </article> */}
-                  </Card>
-                );
-              })}
+              {cardList &&
+                cardList.map((el, idx) => {
+                  return (
+                    <Card
+                      key={el.studyId}
+                      sx={{ maxWidth: 300 }}
+                      className="cardlist"
+                    >
+                      {/* <article > */}
+                      <CardMedia className="cardimg-box">
+                        <img
+                          className="cardimg"
+                          src={require("../../../src/img/businessplan.png")}
+                        ></img>
+                      </CardMedia>
+                      <CardContent className="study-info-box">
+                        <header className="study-info study-info-header">
+                          {/* <Link to="/recruit">{el.title}</Link> */}
+                          {/* <Link to={"/study/" + `${el.id}`}>{el.title}</Link> */}
+                          <Link to={"/study/" + `${el.studyId}`}>{`[${
+                            el.city === "" ? "전국" : el.city
+                          }]${el.title}`}</Link>
+                        </header>
+                        <a className="study-info">{el.content}</a>
+                        <ol className="study-info tags">
+                          <li>{el.category}</li>
+                        </ol>
+                      </CardContent>
+                      <div className="count">
+                        <a>모집완료 0/{el.headCount}</a>
+                      </div>
+                      {/* </article> */}
+                    </Card>
+                  );
+                })}
             </main>
           </section>
 

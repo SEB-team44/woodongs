@@ -7,9 +7,9 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 import Footer from "../Main/Footer";
 import Button from "@mui/material/Button";
-import { UserLogin } from "../../UserContext";
-import useFetch from "../useFetch";
+import { UserInfo, UserLogin } from "../../UserContext";
 import { TiTrash, TiPencil } from "react-icons/ti";
+import Manage from "./Manage";
 
 const StyledRecruit = styled.section`
   h1 {
@@ -48,12 +48,23 @@ const StyledRecruit = styled.section`
   }
   .recruit-main-section {
     padding: 20px;
+    width: 70%;
   }
   .recruit-main-aside {
-    width: 300px;
+    width: 30%;
     border-left: solid 1px black;
     padding: 20px;
     text-align: center;
+  }
+  .tab {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px black solid;
+  }
+  .tab-element {
+    padding-left: 15px;
+    padding-right: 15px;
+    border-left: 1px black solid;
   }
   .my-info {
     border: solid black 1px;
@@ -99,10 +110,14 @@ const StyledRecruit = styled.section`
   .delete-btn {
     float: right;
   }
+  .avatarimg {
+    border-radius: 50%;
+  }
 `;
 
 const Recruit = () => {
   const navigate = useNavigate();
+  // const {UserInfo} = useContext(UserInfo);
   const { isLogin } = useContext(UserLogin);
   const [keyword, setKeyword] = useState([]);
   //댓글리스트
@@ -111,6 +126,7 @@ const Recruit = () => {
   const [inputComment, setInputComment] = useState("");
   const [getcondition, setgetcondition] = useState(true);
   const [getconditions, setgetconditions] = useState(true);
+  const [changeTab, setChangeTab] = useState(true);
 
   const [recruitContent, setRecruitContent] = useState({
     // studyId: "",
@@ -126,14 +142,14 @@ const Recruit = () => {
   const { id } = useParams();
   const { studyId } = useParams(); //studyId입니다.
   const [data, setData] = useState({});
-  const [content, setContent] = useState([]);
+  const [content, setContent] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const access_token = localStorage.getItem("access_token");
 
   //댓글
   useEffect(() => {
-    function getContent() {
+    const getContent = () => {
       let reqOption = {
         method: "GET",
         headers: {
@@ -147,11 +163,11 @@ const Recruit = () => {
       fetch("http://3.35.188.110:8080/study/" + `${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
-          console.log("댓글 입력한거 출력", data);
+          console.log("content", data);
           return data;
         })
-        .then((data) => setContent(data));
-    }
+        .then((data) => setContent({ ...content, ...data }));
+    };
     getContent();
   }, []);
 
@@ -176,7 +192,6 @@ const Recruit = () => {
           navigate(`/main`);
           return res.json();
         }
-        console.log(res);
         return res;
       })
       .catch((err) => console.log(err.message));
@@ -269,6 +284,20 @@ const Recruit = () => {
       });
     //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
   };
+
+
+
+
+  const handleChangeTab = (e) => {
+    e.preventDefault();
+    if(e.target.className === "tab-element tab-info"){
+      setChangeTab(true);
+    }
+    if(e.target.className === "tab-element tab-manage"){
+      setChangeTab(false);
+    }
+  }
+
   //댓글 구현 메소드
   const handleSumit = (e) => {
     // e.preventDefault();
@@ -312,7 +341,6 @@ const Recruit = () => {
           </section>
           {/* {card.map((el,idx)=>{
             return(
-              
             )
           })} */}
           <section className="recruit-main-container">
@@ -325,54 +353,75 @@ const Recruit = () => {
             </section>
             <section className="recruit-main-box">
               <section className="recruit-main-section">
-                <article>
-                  <div className="button-container">
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDeleteRecruit(card.studyId)}
-                    >
-                      <TiTrash />
-                    </button>
-                    <button
-                      className="update-btn"
-                      onClick={() => handleEditRecruit()}
-                    >
-                      <Link to="/study/EditRecruit">
-                        <TiPencil />
-                      </Link>
-                    </button>
-                    {console.log("card", card)}
+                <div className="tab">
+                  <div className="tab-element tab-info" onClick={(e) => handleChangeTab(e)}>
+                    정보
                   </div>
-                  <h2>✔️ 모집현황</h2>
-                  <p>프론트 엔드 스터디원 0/{card.headCount}</p>
-                </article>
-                <article>
-                  <h2>✔️ 스터디 키워드</h2>
-                  <div className="keywords-box">
-                    {card.category}
-                    {keyword.map((el, idx) => {
-                      return (
-                        <>
-                          <button id={idx}>{el}</button>
-                        </>
-                      );
-                    })}
+                  <div className="tab-element tab-manage" onClick={(e) => handleChangeTab(e)}>
+                    관리
                   </div>
-                </article>
-                <article>
-                  <h2>✔️ 소개</h2>
-                  <p>{card.body}</p>
-                </article>
+                </div>
+                {changeTab ? (
+                  <section className="tab-page">
+                    <article>
+                      <div className="button-container">
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDeleteRecruit(card.studyId)}
+                        >
+                          <TiTrash />
+                        </button>
+                        <button
+                          className="update-btn"
+                          onClick={() => handleEditRecruit()}
+                        >
+                          <Link to="/study/EditRecruit">
+                            <TiPencil />
+                          </Link>
+                        </button>
+                        {/* {console.log("card", card)} */}
+                      </div>
+                      <h2>✔️ 모집현황</h2>
+                      <p>프론트 엔드 스터디원 0/{card.headCount}</p>
+                    </article>
+                    <article>
+                      <h2>✔️ 스터디 키워드</h2>
+                      <div className="keywords-box">
+                        {card.category}
+                        {keyword.map((el, idx) => {
+                          return (
+                            <>
+                              <button id={idx}>{el}</button>
+                            </>
+                          );
+                        })}
+                      </div>
+                    </article>
+                    <article>
+                      <h2>✔️ 소개</h2>
+                      <p>{card.body}</p>
+                    </article>
+                  </section>
+                ) : <Manage />}
               </section>
               <aside className="recruit-main-aside">
                 <article>
                   <h2>리더정보</h2>
                   <div className="my-info">
-                    <img
-                      className="avatarimg"
-                      src={require("../../../src/img/avatar.png")}
-                    />
-                    <p>Choi</p>
+                    {content &&
+                      content.memberResponseDtos.map((el) => {
+                        if (content.createdBy === el.memberId) {
+                          return (
+                            <>
+                              <img
+                                className="avatarimg"
+                                src={el.profileImageUrl}
+                              />
+                              {<h2 key={el.memberId}>{el.nickName}</h2>}
+                            </>
+                          );
+                        }
+                      })}
                   </div>
                 </article>
                 <article className="innertext">
@@ -391,7 +440,7 @@ const Recruit = () => {
                   </article>
                 ) : null}
               </aside>
-            </section>
+            </section>{" "}
             <section className="recruit-comment-box">
               <div className="recruit-inputbox">
                 <textarea
