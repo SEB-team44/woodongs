@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import main_project.udongs.apply.service.StudyApplyService;
 import main_project.udongs.globaldto.MultiResponseDto;
-import main_project.udongs.globaldto.SliceInfo;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.service.MemberService;
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
@@ -24,8 +23,10 @@ import main_project.udongs.study.mapper.StudyMapper;
 import main_project.udongs.study.repository.StudyRepository;
 import main_project.udongs.study.service.StudySearchService;
 import main_project.udongs.study.service.StudyService;
-import org.springframework.data.domain.*;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -104,17 +105,16 @@ public class StudyController {
     @Operation(summary = "전체 스터디 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
     @GetMapping
-    public ResponseEntity getStudies(String titleKeyword, String cityKeyword, String categoryKeyword, int size ) {
+    public ResponseEntity getStudies(Long cursorId, Integer size, String titleKeyword, String cityKeyword, String categoryKeyword ) {
         log.debug("GET ALL STUDIES");
 
-        //Page<Study> pageStudies = studyService.getStudies(pageable);
-        //검색 메서드 맨 아래쪽에 있음
-        Pageable pageable = PageRequest.of(0,size,Sort.Direction.DESC, "studyId");
+        Pageable pageable = PageRequest.of(0,size,Sort.by("studyId").descending());
         // 클라에서 size에 초기값을 넣고 스크롤이 다 내려가면 size를 증가해서 다시 요청하는식으로??
-        Slice<Study> searchedStudies = searchFunction(pageable, titleKeyword, cityKeyword, categoryKeyword);
+        Slice<Study> searchedStudies = studyService.searchFunction(cursorId, pageable, titleKeyword, cityKeyword, categoryKeyword);
         List<Study> studies = searchedStudies.getContent();
+        Long lastIdx = studies.get(studies.size() - 1).getStudyId();
 
-        return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(studies), searchedStudies),HttpStatus.OK);
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(studies), searchedStudies, lastIdx),HttpStatus.OK);
     }
 
 
@@ -150,16 +150,14 @@ public class StudyController {
     @Operation(summary = "주변 스터디 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @GetMapping("/around")
-    public ResponseEntity<List<StudyDto.Response>> getAroundStudy(
-//            @PageableDefault(size = 15, sort = "studyId", direction = Sort.Direction.DESC) Pageable pageable,
-//            @RequestParam(required = false) Long lastId,
-            @RequestParam Long page,
+    public ResponseEntity getAroundStudy(
+            Long cursorId, Integer size, String titleKeyword, String cityKeyword, String categoryKeyword,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        List<Study> studies = studyService.getAroundStudy(userPrincipal.getMember().getLatitude(),
-                userPrincipal.getMember().getLongitude(), page);
-        List<StudyDto.Response> response = mapper.studiesToStudyResponse(studies);
 
-        return ResponseEntity.ok().body(response);
+        Pageable pageable = PageRequest.of(0,size,Sort.by("studyId").descending());
+
+        return studyService.getAroundStudy(cursorId, pageable, titleKeyword, cityKeyword, categoryKeyword,
+                userPrincipal.getMember().getLatitude(), userPrincipal.getMember().getLongitude());
     }
 
 
@@ -197,31 +195,6 @@ public class StudyController {
         return new ResponseEntity<>(ans,HttpStatus.OK);
     }
 
-    //조건 검색하는 메서드
-    private Slice<Study> searchFunction(Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword) {
-
-        Slice<Study> searchedStudies = null;
-        //검색 키워드가 전부 없는경우
-        if(titleKeyword == null && cityKeyword == null && categoryKeyword == null){
-            searchedStudies = studyService.getStudies(pageable);
-        } else if(titleKeyword !=null && cityKeyword == null && categoryKeyword == null) { //제목으로만 검색
-            searchedStudies = studySearchService.getStudyByTitle(pageable, titleKeyword);
-        } else if(titleKeyword == null && cityKeyword != null && categoryKeyword == null) { //도시이름으로만 검색
-            searchedStudies = studySearchService.getStudyByCity(pageable, cityKeyword);
-        } else if(titleKeyword == null && cityKeyword == null && categoryKeyword != null) { //카테고리로만 검색
-            searchedStudies = studySearchService.getStudyByCategory(pageable, categoryKeyword);
-        } else if(titleKeyword != null && cityKeyword != null && categoryKeyword == null) {//제목 + 도시로 검색
-            searchedStudies = studySearchService.getStudyByTitleAndCity(pageable, titleKeyword, cityKeyword);
-        } else if(titleKeyword != null && cityKeyword == null && categoryKeyword !=null) { //제목 + 카테고리로 검색
-            searchedStudies = studySearchService.getStudyByTitleAndCategory(pageable, titleKeyword, categoryKeyword);
-        } else if(titleKeyword == null && cityKeyword != null && categoryKeyword !=null) { //도시 + 카테고리로 검색
-            searchedStudies = studySearchService.getStudyByCityAndCategory(pageable, cityKeyword, categoryKeyword);
-        } else { //전부 필터링 할때
-            searchedStudies = studySearchService.getStudyByAllFilter(pageable, titleKeyword, cityKeyword, categoryKeyword);
-        }
-
-        return searchedStudies;
-    }
 
 
     @Operation(summary = "스터디 더미데이터 삽입")

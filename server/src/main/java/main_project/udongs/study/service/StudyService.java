@@ -3,17 +3,19 @@ package main_project.udongs.study.service;
 import lombok.AllArgsConstructor;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
+import main_project.udongs.globaldto.MultiResponseDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Distance;
 import main_project.udongs.study.entity.Study;
 import main_project.udongs.study.entity.StudyComment;
+import main_project.udongs.study.mapper.StudyMapper;
 import main_project.udongs.study.repository.StudyCommentRepository;
 import main_project.udongs.study.repository.StudyRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ public class StudyService {
     private final StudyRepository studyRepository;
     private final StudyCommentRepository commentRepository;
     private final Distance distance;
+    private final StudyMapper mapper;
 
     //스터디 등록
     @Transactional
@@ -133,28 +136,72 @@ public class StudyService {
         return findStudy;
     }
 
+    public Slice<Study> searchFunction(Long id, Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword) {
+        return id == null ?
+                ifFirstpage(pageable, titleKeyword, cityKeyword, categoryKeyword) :
+                ifNotFirstpage(id, pageable, titleKeyword, cityKeyword, categoryKeyword);
+    }
+
+    // 처음 페이지 조회시 lastIdx가 없을때.
+    public Slice<Study> ifFirstpage(Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword) {
+        Slice<Study> searchedStudies = null;
+
+        //검색 키워드가 전부 없는경우
+        if (titleKeyword == null && cityKeyword == null && categoryKeyword == null) {
+            searchedStudies = getStudies(pageable);
+        } else if (titleKeyword != null && cityKeyword == null && categoryKeyword == null) { //제목으로만 검색
+            searchedStudies = studyRepository.findByTitleContaining(titleKeyword, pageable);
+        } else if (titleKeyword == null && cityKeyword != null && categoryKeyword == null) { //도시이름으로만 검색
+            searchedStudies = studyRepository.findByCityContaining(cityKeyword, pageable);
+        } else if (titleKeyword == null && cityKeyword == null && categoryKeyword != null) { //카테고리로만 검색
+            searchedStudies = studyRepository.findByCategoryContaining(categoryKeyword, pageable);
+        }
+
+        return searchedStudies;
+    }
+
+    public Slice<Study> ifNotFirstpage(Long id, Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword) {
+        Slice<Study> searchedPosts = null;
+
+        if (titleKeyword == null && cityKeyword == null && categoryKeyword == null) {
+            searchedPosts = studyRepository.findByStudyIdLessThan(id, pageable);
+        } else if (titleKeyword != null && cityKeyword == null && categoryKeyword == null) { //제목으로만 검색
+            searchedPosts = studyRepository.findByStudyIdLessThanAndTitleContaining(id, titleKeyword, pageable);
+        } else if (titleKeyword == null && cityKeyword != null && categoryKeyword == null) { //도시이름으로만 검색
+            searchedPosts = studyRepository.findByStudyIdLessThanAndCityContaining(id, cityKeyword, pageable);
+        } else if (titleKeyword == null && cityKeyword == null && categoryKeyword != null) { //본문으로만 검색
+            searchedPosts = studyRepository.findByStudyIdLessThanAndCategoryContaining(id, categoryKeyword, pageable);
+        }
+
+        return searchedPosts;
+    }
+
 
     // 주변 3km이내 스터디 목록 가져오기
     // cursor 방식의 페이지네이션 사용 아래로 스크롤 할때마다 가장 마지막에 본 studyId보다 작은 스터디만 표시
     // 일단 주석처리
-    public List<Study> getAroundStudy(Double nowLat, Double nowLon, Long page) {
-        // 처음 페이지 조회시
-        return studyRepository.findAll((Sort.by(Sort.Direction.DESC, "studyId"))).stream()
+    public ResponseEntity getAroundStudy(Long id, Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword,
+                                         Double nowLat, Double nowLon) {
+        Slice<Study> studies;
+
+        if (id == null) {
+            // 첫 페이지 조회
+            studies = ifFirstpage(pageable, titleKeyword, cityKeyword, categoryKeyword);
+        } else {
+            // 다음 페이지 조회
+            studies = ifNotFirstpage(id, pageable, titleKeyword, cityKeyword, categoryKeyword);
+        }
+
+        List<Study> aroundStudies = studies.stream()
                 .filter(study -> {
                     Double lat = study.getLatitude();
                     Double lon = study.getLongitude();
                     double dist = distance.calculateDistance(nowLat, nowLon, lat, lon, "meter");
                     return dist < 3000;
-                }).skip(15 * page).limit(15 * (page + 1)).collect(Collectors.toList());
-    }
+                }).limit(pageable.getPageSize()).collect(Collectors.toList());
 
-//    public List<Study> getAroundStudy(Double nowLat, Double nowLon) {
-//        return studyRepository.findAll((Sort.by(Sort.Direction.DESC, "studyId"))).stream()
-//                .filter(study -> {
-//                    Double lat = study.getLatitude();
-//                    Double lon = study.getLongitude();
-//                    double dist = distance.calculateDistance(nowLat, nowLon, lat, lon, "meter");
-//                    return dist < 3000;
-//                }).collect(Collectors.toList());
-//    }
+        Long lastIdx = aroundStudies.get(aroundStudies.size() - 1).getStudyId();
+
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(aroundStudies), studies, lastIdx), HttpStatus.OK);
+    }
 }

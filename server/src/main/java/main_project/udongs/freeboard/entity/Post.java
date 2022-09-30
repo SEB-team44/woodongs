@@ -38,6 +38,12 @@ public class Post {
     @ManyToOne
     private Member member;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post")
     List<PostComment> comments = new ArrayList<>();
+
+    public void delete() {
+        for (PostComment comment : this.getComments()) {
+            comment.setPost(null);
+        }
+    }
 }

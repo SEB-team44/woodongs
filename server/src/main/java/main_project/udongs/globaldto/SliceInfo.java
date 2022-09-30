@@ -10,6 +10,7 @@ public class SliceInfo {
     private int size;
     private long numberOfElements;
     private boolean nextAvailable;
+    private long lastIdx;
 
 }
 
