@@ -10,6 +10,7 @@ import Input from "@mui/material/Input";
 import { UserLogin } from "../../UserContext";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import Pagination from "../Main/Pagination";
 
 const StyledFreeBoard = styled.section`
   .freeborad-container {
@@ -67,11 +68,45 @@ const StyledFreeBoard = styled.section`
   .search-button {
     color: white;
   }
+  ul {
+    list-style: none;
+  }
 `;
 
 const FreeBoard = () => {
   const { isLogin } = useContext(UserLogin);
   const [boardList, setBoardList] = useState([]);
+  const [searchOp, setSearchOp] = useState("제목");
+  const [searchInput, setSearchInput] = useState("");
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(15);
+  //검색필터링
+  const handleSearchOption = (e) => {
+    setSearchOp(() => e.target.value);
+  };
+  //검색창 input
+  const handleInputChange = (e) => {
+    e.preventDefault();
+    setSearchInput(() => e.target.value);
+  };
+  //검색버튼
+  const handleInputSubmit = (e) => {
+    console.log(searchOp);
+    if (searchOp === "제목") {
+      let filtered = boardList.filter((el) => {
+        return el.title.includes(searchInput);
+      });
+      setBoardList([...filtered]);
+    }
+    if (searchOp === "내용") {
+      let filtered = boardList.filter((el) => {
+        return el.body.includes(searchInput);
+      });
+      setBoardList([...filtered]);
+    }
+  };
   //지역검색필터
   const filterOptions = createFilterOptions({
     matchFrom: "start",
@@ -87,10 +122,24 @@ const FreeBoard = () => {
     { title: "제주도" },
   ];
 
-  // cardList를 요청
+  // 게시판list를 요청
+  const access_token = localStorage.getItem("access_token");
+
   useEffect(() => {
     const getBoardList = async () => {
-      fetch("http://localhost:3001/board")
+      setLoading(true);
+      let reqOption = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: access_token,
+        },
+      };
+      // fetch("https://jsonplaceholder.typicode.com/posts", reqOption)
+      fetch("http://3.35.188.110:8080/post", reqOption)
         .then((res) => {
           if (!res.ok) {
             throw Error("could not fetch the data for that resource");
@@ -99,6 +148,7 @@ const FreeBoard = () => {
         })
         .then((data) => {
           setBoardList(data);
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -106,6 +156,75 @@ const FreeBoard = () => {
     };
     getBoardList();
   }, []);
+
+  const indexOfLast = currentPage * postsPerPage;
+  const indexOfFirst = indexOfLast - postsPerPage;
+  const currentPosts = (posts) => {
+    let currentPosts = 0;
+    currentPosts = posts.slice(indexOfFirst, indexOfLast);
+    return currentPosts;
+  };
+  // //무한스크롤관련
+  // const [item, setItem] = useState([]);
+  // const [target, setTarget] = useState(null);
+  // const page = 10;
+
+  // const fetchData = async () => {
+  //   let reqOption = {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json",
+  //       withCredentials: true,
+  //       "Access-Control-Allow-Origin": "*",
+  //       Authorization: access_token,
+  //     },
+  //   };
+  //   fetch(`http://3.35.188.110:8080/post`, reqOption)
+  //     .then((res) => {
+  //       if (!res.ok) {
+  //         throw Error("Couldn't fetch the data for that resource");
+  //       }
+  //       return res.json();
+  //     })
+  //     .then((data) => {
+  //       // page++;
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+  // useEffect(() => {
+  //   let observer;
+  //   if (target) {
+  //     const onIntersect = async ([entry], observer) => {
+  //       if (entry.isIntersecting) {
+  //         observer.unobserve(entry.target);
+  //         await fetchData();
+  //         observer.observe(entry.target);
+  //       }
+  //     };
+  //     observer = new IntersectionObserver(onIntersect, { threshold: 1 });
+  //     observer.observe(target);
+  //   }
+  //   return () => observer && observer.disconnect();
+  // }, [target]);
+
+  // let count = 0;
+  // window.onscroll = function (e) {
+  //   if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+  //     count++;
+  //     let addContent =
+  //       // document.createElement("div");
+  //       // addContent.classList.add("box");
+
+  //       '<div class="block"><p>' + count + "번째로 추가된 컨텐츠</p></div>";
+  //     document.querySelector("article").append(addContent);
+  //   }
+  // };
 
   return (
     <>
@@ -131,8 +250,20 @@ const FreeBoard = () => {
                   />
                 </div>
                 <div className="handle-search-box">
-                  <Input placeholder="Search.." />
-                  <Button variant="contained" className="search-button">
+                  <select onChange={(e) => handleSearchOption(e)}>
+                    <option value="제목">제목</option>
+                    <option value="내용">내용</option>
+                  </select>
+                  <Input
+                    onChange={(e) => handleInputChange(e)}
+                    placeholder="Search.."
+                    value={searchInput}
+                  />
+                  <Button
+                    onClick={(e) => handleInputSubmit(e)}
+                    variant="contained"
+                    className="search-button"
+                  >
                     검색
                   </Button>
                 </div>
@@ -158,20 +289,28 @@ const FreeBoard = () => {
                   {boardList.map((el, idx) => {
                     return (
                       <>
-                        <div key={idx} className="post">
-                          <div>{`#[${el.tag}]`}</div>
-                          <Link to={"/SingleBoard/" + `${el.id}`}>
-                            <h1>{el.title}</h1>
-                          </Link>
-                          <body>{el.body}</body>
-                        </div>
+                        <ul>
+                          <li key={idx} className="post">
+                            <Link to={"/SingleBoard/" + `${el.postId}`}>
+                              <h1>{el.title}</h1>
+                              <div>{el.body.slice(0, 180)}</div>
+                            </Link>
+                          </li>
+                        </ul>
                       </>
                     );
                   })}
                 </div>
               </article>
+              <Pagination>
+                postsPerPage={postsPerPage}
+                totalPosts={posts.length}
+                paginate = {setCurrentPage}
+              </Pagination>
             </main>
           </section>
+          {/* <div ref={setTarget}>this is target</div> */}
+
           <section className="freeboard-footer-container">
             <Footer />
           </section>

@@ -36,16 +36,15 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
-  const [myip , setMyip] = useState("");
+  const [myip, setMyip] = useState("");
   let navigate = useNavigate();
 
-
-  // 내 아이피 주소 가져오기 
-  const getIP = async() => {
-    const ipData = await fetch('https://geolocation-db.com/json/');
+  // 내 아이피 주소 가져오기
+  const getIP = async () => {
+    const ipData = await fetch("https://geolocation-db.com/json/");
     const locationIp = await ipData.json();
-    setMyip(locationIp.IPv4)
-  }
+    setMyip(locationIp.IPv4);
+  };
   getIP();
 
   // 정보들을 입력하고 제출버튼 누르면, 데이터들 post
@@ -61,14 +60,14 @@ export default function SignUp() {
         "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify({
-        nickName: data.get("nickname") ,
+        nickName: data.get("nickname"),
         email: data.get("email"),
         password: data.get("password"),
       }),
     };
     // 'http://14.6.86.98:8080/member/signup' 지훈님
     // `http://59.16.126.210:8080/member/signup?ipAddress=${myip}` 대한님
-    fetch('http://59.16.126.210:8080/member/signup', reqPost)
+    fetch('http://3.35.188.110:8080/member/signup', reqPost)
     .then((response) => response.json())
     .then((response) => {
       console.log(response)
@@ -103,7 +102,7 @@ export default function SignUp() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} >
+              <Grid item xs={12}>
                 <TextField
                   autoComplete="given-name"
                   name="nickname"

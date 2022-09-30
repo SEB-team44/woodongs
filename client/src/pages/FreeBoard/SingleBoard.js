@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Navbar from "../Main/Navbar";
 import Footer from "../Main/Footer";
 import Button from "@mui/material/Button";
+import { TiTrash, TiPencil } from "react-icons/ti";
 
 const StyledSingleBoard = styled.section`
   .singleboard-main-container {
     height: 100vh;
-    width: 800px;
-    margin: 50px;
-    background-color: beige;
+    width: 1000px;
+    margin: 30px 300px;
+    border: solid black 1px;
+    background-color: #f1f4f7;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -19,73 +21,205 @@ const StyledSingleBoard = styled.section`
   }
   .singleboard-title {
     border: 1px solid black;
-    height: 20px;
+    height: 100px;
   }
   .singleboard-body {
     border: 1px solid black;
+    height: 500px;
   }
   .singleboard-tag {
     border: 1px solid black;
   }
-  .singleboard-comment-box {
-    border: 1px solid black;
+  .singleboard-comment {
+    margin-bottom: 20px;
+    border-left: black 1px solid;
+    display: flex;
   }
-  .singleboard-input-box {
+  /* .singleboard-comment-box {
     border: 1px solid black;
+  } */
+  /* .singleboard-input-box {
+    border: 1px solid black;
+  } */
+  /* .singleboard-comment-view-box {
+    background-color: #ffdddd;
+    height: 100;
+  } */
+  .update-btn,
+  .delete-btn {
+    float: right;
+    cursor: pointer;
+  }
+  .button-container {
+    height: 20px;
+    margin: 5px;
   }
   .singleboard-comment-view-box {
-    background-color: #ffdddd;
     height: 100px;
+  }
+  .singleboard-comment-name {
+    font-weight: bold;
+    margin: 5px;
+  }
+  .singleboard-comment-content {
+    margin: 5px;
+  }
+  .singleboard-comment-delete-btn {
+    border: none;
+    cursor: pointer;
+  }
+  .singleboard-textarea {
+    width: 53vw;
+    margin-top: 10px;
   }
 `;
 
 const SingleBoard = () => {
+  const navigate = useNavigate();
   const [comments, setComments] = useState([]);
+  const [board, setBoard] = useState([]);
   const [inputComments, setInputComments] = useState("");
+  const [getcondition, setgetCondition] = useState(true);
   const [getconditions, setgetconditions] = useState(true);
-  const [getSingleBoard, setGetSingleBoard] = useState([]);
+  const [content, setContent] = useState([]);
   const { id } = useParams();
+  const { postId } = useParams();
+  const access_token = localStorage.getItem("access_token");
 
+  //boardlist 내용 상세페이지로 가져오기
   useEffect(() => {
-    const getBoardList = async () => {
-      fetch("http://localhost:3001/board/" + `${id}`)
-        .then((res) => {
-          if (!res.ok) {
-            throw Error("could not fetch the data for that resource");
-          }
-          return res.json();
-        })
+    function getBoardList() {
+      let reqOption = {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: access_token,
+        },
+      };
+      fetch(`http://3.35.188.110:8080/post/${id}`, reqOption)
+        .then((res) => res.json())
         .then((data) => {
-          setGetSingleBoard(data);
+          console.log(data);
+          return data;
         })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
+        .then((data) => setBoard(data));
+    }
+    function getCommentList() {
+      let reqOption = {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: access_token,
+        },
+      };
+      fetch(`http://3.35.188.110:8080/post/${id}`, reqOption)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          return data;
+        })
+        .then((data) => setComments(data.commentResponseDtos));
+    }
+    getCommentList();
     getBoardList();
-  }, [getSingleBoard, id]);
+  }, [getcondition]);
 
+  //게시판 게시물 삭제 메소드
+  const handleDeleteSB = () => {
+    let reqDelete = {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
+      },
+    };
+    fetch(`http://3.35.188.110:8080/post/${id}`, reqDelete)
+      .then((res) => {
+        if (res.ok) {
+          alert("해당 게시물이 삭제 되었습니다 :-D");
+          navigate(`/FreeBoard`);
+          return res.json();
+        }
+        console.log(res);
+        return res;
+      })
+      .catch((err) => console.log(err.message));
+  };
+
+  //댓글
+  useEffect(() => {
+    function getContent() {
+      let reqOption = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: access_token,
+        },
+      };
+      fetch("http://3.35.188.110:8080/post/" + `${id}`, reqOption)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("댓글 입력한거 출력", data);
+          return data;
+        })
+        .then((data) => setContent(data));
+    }
+    getContent();
+  }, []);
+
+  //댓글입력
   // 댓글 입력을 누르면, 그 내용을 post요청
   const postCommentDatas = () => {
     let reqPost = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
       },
       body: JSON.stringify({
-        name: "김영하",
-        content: inputComments,
+        body: inputComments,
       }),
     };
-    fetch("http://localhost:3001/boardcomment", reqPost).then((res) =>
-      res.json()
-    );
-
+    fetch(`http://3.35.188.110:8080/post/${id}/comment`, reqPost)
+      .then((res) => res.json())
+      .then(() => {
+        setgetconditions(!getconditions);
+        setInputComments("");
+      });
     //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
-    setgetconditions(!getconditions);
-    setInputComments("");
   };
 
+  //삭제 버튼 클릭 시, 들어온 id 값에 맞는 부분 삭제 요청 보냄
+  //댓글 삭제
+  const handleDeleteSBComment = (elID) => {
+    fetch(`http://3.35.188.110:8080/post/${id}/${elID}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
+      },
+    }).then(() => {
+      setgetconditions(!getconditions);
+    });
+  };
+
+  //댓글 구현 메소드
   const handleSumits = (e) => {
     e.preventDefault();
     postCommentDatas();
@@ -96,13 +230,6 @@ const SingleBoard = () => {
     setInputComments(e.target.value);
   };
 
-  //삭제 버튼 클릭 시, 들어온 id 값에 맞는 부분 삭제 요청 보냄
-  const handleDeleteSBComment = (id) => {
-    fetch("http://localhost:3001/boardcomment/" + `${id}`, {
-      method: "DELETE",
-    });
-    setgetconditions(!getSingleBoard);
-  };
   return (
     <>
       <StyledSingleBoard>
@@ -111,27 +238,44 @@ const SingleBoard = () => {
             <Navbar />
           </section>
           <section className="singleboard-main-container">
-            <section className="singleboard-title">
-              <div>제목: {getSingleBoard.title}</div>
-            </section>
-            <section className="singleboard-body">
-              <div>내용: {getSingleBoard.body}</div>
-            </section>
-            <section className="singleboard-tag">
-              <div>지역: {getSingleBoard.tag}</div>
+            <section className="singleboard-main-container-inner">
+              <div className="button-container">
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDeleteSB(board.postId)}
+                >
+                  <TiTrash />
+                </button>
+                <button
+                  className="update-btn"
+                  // onClick={handleUpdateSBComment(content.postId)}
+                >
+                  <TiPencil />
+                </button>
+              </div>
+
+              <section className="singleboard-title">
+                <div>제목: {board.title}</div>
+              </section>
+              <section className="singleboard-body">
+                <div>내용: {board.body}</div>
+              </section>
+              {/* <section className="singleboard-tag">
+                <div>지역:</div>
+              </section> */}
             </section>
             <section className="singleboard-comment-box">
               <div className="singleboard-input-box">
                 <textarea
                   className="singleboard-textarea"
                   placeholder="여기에 댓글을 입력하세요."
-                  value={inputComments}
                   onChange={(e) => handleChangeInputs(e)}
+                  value={inputComments}
                 />
                 <Button
                   className="input-button"
                   variant="contained"
-                  onclick={(e) => handleSumits(e)}
+                  onClick={(e) => handleSumits(e)}
                 >
                   입력
                 </Button>
@@ -140,16 +284,16 @@ const SingleBoard = () => {
                 {comments.map((el, idx) => {
                   return (
                     <>
-                      <div key={el.id} className="singleboard-comment">
+                      <div key={el.commentId} className="singleboard-comment">
                         <div className="singleboard-comment-name">
-                          {el.name}
+                          {el.nickName}
                         </div>
                         <div className="singleboard-comment-content">
-                          {el.content}
+                          {el.body}
                         </div>
                         <button
                           className="singleboard-comment-delete-btn"
-                          onClick={() => handleDeleteSBComment(el.id)}
+                          onClick={() => handleDeleteSBComment(el.commentId)}
                         >
                           ✖️ 삭제
                         </button>
@@ -160,7 +304,9 @@ const SingleBoard = () => {
               </div>
             </section>
           </section>
-          <Footer />
+          <section className="footer-box">
+            <Footer />
+          </section>
         </section>
       </StyledSingleBoard>
     </>

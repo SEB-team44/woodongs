@@ -4,13 +4,14 @@ import Navbar from "./Navbar";
 import Notice from "./Notice";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import Footer from "./Footer";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import { UserInfo } from "../../UserContext";
+import { UserInfo, UserLogin } from "../../UserContext";
 import { useContext } from "react";
-
+import useFetch from "../useFetch";
 
 const StyledMain = styled.div`
   .main-container {
@@ -95,114 +96,160 @@ const StyledMain = styled.div`
   }
 `;
 
-const Main = ({ list, totall }) => {
+const Main = () => {
+  const access_token = localStorage.getItem("access_token");
+  const getlat = localStorage.getItem("latitude");
+  const getlong = localStorage.getItem("longitude");
   const [cardList, setCardList] = useState([]);
-  const {userInfo} = useContext(UserInfo);
-
-  const obsRef = useRef(null); //observer Element
-  // const [list, setList] = useState(() => list); //post List
-  const [page, setPage] = useState(1); //현재 페이지
-  const [load, setLoad] = useState(false); //로딩 스피너
-  const preventRef = useRef(true); //옵저버 중복 실행 방지
-  const endRef = useRef(false); //모든 글 로드 확인
-
-  useEffect(() => {
-    //옵저버 생성
-    const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
-    if (obsRef.current) observer.observe(obsRef.current);
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    getPost();
-  }, [page]);
-
-console.log(userInfo) 
-
-  const obsHandler = (entries) => {
-    //옵저버 콜백함수
-    const target = entries[0];
-    if (!endRef.current && target.isIntersecting && preventRef.current) {
-      //옵저버 중복실행방지
-      preventRef.current = false; //옵저버 중복실행 방지
-      setPage((prev) => prev + 1); //페이지 값 증가
-    }
+  const [reRender, setRerender] = useState(false);
+  const { isLogin } = useContext(UserLogin);
+  const { userInfo } = useContext(UserInfo);
+  const myAround = true;
+  const header = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    withCredentials: true,
+    "Access-Control-Allow-Origin": "*",
+    Authorization: access_token,
   };
 
-  const getPost = useCallback(async () => {
-    //글 불러오기
-    setLoad(true); //로딩 시작
-  });
+  // //무한스크롤관련
+  // const [item, setItem] = useState([]);
+  // const [target, setTarget] = useState(null);
+  // const page = 10;
 
-  // cardList를 요청
+  // const fetchData = async () => {
+  //   const response = await fetch(`http://3.35.188.110:8080/study`);
+  //   page++;
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+  // useEffect(() => {
+  //   let observer;
+  //   if (target) {
+  //     const onIntersect = async ([entry], observer) => {
+  //       if (entry.isIntersecting) {
+  //         observer.unobserve(entry.target);
+  //         await fetchData();
+  //         observer.observe(entry.target);
+  //       }
+  //     };
+  //     observer = new IntersectionObserver(onIntersect, { threshold: 1 });
+  //     observer.observe(target);
+  //   }
+  //   return () => observer && observer.disconnect();
+  // }, [target]);
+
   useEffect(() => {
-    const getCardList = async () => {
-      fetch("http://localhost:3001/card")
-        .then((res) => {
-          if (!res.ok) {
-            throw Error("could not fetch the data for that resource");
-          }
-          return res.json();
-        })
-        .then((data) => {
-          setCardList(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
+    function getCardList() {
+      let reqOption = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: access_token,
+        },
+      };
+      if (getlat) {
+        fetch("http://3.35.188.110:8080/study/around?page=0", reqOption)
+          .then((res) => {
+            console.log("res", res);
+            return res.json();
+          })
+          .then((data) => {
+            console.log(data);
+            return data;
+          })
+          .then((data) => setCardList(data))
+          .catch((error) => console.log(error));
+
+        // fetch("http://3.35.188.110:8080/study/recruit/dummy", {
+        //   method : "POST",
+        //   headers : header,
+        //   body: JSON.stringify({
+        //     latitute: Number(getlat),
+        //     longitute: Number(getlong)
+        //   })
+        // })
+        //   .then((res) => res.json())
+        //   .then((data) => {
+        //     return console.log(data);
+        //   })
+        //   .catch((error) => console.log("error",error))
+      } else {
+        fetch("http://3.35.188.110:8080/study?size=20", reqOption)
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            return data;
+          })
+          .then((data) => setCardList(data.data));
+      }
+    }
     getCardList();
-  }, []);
+  }, [reRender]);
 
   return (
     <>
       <StyledMain>
         <section className="main-container">
           <section className="main-nav-container">
-            <Navbar />
+            <Navbar myAround={myAround} />
           </section>
-
           <section className="main-notice-container">
-            <Notice />
+            {getlat ? (
+              isLogin ? (
+                <Notice title={userInfo.city} />
+              ) : (
+                <Notice title="전국" />
+              )
+            ) : (
+              <Notice title="전국" />
+            )}
           </section>
-
           <section className="main-cardlist-container">
             <main className="cardlists-box">
-              {cardList.map((el, idx) => {
-                return (
-                  <Card sx={{ maxWidth: 300 }} className="cardlist" key={idx}>
-                    {/* <article > */}
-                    <CardMedia className="cardimg-box">
-                      <img
-                        className="cardimg"
-                        src={require("../../../src/img/businessplan.png")}
-                      ></img>
-                    </CardMedia>
-                    <CardContent className="study-info-box">
-                      <header className="study-info study-info-header">
-                        <Link to="/recruit">{el.title}</Link>
-                      </header>
-                      <a className="study-info">{el.content}</a>
-                      <ol className="study-info tags">
-                        <li>#JS</li>
-                        <li>#React</li>
-                        <li>#CSS</li>
-                      </ol>
-                    </CardContent>
-                    <div className="count">
-                      <a>모집완료 0/3</a>
-                      {/* <div ref={observer} />
-                      <>{isLoading && <Loading />}</> */}
-                    </div>
-                    {/* </article> */}
-                  </Card>
-                );
-              })}
+              {cardList &&
+                cardList.map((el, idx) => {
+                  return (
+                    <Card
+                      key={el.studyId}
+                      sx={{ maxWidth: 300 }}
+                      className="cardlist"
+                    >
+                      {/* <article > */}
+                      <CardMedia className="cardimg-box">
+                        <img
+                          className="cardimg"
+                          src={require("../../../src/img/businessplan.png")}
+                        ></img>
+                      </CardMedia>
+                      <CardContent className="study-info-box">
+                        <header className="study-info study-info-header">
+                          {/* <Link to="/recruit">{el.title}</Link> */}
+                          {/* <Link to={"/study/" + `${el.id}`}>{el.title}</Link> */}
+                          <Link to={"/study/" + `${el.studyId}`}>{`[${
+                            el.city === "" ? "전국" : el.city
+                          }]${el.title}`}</Link>
+                        </header>
+                        <a className="study-info">{el.content}</a>
+                        <ol className="study-info tags">
+                          <li>{el.category}</li>
+                        </ol>
+                      </CardContent>
+                      <div className="count">
+                        <a>모집완료 0/{el.headCount}</a>
+                      </div>
+                      {/* </article> */}
+                    </Card>
+                  );
+                })}
+              {/* <div ref={setTarget}>this is target</div> */}
             </main>
           </section>
-
           <section className="main-footer-container">
             <Footer />
           </section>

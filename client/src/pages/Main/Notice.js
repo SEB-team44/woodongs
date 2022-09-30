@@ -69,12 +69,14 @@ const StyledNav = styled.div`
   .avatarimg {
     width: 25px;
     height: 25px;
+    border-radius: 50%;
   }
 `;
 
-const Notice = () => {
-  const {userInfo, setUserInfo} = useContext(UserInfo);
+const Notice = (props) => {
+  const { userInfo, setUserInfo } = useContext(UserInfo);
   const { isLogin } = useContext(UserLogin);
+  const getlat = localStorage.getItem("latitude");
 
   return (
     <>
@@ -102,8 +104,8 @@ const Notice = () => {
                         className="avatarimg"
                         src={
                           userInfo.profileImageUrl
-                            ? userInfo.profileImageUrl:
-                             require("../../../src/img/avatar.png")
+                            ? userInfo.profileImageUrl
+                            : require("../../../src/img/avatar.png")
                         }
                       />
                     </Link>
@@ -126,8 +128,9 @@ const Notice = () => {
               <div className="now-location">
                 <p>현재 위치</p>
               </div>
+              {/* 전체 스터디 에서는 전국이 뜨게하고, 주변 스터디에서는 내위치가 뜨게 해야함. */}
               <div className="saved-location">
-                {isLogin ? <p>{userInfo.city}</p> : <p>전국</p>}
+                <h3>{props.title}</h3>
               </div>
               <button className="my-location-btn">밑</button>
             </div>
