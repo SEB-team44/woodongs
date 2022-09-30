@@ -14,6 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link as Links } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -172,9 +173,9 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="http://localhost:3000/Login" variant="body2">
+                <Links to = "/Login" variant="body2">
                   Already have an account? Login
-                </Link>
+                </Links>
               </Grid>
             </Grid>
           </Box>

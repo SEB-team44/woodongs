@@ -104,6 +104,7 @@ const Main = () => {
   const [reRender, setRerender] = useState(false);
   const { isLogin } = useContext(UserLogin);
   const { userInfo } = useContext(UserInfo);
+  const [size , setsize] = useState(1);
   const myAround = true;
   const header = {
     "Content-Type": "application/json",
@@ -154,7 +155,7 @@ const Main = () => {
         },
       };
       if (getlat) {
-        fetch("http://3.35.188.110:8080/study/around?page=0", reqOption)
+        fetch("http://3.35.188.110:8080/study/around?size=1", reqOption)
           .then((res) => {
             console.log("res", res);
             return res.json();
@@ -163,7 +164,7 @@ const Main = () => {
             console.log(data);
             return data;
           })
-          .then((data) => setCardList(data))
+          .then((data) => setCardList(data.data))
           .catch((error) => console.log(error));
 
         // fetch("http://3.35.188.110:8080/study/recruit/dummy", {
@@ -179,8 +180,10 @@ const Main = () => {
         //     return console.log(data);
         //   })
         //   .catch((error) => console.log("error",error))
+
+
       } else {
-        fetch("http://3.35.188.110:8080/study?size=20", reqOption)
+        fetch("http://3.35.188.110:8080/study?size=10", reqOption)
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
