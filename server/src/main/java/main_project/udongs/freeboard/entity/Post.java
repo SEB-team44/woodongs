@@ -38,6 +38,6 @@ public class Post {
     @ManyToOne
     private Member member;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     List<PostComment> comments = new ArrayList<>();
 }

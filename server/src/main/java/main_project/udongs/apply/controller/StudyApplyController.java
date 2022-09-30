@@ -131,10 +131,6 @@ public class StudyApplyController {
 
         Study study = studyService.findVerifiedStudy(studyId);
 
-        if (userPrincipal.getMember().getMemberId() != study.getMember().getMemberId()) {
-            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
-        }
-
         List<StudyApply> studyApplies = study.getStudyApplies();
 
         return ResponseEntity.ok(mapper.studyAppliesToStudyApplyResponse(studyApplies));

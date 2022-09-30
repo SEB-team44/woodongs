@@ -56,19 +56,19 @@ public class Study {
     private Member member;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "study")
+    @OneToMany(mappedBy = "study",cascade = CascadeType.ALL)
     @Builder.Default
     List<StudyApply> studyApplies = new ArrayList<>();
 
     //수락한 스터디 신청 리스트
     @JsonIgnore
-    @OneToMany(mappedBy = "study")
+    @OneToMany(mappedBy = "study",cascade = CascadeType.ALL)
     @Builder.Default
     List<Acceptance> acceptances = new ArrayList<>();
 
     //스터디 모집글 댓글
     @JsonIgnore
-    @OneToMany(mappedBy = "study")
+    @OneToMany(mappedBy = "study",cascade = CascadeType.ALL)
     @Builder.Default
     List<StudyComment> comments = new ArrayList<>();
 

@@ -54,11 +54,13 @@ public class PostController {
     @Operation(summary = "게시글 수정")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PostDto.Response.class))))})
     @PatchMapping("/{post-id}")
-    public ResponseEntity patchPost(@Valid @PathVariable("post-id") Long postId, @RequestBody PostDto.Patch requestBody) {
+    public ResponseEntity patchPost(@Valid @PathVariable("post-id") Long postId, @RequestBody PostDto.Patch requestBody, @AuthenticationPrincipal
+                                    UserPrincipal userPrincipal) {
         log.debug("PATCH POST");
 
-        Post findPost = postService.findVerifiedPost(postId);
-        Post post = postService.patchPost(findPost, requestBody);
+        Post verifiedPost = postService.findVerifiedPost(postId);
+        postService.isWriterOrAdmin(userPrincipal.getMember(), verifiedPost.getMember());
+        Post post = postService.patchPost(verifiedPost, requestBody);
 
         return ResponseEntity.ok(mapper.postToPostResponse(post));
     }
@@ -82,10 +84,12 @@ public class PostController {
     @Operation(summary = "해당 게시글 삭제")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @DeleteMapping("/{post-id}")
-    public ResponseEntity deletePost(@Valid @PathVariable("post-id") Long postId) {
+    public ResponseEntity deletePost(@Valid @PathVariable("post-id") Long postId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("DELETE POST");
 
-        postService.deletePost(postId);
+        Post verifiedPost = postService.findVerifiedPost(postId);
+        postService.isWriterOrAdmin(userPrincipal.getMember(), verifiedPost.getMember());
+        postService.deletePost(verifiedPost);
 
         return new ResponseEntity<>("게시글이 삭제 되었습니다.",HttpStatus.OK);
     }
@@ -129,11 +133,11 @@ public class PostController {
     public ResponseEntity patchComment(@Valid @PathVariable("post-id") Long postId, @PathVariable("comment-id") Long commentId,
                                        @RequestBody PostCommentDto.Patch requestBody,
                                        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+
         log.debug("PATCH STUDY COMMENTS");
-
-        PostComment comment = mapper.commentPatchToComment(requestBody);
-        PostComment patchedComment = postService.patchPostComment(comment, commentId);
-
+        PostComment verifiedPostComment = postService.findVerifiedPostComment(commentId);
+        postService.isWriterOrAdmin(userPrincipal.getMember(), verifiedPostComment.getMember());
+        PostComment patchedComment = postService.patchPostComment(verifiedPostComment, requestBody);
         PostCommentDto.Response response = mapper.commentToCommentResponse(patchedComment);
 
         return new ResponseEntity<>(response,HttpStatus.OK);
@@ -146,9 +150,11 @@ public class PostController {
     @DeleteMapping("/{post-id}/{comment-id}")
     public ResponseEntity deleteComment(@Valid @PathVariable("post-id") Long postId, @PathVariable("comment-id") Long commentId,
                                         @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        log.debug("DELETE STUDY COMMENTS");
 
-        postService.deletePostComment(commentId);
+        log.debug("DELETE STUDY COMMENTS");
+        PostComment verifiedPostComment = postService.findVerifiedPostComment(commentId);
+        postService.isWriterOrAdmin(userPrincipal.getMember(), verifiedPostComment.getMember());
+        postService.deletePostComment(verifiedPostComment);
         String ans = "Deletion completed";
 
         return new ResponseEntity<>(ans,HttpStatus.OK);

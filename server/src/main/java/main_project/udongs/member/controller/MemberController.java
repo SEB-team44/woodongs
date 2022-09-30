@@ -9,12 +9,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import main_project.udongs.exception.BusinessLogicException;
+import main_project.udongs.exception.ExceptionCode;
 import main_project.udongs.locationservice.LocationService;
 import main_project.udongs.member.dto.MemberDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.entity.Profile;
 import main_project.udongs.member.mapper.MemberMapper;
+import main_project.udongs.member.repository.MemberRepository;
 import main_project.udongs.member.service.MemberService;
+import main_project.udongs.oauth2.oauth.entity.RoleType;
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
 import main_project.udongs.s3upload.AwsS3Upload;
 import org.springframework.http.HttpStatus;
@@ -40,6 +44,7 @@ public class MemberController {
     private final LocationService locationService;
     private final AwsS3Upload s3Upload;
     private final PasswordEncoder passwordEncoder;
+    private final MemberRepository memberRepository;
 
 
     /*
@@ -70,6 +75,11 @@ public class MemberController {
     }
 
 
+    /*
+    * at main_project.udongs.locationservice.LocationService.getRegionAddress(LocationService.java:88)
+        at main_project.udongs.locationservice.LocationService.coordToAddr(LocationService.java:26)
+        at main_project.udongs.member.controller.MemberController.locate(MemberController.java:80)
+*/
     //경도, 위도 프론트에서 받기
     //로그인시 바로 위치 요청 받기
     @Operation(summary = "회원 위치 등록")
@@ -77,7 +87,7 @@ public class MemberController {
     @PostMapping("/locate")
     public ResponseEntity locate(@RequestBody MemberDto.Location requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) throws Exception {
         log.debug("locate member");
-        requestBody.setCity(locationService.coordToAddr(requestBody.getLongitude(), requestBody.getLatitude()));
+        requestBody.setCity(locationService.coordToAddr(requestBody.getLongitude(), requestBody.getLatitude())); //위치정보 받은상태에서 로그아웃하고 다시 로그인해서 위치받으면 도시 갱신 실패  NPE
         memberService.updateLocation(userPrincipal.getMember(), requestBody);
 
         return ResponseEntity.ok("위치정보 갱신 성공");
@@ -92,6 +102,20 @@ public class MemberController {
         MemberDto.Response response = mapper.memberToMemberResponse(member);
         log.info("member : {}" + member.toString());
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "운영자 계정 만들기")
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = MemberDto.Response.class))))
+    @PostMapping("/admin")
+    public ResponseEntity setAdmin(@RequestParam String adminKey, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        if (!adminKey.equals("seb39_main_044")) {
+            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+        }
+        Member member = userPrincipal.getMember();
+        member.setRoleType(RoleType.ADMIN);
+        memberRepository.save(member);
+
+        return ResponseEntity.ok("권한이 관리자로 설정되었습니다.");
     }
 
 //    @Operation(summary = "회원 정보 조회")

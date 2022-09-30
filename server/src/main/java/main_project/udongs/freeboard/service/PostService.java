@@ -3,12 +3,14 @@ package main_project.udongs.freeboard.service;
 import lombok.RequiredArgsConstructor;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
+import main_project.udongs.freeboard.dto.PostCommentDto;
 import main_project.udongs.freeboard.dto.PostDto;
 import main_project.udongs.freeboard.entity.Post;
 import main_project.udongs.freeboard.entity.PostComment;
 import main_project.udongs.freeboard.repository.PostCommentRepository;
 import main_project.udongs.freeboard.repository.PostRepository;
 import main_project.udongs.member.entity.Member;
+import main_project.udongs.oauth2.oauth.entity.RoleType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -60,19 +62,13 @@ public class PostService {
 
     //게시글 삭제
     @Transactional
-    public void deletePost(Long postId) {
-        Post findPost = findVerifiedPost(postId);
-        postRepository.delete(findPost);
+    public void deletePost(Post post) {
+        postRepository.delete(post);
     }
 
     @Transactional(readOnly = true)
     public Post findVerifiedPost(long postId) {
-        Optional<Post> optionalPost =
-                postRepository.findById(postId);
-        Post findPost =
-                optionalPost.orElseThrow(() ->
-                        new BusinessLogicException(ExceptionCode.STUDY_NOT_FOUND));
-        return findPost;
+        return postRepository.findById(postId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.POST_NOT_FOUND));
     }
 
     //게시글 모집글 질문 작성
@@ -91,23 +87,37 @@ public class PostService {
 
     //게시글 모집글 질문 수정
     @Transactional
-    public PostComment patchPostComment(PostComment comment, Long commentId) {
+    public PostComment patchPostComment(PostComment comment, PostCommentDto.Patch patch) {
 
-        PostComment foundComment = commentRepository.findById(commentId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+        Optional.ofNullable(patch.getBody())
+                .ifPresent(comment::setBody);
+        comment.setModifiedAt(LocalDateTime.now());
 
-        Optional.ofNullable(comment.getBody())
-                .ifPresent(foundComment::setBody);
-        foundComment.setModifiedAt(LocalDateTime.now());
-
-        return commentRepository.save(foundComment);
+        return commentRepository.save(comment);
     }
 
     //게시글 모집글 질문 삭제
     @Transactional
-    public void deletePostComment(Long commentId) {
+    public void deletePostComment(PostComment postComment) {
+        commentRepository.delete(postComment);
+    }
 
-        PostComment foundComment = commentRepository.findById(commentId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
-        commentRepository.delete(foundComment);
+    @Transactional(readOnly = true)
+    public PostComment findVerifiedPostComment(long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isWriterOrAdmin(Member currentUser, Member writer) {
+        if (currentUser.getRoleType() == (RoleType.ADMIN)) {
+            return true;
+        }
+
+        if (!currentUser.getMemberId().equals(writer.getMemberId())) {
+            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+        }
+
+        return true;
     }
 
 
