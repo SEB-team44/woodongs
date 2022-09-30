@@ -18,6 +18,7 @@ import ChatSideBar from "./pages/Group/ChatSideBar";
 import { UserLogin } from "../src/UserContext";
 import { UserInfo } from "../src/UserContext";
 import Redirect from "./pages/oauth2/Redirect";
+import Manage from "./pages/Recruit/Manage";
 
 function App() {
   const [isLogin, setIslogin] = useState(false);
@@ -45,6 +46,7 @@ function App() {
               <Route path="/ChatMessage" element={<ChatMessage />} />
               <Route path="/ChatSideBar" element={<ChatSideBar />} />
               <Route path="/Redirect" element={<Redirect />} />
+              <Route path="/Manage" element={<Manage/>}/>
             </Routes>
           </BrowserRouter>
         </UserLogin.Provider>

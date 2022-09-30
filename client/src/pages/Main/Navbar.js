@@ -81,6 +81,8 @@ const StyledNav = styled.div`
   .avatarimg {
     width: 30px !important;
     height: 30px !important;
+    border-radius: 50%;
+
   }
   .group-btn {
     border: 0;
@@ -129,13 +131,20 @@ const Navbar = ({myAround,  cardList, setCardList, setRerender, reRender }) => {
   };
 
   const handleInputSubmit = (e) => {
-    console.log(searchOption);
+    // console.log(searchOption);
+    let filtered ;
     if (searchOption === "제목") {
-      let filtered = cardList.filter((el) => {
+      filtered = cardList.filter((el) => {
         return el.title.includes(searchInput);
       });
-      setCardList([...filtered]);
+      
     }
+    if (searchOption === "지역") {
+      filtered = cardList.filter((el) => {
+        return el.city.includes(searchInput);
+      });
+    }
+    setCardList([...filtered]);
   };
 
   const handleClearSubmit = () => {

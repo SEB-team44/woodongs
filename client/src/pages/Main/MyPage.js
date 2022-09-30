@@ -7,11 +7,13 @@ import { Link } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
-import { Avatar } from "antd";
+// import { Avatar } from "antd";
 
 import { useState, useRef, useContext } from "react";
 import { UserInfo } from "../../UserContext";
 import LogOut from "../Member/Logout";
+
+import axios from "axios";
 
 const MyPageStyled = styled.div`
   .mypage_content {
@@ -33,22 +35,24 @@ const MyPageStyled = styled.div`
   .mypage_downcontent {
     display: flex;
     flex-direction: column;
-    justify-content: center ;
+    justify-content: center;
     text-align: center;
-    align-items:center;
+    align-items: center;
   }
   .avatarimg {
     height: 150px;
     width: 150px;
+    border-radius: 50%;
+  
   }
   .user_info {
-    margin:0;
+    margin: 0;
     display: flex;
     flex-direction: column;
     width: 200px;
-    justify-content: center ;
-    text-align: center ;
-    align-items:center;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
   }
 `;
 
@@ -139,7 +143,6 @@ const MyPage = () => {
     setIsEdit(false);
   };
 
-
   //회원정보 수정 handler
   const handleEditContents = (e) => {
     // e.preventDefault();
@@ -169,10 +172,10 @@ const MyPage = () => {
       console.log(changeInfo);
       return changeInfo;
     }
-    if (e.target.className === "edit-introduce edit-infos") {
+    if (e.target.className === "edit-introduction edit-infos") {
       setChangeInfo({
         ...changeInfo,
-        introduce: e.target.value,
+        introduction: e.target.value,
       });
       console.log(changeInfo);
       return changeInfo;
@@ -214,7 +217,7 @@ const MyPage = () => {
                     nickName: changeInfo.nickName,
                     profile: {
                       job: changeInfo.job,
-                      career: changeInfo.job,
+                      career: changeInfo.career,
                       introduction: changeInfo.introduction,
                     },
                     profileImageUrl: Image,
@@ -232,13 +235,8 @@ const MyPage = () => {
         .catch((error) => console.log(`${error}, 정보를 수정할 수 없습니다.`));
     };
 
-    // const PatchInfoChanges = async () => {
-
-    // };
 
     PatchNickName();
-    // PatchInfoChanges();
-    //편집을 끝냄
     setIsEdit(false);
   };
 
@@ -256,21 +254,28 @@ const MyPage = () => {
     }
 
     const formData = new FormData();
-    formData.append("file", e.target.files[0]);
+    formData.append("images", e.target.files[0]);
     console.log(e.target.files[0]);
     // 서버의 upload API 호출
-    const res = fetch("http://3.35.188.110:8080/member/imageupload", {
+    axios({
+      // baseURL: "http://59.16.126.210:8080/member/imageupload",
+      url: "http://59.16.126.210:8080/member/imageupload",
       method: "POST",
-      headers: header,
-      images: formData,
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Accept: "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
+      },
     })
-      .then((res) => {
-        console.log(res);
+      .then((response) => {
+        console.log(response.status);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
-    console.log(res);
 
     //화면에 프로필 사진 표시
     const reader = new FileReader();
@@ -306,13 +311,13 @@ const MyPage = () => {
                 />
                 {isEdit ? (
                   <div>
-                  <input
-                    type="file"
-                    accept="image/jpg,image/png,image/jpeg"
-                    name="profile_img"
-                    onChange={(e) => onImgChange(e)}
-                    ref={fileInput}
-                  />
+                    <input
+                      type="file"
+                      accept="image/jpg,image/png,image/jpeg"
+                      name="profile_img"
+                      onChange={(e) => onImgChange(e)}
+                      ref={fileInput}
+                    />
                   </div>
                 ) : null}
               </div>
@@ -336,16 +341,16 @@ const MyPage = () => {
                     onChange={(e) => handleEditContents(e)}
                     value={changeInfo.nickName}
                     placeholder="nickName"
-                  >
-                  </textarea>
+                  ></textarea>
                 </>
               ) : (
-                <div className="name"><h1>{userInfo.nickName}</h1></div>
+                <div className="name">
+                  <h1>{userInfo.nickName}</h1>
+                </div>
               )}
             </div>
 
             <div className="mypage_downcontent">
-              
               {isEdit ? (
                 <div className="user_info">
                   <div>
@@ -381,7 +386,9 @@ const MyPage = () => {
                 <div className="user_info">
                   <div className="info job">{changeInfo.job}</div>
                   <div className="info career">{changeInfo.career}</div>
-                  <div className="info introduction">{changeInfo.introduction}</div>
+                  <div className="info introduction">
+                    {changeInfo.introduction}
+                  </div>
                 </div>
               )}
             </div>
