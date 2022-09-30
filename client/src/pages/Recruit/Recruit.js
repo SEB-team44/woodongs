@@ -285,18 +285,15 @@ const Recruit = () => {
     //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
   };
 
-
-
-
   const handleChangeTab = (e) => {
     e.preventDefault();
-    if(e.target.className === "tab-element tab-info"){
+    if (e.target.className === "tab-element tab-info") {
       setChangeTab(true);
     }
-    if(e.target.className === "tab-element tab-manage"){
+    if (e.target.className === "tab-element tab-manage") {
       setChangeTab(false);
     }
-  }
+  };
 
   //댓글 구현 메소드
   const handleSumit = (e) => {
@@ -354,10 +351,16 @@ const Recruit = () => {
             <section className="recruit-main-box">
               <section className="recruit-main-section">
                 <div className="tab">
-                  <div className="tab-element tab-info" onClick={(e) => handleChangeTab(e)}>
+                  <div
+                    className="tab-element tab-info"
+                    onClick={(e) => handleChangeTab(e)}
+                  >
                     정보
                   </div>
-                  <div className="tab-element tab-manage" onClick={(e) => handleChangeTab(e)}>
+                  <div
+                    className="tab-element tab-manage"
+                    onClick={(e) => handleChangeTab(e)}
+                  >
                     관리
                   </div>
                 </div>
@@ -402,7 +405,9 @@ const Recruit = () => {
                       <p>{card.body}</p>
                     </article>
                   </section>
-                ) : <Manage />}
+                ) : (
+                  <Manage />
+                )}
               </section>
               <aside className="recruit-main-aside">
                 <article>
