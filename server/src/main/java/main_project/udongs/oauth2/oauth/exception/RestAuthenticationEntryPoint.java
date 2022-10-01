@@ -18,7 +18,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
             AuthenticationException authException
     ) throws IOException, ServletException {
         authException.printStackTrace();
-        log.info("Responding with unauthorized error. Message := {}", authException.getMessage());
+        log.info("Responding with unauthorized error. Chat := {}", authException.getMessage());
         response.sendError(
                 HttpServletResponse.SC_UNAUTHORIZED,
                 authException.getLocalizedMessage()

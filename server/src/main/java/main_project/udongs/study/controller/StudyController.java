@@ -92,7 +92,7 @@ public class StudyController {
     @Operation(summary = "단일 스터디 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
     @GetMapping("/{study-id}")
-    public ResponseEntity postStudy(@Valid @PathVariable("study-id") Long studyId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResponseEntity getStudy(@Valid @PathVariable("study-id") Long studyId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("GET STUDY");
 
         Study study = studyService.findVerifiedStudy(studyId);
@@ -194,7 +194,6 @@ public class StudyController {
 
         return new ResponseEntity<>(ans,HttpStatus.OK);
     }
-
 
 
     @Operation(summary = "스터디 더미데이터 삽입")

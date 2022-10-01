@@ -145,4 +145,10 @@ public class Member {
         //this.modifiedAt = modifiedAt;
     }
 
+
+    public Member(String email, String nickName, String password) {
+        this.email = email;
+        this.nickName = nickName;
+        this.password = password;
+    }
 }
