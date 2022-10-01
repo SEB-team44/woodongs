@@ -9,8 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import main_project.udongs.alram.dto.MessageDto;
-import main_project.udongs.alram.service.AlarmService;
+import main_project.udongs.stomp.ChatDto;
+import main_project.udongs.stomp.AlarmService;
 import main_project.udongs.apply.dto.StudyApplyDto;
 import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.apply.mapper.StudyApplyMapper;
@@ -71,7 +71,8 @@ public class StudyApplyController {
         studyApplyService.createStudyApply(study,userPrincipal.getMember());
 
         // 알람 전송 추가
-        alarmService.alarmByMessage(new MessageDto(userPrincipal.getMember().getMemberId(), study.getMember().getMemberId(), "스터디 신청이 왔습니다", LocalDateTime.now()));
+        alarmService.alarmByMessage(new ChatDto(userPrincipal.getMember().getMemberId(), userPrincipal.getMember().getNickName(), study.getMember().getMemberId(), "스터디 신청이 왔습니다", LocalDateTime.now()));
+
         return ResponseEntity.ok("신청했습니다");
     }
 
@@ -107,6 +108,9 @@ public class StudyApplyController {
             studyRepository.save(study);
         }
 
+        // 알람 전송 추가
+        alarmService.alarmByMessage(new ChatDto(userPrincipal.getMember().getMemberId(), userPrincipal.getMember().getNickName(), studyApply.getMember().getMemberId(), "스터디 신청이 승인됐습니다", LocalDateTime.now()));
+
         return ResponseEntity.ok("승인했습니다");
     }
 
@@ -126,6 +130,9 @@ public class StudyApplyController {
         StudyApply studyApply = studyApplyService.getStudyApply(applyId);
         studyApply.setState(StudyApply.State.REFUSE);
         studyApplyRepository.save(studyApply);
+
+        // 알람 전송 추가
+        alarmService.alarmByMessage(new ChatDto(userPrincipal.getMember().getMemberId(), userPrincipal.getMember().getNickName(), studyApply.getMember().getMemberId(), "스터디 신청이 거절됐습니다", LocalDateTime.now()));
 
         return ResponseEntity.ok("거절했습니다");
     }

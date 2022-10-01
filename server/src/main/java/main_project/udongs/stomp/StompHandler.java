@@ -1,4 +1,4 @@
-package main_project.udongs.alram.handler;
+package main_project.udongs.stomp;
 
 import lombok.RequiredArgsConstructor;
 import main_project.udongs.oauth2.oauth.token.AuthToken;
