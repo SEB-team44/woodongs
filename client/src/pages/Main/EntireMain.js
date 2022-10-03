@@ -111,7 +111,7 @@ const EntireMain = () => {
           Authorization: access_token,
         },
       };
-      fetch("http://3.35.188.110:8080/study?size=20", reqOption)
+      fetch("http://www.woodongs.site:8080/study?size=20", reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);

@@ -70,6 +70,7 @@ const StyledFreeBoard = styled.section`
 `;
 
 const FreeBoard = () => {
+  
   const { isLogin } = useContext(UserLogin);
   const [boardList, setBoardList] = useState([]);
   //지역검색필터
@@ -102,15 +103,16 @@ const FreeBoard = () => {
           Authorization: access_token,
         },
       };
-      fetch("http://3.35.188.110:8080/post", reqOption)
+      fetch("http://www.woodongs.site:8080/post?size=15&cursorId=15", reqOption)
         .then((res) => {
           if (!res.ok) {
-            throw Error("could not fetch the data for that resource");
+            throw Error("could not fetch the data for that resoure");
           }
           return res.json();
         })
         .then((data) => {
-          setBoardList(data);
+          console.log("data", data)
+          setBoardList(data.data);
         })
         .catch((err) => {
           console.log(err);
@@ -167,7 +169,7 @@ const FreeBoard = () => {
 
               <article className="post-box">
                 <div className="post-list">
-                  {boardList.map((el, idx) => {
+                  {boardList && boardList.map((el, idx) => {
                     return (
                       <div key={idx} className="post">
                         <Link to={"/SingleBoard/" + `${el.postId}`}>

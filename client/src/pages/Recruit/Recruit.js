@@ -111,6 +111,8 @@ const StyledRecruit = styled.section`
     float: right;
   }
   .avatarimg {
+    width: 125px;
+    height: 125px;
     border-radius: 50%;
   }
 `;
@@ -145,20 +147,21 @@ const Recruit = () => {
   const [content, setContent] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const access_token = localStorage.getItem("access_token");
+  // const access_token =
+  const header = {
+    "content-type": "application/json",
+    Accept: "application/json",
+    withCredentials: true,
+    "Access-Control-Allow-Origin": "*",
+    Authorization: localStorage.getItem("access_token"),
+  };
 
   //댓글
   useEffect(() => {
     const getContent = () => {
       let reqOption = {
         method: "GET",
-        headers: {
-          "content-type": "application/json",
-          Accept: "application/json",
-          withCredentials: true,
-          "Access-Control-Allow-Origin": "*",
-          Authorization: access_token,
-        },
+        headers: header,
       };
       fetch("http://3.35.188.110:8080/study/" + `${id}`, reqOption)
         .then((res) => res.json())
@@ -175,13 +178,7 @@ const Recruit = () => {
   const handleDeleteRecruit = () => {
     let reqDelete = {
       method: "DELETE",
-      headers: {
-        "content-type": "application/json",
-        Accept: "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
-        Authorization: access_token,
-      },
+      headers: header,
     };
 
     // fetch("http://localhost:3001/card/" + `${id}`, reqDelete)
@@ -219,13 +216,7 @@ const Recruit = () => {
     function getCommentList() {
       let reqOption = {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          withCredentials: true,
-          "Access-Control-Allow-Origin": "*",
-          Authorization: access_token,
-        },
+        headers: header,
       };
       fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
         .then((res) => res.json())
@@ -239,13 +230,7 @@ const Recruit = () => {
     function getCardList() {
       let reqOption = {
         method: "GET",
-        headers: {
-          "content-type": "application/json",
-          Accept: "application/json",
-          withCredentials: true,
-          "Access-Control-Allow-Origin": "*",
-          Authorization: access_token,
-        },
+        headers: header,
       };
       fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
         .then((res) => res.json())
@@ -262,15 +247,10 @@ const Recruit = () => {
 
   // 댓글 입력을 누르면, 그 내용을 post요청
   const postCommentData = () => {
-    const access_token = localStorage.getItem("access_token");
+    // const access_token = localStorage.getItem("access_token");
     let reqPost = {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
-        Authorization: access_token,
-      },
+      headers: header,
       body: JSON.stringify({
         body: inputComment,
       }),
@@ -285,18 +265,15 @@ const Recruit = () => {
     //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
   };
 
-
-
-
   const handleChangeTab = (e) => {
     e.preventDefault();
-    if(e.target.className === "tab-element tab-info"){
+    if (e.target.className === "tab-element tab-info") {
       setChangeTab(true);
     }
-    if(e.target.className === "tab-element tab-manage"){
+    if (e.target.className === "tab-element tab-manage") {
       setChangeTab(false);
     }
-  }
+  };
 
   //댓글 구현 메소드
   const handleSumit = (e) => {
@@ -314,12 +291,7 @@ const Recruit = () => {
   const handeDeleteComment = (elID) => {
     fetch(`http://3.35.188.110:8080/study/${id}/${elID}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
-        Authorization: access_token,
-      },
+      headers: header,
     }).then(() => {
       setgetcondition(!getcondition);
     });
@@ -332,6 +304,20 @@ const Recruit = () => {
     });
     setgetconditions(!getconditions);
   };
+
+  const handleApplyStudy = (id) => {
+    fetch(`http://3.35.188.110:8080/study/${id}/apply`, {
+      method: "POST",
+      headers: header,
+    })
+      .then((res) => {
+        if (res.ok) {
+          alert("신청을 성공하였습니다.")
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <>
       <StyledRecruit>
@@ -354,10 +340,16 @@ const Recruit = () => {
             <section className="recruit-main-box">
               <section className="recruit-main-section">
                 <div className="tab">
-                  <div className="tab-element tab-info" onClick={(e) => handleChangeTab(e)}>
+                  <div
+                    className="tab-element tab-info"
+                    onClick={(e) => handleChangeTab(e)}
+                  >
                     정보
                   </div>
-                  <div className="tab-element tab-manage" onClick={(e) => handleChangeTab(e)}>
+                  <div
+                    className="tab-element tab-manage"
+                    onClick={(e) => handleChangeTab(e)}
+                  >
                     관리
                   </div>
                 </div>
@@ -402,7 +394,9 @@ const Recruit = () => {
                       <p>{card.body}</p>
                     </article>
                   </section>
-                ) : <Manage />}
+                ) : (
+                  <Manage id = {id}/>
+                )}
               </section>
               <aside className="recruit-main-aside">
                 <article>
@@ -434,7 +428,11 @@ const Recruit = () => {
                 </article>
                 {isLogin ? (
                   <article>
-                    <Button className="submit-button" variant="contained">
+                    <Button
+                      className="submit-button"
+                      variant="contained"
+                      onClick={(e) => handleApplyStudy(content.studyId)}
+                    >
                       신청하기
                     </Button>
                   </article>
