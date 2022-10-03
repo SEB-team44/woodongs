@@ -9,9 +9,9 @@ name: BE AWS CI/CD
 
 on:
   push:
-    branches: [ "be-production" ]
+    branches: [ "production" ]
   pull_request:
-    branches: [ "be-production" ]
+    branches: [ "production" ]
 
 permissions:
   contents: read
