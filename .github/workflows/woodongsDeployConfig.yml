@@ -20,6 +20,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+#    permissions:
+#      contents: read
+#      packages: write
 
     steps:
       - uses: actions/checkout@v3
@@ -35,6 +38,7 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+        shell: bash
 
         #BUILD
       - name: Build with Gradle
@@ -47,6 +51,14 @@ jobs:
         #COPY .JAR
       - name: Copy Jar
         run: cp ./build/libs/*.jar ./deploy/
+        
+        #COPY appspec.yml
+      - name: Copy appspec
+        run: cp ./appspec.yml ./deploy/
+        
+        #COPY SCRIPTS
+      - name: Copy shell
+        run: cp ./scripts/* ./deploy/
 
         #CREATE ZIP FOR TRANSFER
       - name: Make zip file
