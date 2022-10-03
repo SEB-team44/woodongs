@@ -8,6 +8,7 @@ import Input from "@mui/material/Input";
 import { UserLogin } from "../../UserContext";
 import { useContext, useState } from "react";
 import { UserInfo } from "../../UserContext";
+import Alert from "../Main/Alert";
 
 const StyledNav = styled.div`
   .header-container {
@@ -109,6 +110,9 @@ const Navbar = ({myAround,  cardList, setCardList, setRerender, reRender }) => {
   const [searchInput, setSearchInput] = useState("");
   const { isLogin } = useContext(UserLogin);
   const [searchOption, setSearchOption] = useState("제목");
+
+
+  console.log("userInfo" , userInfo)
 
   const handleClick1 = (event) => {
     setAnchorEl1(anchorEl1 ? null : event.currentTarget);
@@ -253,15 +257,7 @@ const Navbar = ({myAround,  cardList, setCardList, setRerender, reRender }) => {
                           }}
                         >
                           <div className="alert">
-                            <Link to="/MyPage">
-                              <ul>
-                                <li>🔔 새소식 🔔</li>
-                                <li>
-                                  @대한님으로부터 스터디 신청이 있습니다.{" "}
-                                </li>
-                                <li>@지훈님으로부터 스터디 신청이 있습니다.</li>
-                              </ul>
-                            </Link>
+                          <Alert></Alert>
                           </div>
                         </Typography>
                       </Popover>
@@ -299,8 +295,11 @@ const Navbar = ({myAround,  cardList, setCardList, setRerender, reRender }) => {
                           <div>
                             <Link to="/MyGroup">
                               <ul>
-                                <li>1번스터디</li>
-                                <li>2번스터디</li>
+                              {userInfo.studyResponseDtos.map((el)=>{
+                                return (
+                                <li key={el.studyId}>{el.title}</li>
+                                )
+                              })}
                               </ul>
                             </Link>
                           </div>

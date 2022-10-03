@@ -155,7 +155,7 @@ const Main = () => {
         },
       };
       if (getlat) {
-        fetch("http://3.35.188.110:8080/study/around?size=1", reqOption)
+        fetch("http://www.woodongs.site:8080/study/around?size=10", reqOption)
           .then((res) => {
             console.log("res", res);
             return res.json();
@@ -183,7 +183,7 @@ const Main = () => {
 
 
       } else {
-        fetch("http://3.35.188.110:8080/study?size=10", reqOption)
+        fetch("http://www.woodongs.site:8080/study?size=10", reqOption)
           .then((res) => res.json())
           .then((data) => {
             console.log(data);

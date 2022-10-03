@@ -46,7 +46,7 @@ function Copyright(props) {
 // localhost:3000
 // 3.35.188.110:8080
 const KAKAOPATH =
-  "http://woodongs.site:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/Redirect";
+  "http://www.woodongs.site:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/Redirect";
 
 const theme = createTheme();
 
@@ -127,7 +127,7 @@ export default function Login() {
 
     //3.35.188.110:8080대한님
     //14.6.86.98:8080 지훈님
-    fetch("http://3.35.188.110:8080/login", reqOAuthPost)
+    fetch("http://www.woodongs.site:8080/login", reqOAuthPost)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -151,10 +151,10 @@ export default function Login() {
               latitude: localStorage.getItem("latitude"),
               longitude: localStorage.getItem("longitude"),
             });
-            fetch("http://3.35.188.110:8080/member/locate", reqOAuthPost)
+            fetch("http://www.woodongs.site:8080/member/locate", reqOAuthPost)
               .then((res) => console.log(res.json()))
               .then((res) => {
-                fetch("http://3.35.188.110:8080/member/me", {
+                fetch("http://www.woodongs.site:8080/member/me", {
                   headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
@@ -265,9 +265,7 @@ export default function Login() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Links to = "/SignUp" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Links>
+                  <Links to="/SignUp">{"Don't have an account? Sign Up"}</Links>
                 </Grid>
               </Grid>
               {isLoading ? (
@@ -284,27 +282,6 @@ export default function Login() {
                   >
                     <KakaoButton sx={{ mt: 8, mb: 4 }} />
                   </a>
-                  <Links to="/main">
-                    {" "}
-                    <button
-                      onClick={() => {
-                        setIslogin(true);
-                      }}
-                    >
-                      임시로그인버튼
-                    </button>
-                  </Links>
-                  <Links to="/main">
-                    {" "}
-                    <button
-                      onClick={() => {
-                        localStorage.clear();
-                      }}
-                    >
-                      {" "}
-                      로그인 안하고 메인가기
-                    </button>
-                  </Links>
                 </div>
               )}
             </Box>

@@ -70,7 +70,7 @@ const AddBoard = () => {
         body: content.body,
       }),
     };
-    fetch("http://3.35.188.110:8080/post", reqPost)
+    fetch("http://www.woodongs.site:8080/post", reqPost)
       .then((res) => {
         if (res.ok) {
           alert("새로운 게시물이 성공적으로 등록되었습니다 :-D");
