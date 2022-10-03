@@ -395,7 +395,9 @@ const Recruit = () => {
                     </article>
                   </section>
                 ) : (
+
                   <Manage id = {id}/>
+
                 )}
               </section>
               <aside className="recruit-main-aside">

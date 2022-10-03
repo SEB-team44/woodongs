@@ -1,34 +1,30 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import "intersection-observer";
 
-const useFetch = (url) => {
-  const [getdata, setData] = useState([]);
-  const [isPending, setIsPending] = useState(true);
-  const [error, setError] = useState(null);
+export const useIntersectionObserver = (callback) => {
+  const [observationTarget, setObservationTarget] = useState(null);
+  const observer = useRef(
+    new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        callback();
+      },
+      { threshold: 1 }
+    )
+  );
 
   useEffect(() => {
-    const getAsync = async () => {
-      fetch(url)
-        .then((res) => {
-          if (!res.ok) {
-            throw Error("could not fetch the data for that resource");
-          }
-          return res.json();
-        })
-        .then((data) => {
-          setData(data.data);
-          setIsPending(false);
-          setError(null);
-        })
-        .catch((err) => {
-          setIsPending(false);
-          setError(err.message);
-        });
+    const currentTarget = observationTarget;
+    const currentObserver = observer.current;
+    if (currentTarget) {
+      currentObserver.observe(currentTarget);
+    }
+    return () => {
+      if (currentTarget) {
+        currentObserver.unobserve(currentTarget);
+      }
     };
-    getAsync();
-  }, []);
+  }, [observationTarget]);
 
-  return { getdata, isPending, error };
+  return setObservationTarget;
 };
-//커스텀 훅은 앞에 use를 사용하지 않으면 동작하지 않는다.
-
-export default useFetch;
