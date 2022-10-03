@@ -1,3 +1,4 @@
+/*
 package main_project.udongs.alarm;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -138,4 +139,4 @@ class AlarmServiceTest {
     private String getWsPath() {
         return String.format("ws://localhost:%d/ws-stomp", port);
     }
-}
+}*/
