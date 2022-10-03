@@ -21,14 +21,14 @@ public class MessageController {
     @Operation(summary = "알람 보내기")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @MessageMapping("/alarm")
-    public void message(ChatDto chatDto) {
+    public void sendAlarm(ChatDto chatDto) {
         messagingTemplate.convertAndSend("/sub/alarm" + chatDto.getReceiverId(), chatDto);
     }
 
     @Operation(summary = "채팅 보내기")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @MessageMapping("/chat")
-    public void chat(ChatDto chatDto) {
+    public void sendChat(ChatDto chatDto) {
         messagingTemplate.convertAndSend("/sub/chat/"+chatDto.getReceiverId(), chatDto);
     }
 }
