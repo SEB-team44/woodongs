@@ -51,14 +51,15 @@ jobs:
         #COPY .JAR
       - name: Copy Jar
         run: cp ./build/libs/*.jar ./deploy/
-        
-        #COPY appspec.yml
-      - name: Copy appspec
-        run: cp ./appspec.yml ./deploy/
-        
-        #COPY SCRIPTS
-      - name: Copy shell
-        run: cp ./scripts/* ./deploy/
+
+#  nonstop - try later       
+#        #COPY appspec.yml
+#      - name: Copy appspec
+#        run: cp ./appspec.yml ./deploy/
+#        
+#        #COPY SCRIPTS
+#      - name: Copy shell
+#        run: cp ./scripts/* ./deploy/
 
         #CREATE ZIP FOR TRANSFER
       - name: Make zip file
