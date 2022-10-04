@@ -16,7 +16,7 @@
 const fs = require('fs');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const apiProxy = createProxyMiddleware({
+createProxyMiddleware({
   target: {
     protocol: 'https:',
     host: 'woodongs.site',
