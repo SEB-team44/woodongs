@@ -71,7 +71,6 @@ const StyledRecruit = styled.section`
     border-radius: 30px;
     background-color: #e6edfc;
     padding: 20px;
-
     flex-direction: row;
     justify-content: center;
   }
@@ -79,7 +78,8 @@ const StyledRecruit = styled.section`
     padding: 20px;
   }
   .inputbox-textarea {
-    width: 52vw;
+    width: 900px;
+    margin-bottom: 20px;
   }
   .recruit-comment {
     margin-bottom: 20px;
@@ -89,12 +89,10 @@ const StyledRecruit = styled.section`
   textarea {
     resize: none;
   }
-  .input-button {
-    padding: 0px;
-  }
   .recruit-inputbox {
     align-items: center;
     justify-content: center;
+    display: flex;
   }
   .recruit-comment-name {
     font-weight: bold;

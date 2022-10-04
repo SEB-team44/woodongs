@@ -14,7 +14,7 @@ const StyledNav = styled.div`
   .header-container {
     height: 63.5px;
     width: 100vw;
-    border: solid black 1px;
+    /* border: solid black 1px; */
     background-color: white;
   }
   .nav-container {
@@ -83,7 +83,6 @@ const StyledNav = styled.div`
     width: 30px !important;
     height: 30px !important;
     border-radius: 50%;
-
   }
   .group-btn {
     border: 0;
@@ -97,13 +96,13 @@ const StyledNav = styled.div`
     cursor: pointer;
     background-color: white;
   }
-  ul > li {
+  a {
     text-decoration: none;
-    text-decoration-line: none;
+    list-style: none;
   }
 `;
 
-const Navbar = ({myAround,  cardList, setCardList, setRerender, reRender }) => {
+const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const { userInfo, setUserInfo } = useContext(UserInfo); //로그인 한 사용자 정보
   const [anchorEl1, setAnchorEl1] = React.useState(null);
   const [anchorEl2, setAnchorEl2] = React.useState(null);
@@ -136,12 +135,11 @@ const Navbar = ({myAround,  cardList, setCardList, setRerender, reRender }) => {
 
   const handleInputSubmit = (e) => {
     // console.log(searchOption);
-    let filtered ;
+    let filtered;
     if (searchOption === "제목") {
       filtered = cardList.filter((el) => {
         return el.title.includes(searchInput);
       });
-      
     }
     if (searchOption === "지역") {
       filtered = cardList.filter((el) => {
@@ -216,7 +214,7 @@ const Navbar = ({myAround,  cardList, setCardList, setRerender, reRender }) => {
                         초기화
                       </Button>
                     </div>
-                  )} 
+                  )}
 
                   <div className="info-box">
                     <div className="new-study-btn">

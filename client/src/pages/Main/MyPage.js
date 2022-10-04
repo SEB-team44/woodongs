@@ -43,7 +43,6 @@ const MyPageStyled = styled.div`
     height: 150px;
     width: 150px;
     border-radius: 50%;
-  
   }
   .user_info {
     margin: 0;
@@ -53,6 +52,11 @@ const MyPageStyled = styled.div`
     justify-content: center;
     text-align: center;
     align-items: center;
+  }
+  li,
+  a {
+    text-decoration: none;
+    list-style: none;
   }
 `;
 
@@ -237,7 +241,6 @@ const MyPage = () => {
         .catch((error) => console.log(`${error}, 정보를 수정할 수 없습니다.`));
     };
 
-
     PatchNickName();
     setIsEdit(false);
   };
@@ -273,10 +276,9 @@ const MyPage = () => {
       },
     })
       .then((response) => {
-        if(response.ok){
-          console.log(response.status , "업로드 성공");
+        if (response.ok) {
+          console.log(response.status, "업로드 성공");
         }
-       
       })
       .catch((error) => {
         console.error(error);

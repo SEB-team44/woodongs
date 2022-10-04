@@ -82,7 +82,9 @@ const StyledEntireMain = styled.div`
   ol {
     padding-left: 0px;
   }
-  li {
+  li,
+  a {
+    text-decoration: none;
     list-style: none;
   }
   .count {
@@ -98,7 +100,7 @@ const EntireMain = () => {
   const access_token = localStorage.getItem("access_token");
   const [cardList, setCardList] = useState([]);
   const [reRender, setRerender] = useState(false);
-  
+  const [size, setSize] = useState(10);
   useEffect(() => {
     function getCardList() {
       let reqOption = {
@@ -111,6 +113,7 @@ const EntireMain = () => {
           Authorization: access_token,
         },
       };
+
       fetch("http://www.woodongs.site:8080/study?size=20", reqOption)
         .then((res) => res.json())
         .then((data) => {

@@ -71,6 +71,10 @@ const StyledNav = styled.div`
     height: 25px;
     border-radius: 50%;
   }
+  a {
+    text-decoration: none;
+    list-style: none;
+  }
 `;
 
 const Notice = (props) => {
@@ -78,6 +82,16 @@ const Notice = (props) => {
   const { isLogin } = useContext(UserLogin);
   const getlat = localStorage.getItem("latitude");
 
+  //현재시간
+  const todayTime = () => {
+    let now = new Date();
+    let todayYear = now.getFullYear();
+    let todayMonth = now.getMonth() + 1;
+    let todayDate = now.getDate();
+    const week = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT", "SAT"];
+    let dayOfWeek = week[now.getDay()];
+    return todayYear + "." + todayMonth + "." + todayDate + "." + dayOfWeek;
+  };
   return (
     <>
       <StyledNav>
@@ -85,8 +99,7 @@ const Notice = (props) => {
           <section className="notice-box-1">
             <div className="notice-text">
               <Alert severity="info">
-                공지사항 입니다!!공지사항입니다! 공지사항 봐주세요! 공지사항
-                전체게시판이랑 연결되야 될 듯?
+                공지사항 입니다!!공지사항입니다! 공지사항 봐주세요!
               </Alert>
               {/* <div className="notice-btn">
               <button>Notice</button>
@@ -97,7 +110,7 @@ const Notice = (props) => {
             <div className="avatar-text">
               {isLogin ? (
                 <ol className="profile-box">
-                  <li>13 Apr, 2022</li>
+                  <li>{todayTime().slice(0, 13)}</li>
                   <li>
                     <Link to="/MyPage">
                       <img
@@ -114,7 +127,7 @@ const Notice = (props) => {
                 </ol>
               ) : (
                 <ol className="profile-box">
-                  <li>13 Apr, 2022</li>
+                  <li>{todayTime().slice(0, 13)}</li>
                   <li>
                     <Link to="/Login">로그인 후 이용해 주세요</Link>
                   </li>

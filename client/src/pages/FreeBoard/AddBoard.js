@@ -16,13 +16,19 @@ const StyledAddBoard = styled.div`
     margin-bottom: 30px;
   }
   .addboard-container {
-    display: flex;
-    flex-direction: column;
-    border: black solid 1px;
+    align-items: center;
+    justify-content: center;
+    margin: 50px auto;
+    border: 1px solid black;
+    border-radius: 50px;
+    padding: 30px;
+    width: 800px;
+    /* flex-direction: column; */
+
     /* margin-left: 10%;
     margin-right: 10%; */
-    padding-left: 5%;
-    margin: 50px 500px;
+    /* padding-left: 5%;
+    margin: 50px 500px;  */
   }
   textarea {
     resize: none;
@@ -39,6 +45,10 @@ const StyledAddBoard = styled.div`
   .addboard-submit-box {
     text-align: center;
     margin: 50px;
+  }
+  .addboard-body-box {
+    justify-content: center;
+    align-items: center;
   }
 `;
 
@@ -70,7 +80,10 @@ const AddBoard = () => {
         body: content.body,
       }),
     };
+
     fetch("http://www.woodongs.site:8080/post", reqPost)
+      //fetch("http://3.35.188.110:8080/post?size=10&cursorId=10", reqPost)
+
       .then((res) => {
         if (res.ok) {
           alert("새로운 게시물이 성공적으로 등록되었습니다 :-D");
@@ -127,11 +140,6 @@ const AddBoard = () => {
                 console.log(bodyValue);
               }}
             />
-          </section>
-
-          <section className="addboard-tags-box">
-            <h1>검색 태그(#)</h1>
-            <input className="addboard-textarea tags-textarea" />
           </section>
           <section className="addboard-submit-box">
             <Button
