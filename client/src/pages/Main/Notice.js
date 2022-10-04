@@ -69,13 +69,29 @@ const StyledNav = styled.div`
   .avatarimg {
     width: 25px;
     height: 25px;
+    border-radius: 50%;
+  }
+  a {
+    text-decoration: none;
+    list-style: none;
   }
 `;
 
-const Notice = () => {
-  const {userInfo, setUserInfo} = useContext(UserInfo);
+const Notice = (props) => {
+  const { userInfo, setUserInfo } = useContext(UserInfo);
   const { isLogin } = useContext(UserLogin);
+  const getlat = localStorage.getItem("latitude");
 
+  //현재시간
+  const todayTime = () => {
+    let now = new Date();
+    let todayYear = now.getFullYear();
+    let todayMonth = now.getMonth() + 1;
+    let todayDate = now.getDate();
+    const week = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT", "SAT"];
+    let dayOfWeek = week[now.getDay()];
+    return todayYear + "." + todayMonth + "." + todayDate + "." + dayOfWeek;
+  };
   return (
     <>
       <StyledNav>
@@ -83,8 +99,7 @@ const Notice = () => {
           <section className="notice-box-1">
             <div className="notice-text">
               <Alert severity="info">
-                공지사항 입니다!!공지사항입니다! 공지사항 봐주세요! 공지사항
-                전체게시판이랑 연결되야 될 듯?
+                공지사항 입니다!!공지사항입니다! 공지사항 봐주세요!
               </Alert>
               {/* <div className="notice-btn">
               <button>Notice</button>
@@ -95,15 +110,15 @@ const Notice = () => {
             <div className="avatar-text">
               {isLogin ? (
                 <ol className="profile-box">
-                  <li>13 Apr, 2022</li>
+                  <li>{todayTime().slice(0, 13)}</li>
                   <li>
                     <Link to="/MyPage">
                       <img
                         className="avatarimg"
                         src={
                           userInfo.profileImageUrl
-                            ? userInfo.profileImageUrl:
-                             require("../../../src/img/avatar.png")
+                            ? userInfo.profileImageUrl
+                            : require("../../../src/img/avatar.png")
                         }
                       />
                     </Link>
@@ -112,7 +127,7 @@ const Notice = () => {
                 </ol>
               ) : (
                 <ol className="profile-box">
-                  <li>13 Apr, 2022</li>
+                  <li>{todayTime().slice(0, 13)}</li>
                   <li>
                     <Link to="/Login">로그인 후 이용해 주세요</Link>
                   </li>
@@ -126,8 +141,9 @@ const Notice = () => {
               <div className="now-location">
                 <p>현재 위치</p>
               </div>
+              {/* 전체 스터디 에서는 전국이 뜨게하고, 주변 스터디에서는 내위치가 뜨게 해야함. */}
               <div className="saved-location">
-                {isLogin ? <p>{userInfo.city}</p> : <p>전국</p>}
+                <h3>{props.title}</h3>
               </div>
               <button className="my-location-btn">밑</button>
             </div>

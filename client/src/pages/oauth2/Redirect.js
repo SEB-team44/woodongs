@@ -54,9 +54,9 @@ const Redirect = () => {
 
     if (check_a_token) {
       reqOAuthPost.headers["Authorization"] = check_a_token;
-      fetch("http://59.16.126.210:8080/member/locate", reqOAuthPost).then(
+      fetch("http://3.35.188.110:8080/member/locate", reqOAuthPost).then(
         (res) => {
-          fetch("http://59.16.126.210:8080/member/me", {
+          fetch("http://3.35.188.110:8080/member/me", {
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
@@ -68,14 +68,17 @@ const Redirect = () => {
             .then((res) => res.json())
             .then((res) => {
               console.log("사용자", res);
-              setUserInfo({... 
-                res
-              });
+              setUserInfo({ ...res });
             })
             .then((res) => {
               alert("로그인 성공");
               setIslogin(true);
-              return navigate("/main");
+              if(getlat && getlong){
+                return navigate("/main");
+              } else {
+                return navigate("/EntireMain");
+              }
+              
             })
             .catch((error) => {
               console.log(error);

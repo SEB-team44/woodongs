@@ -8,9 +8,8 @@ import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { UserLogin } from "../../UserContext";
-import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-
+import Paginations from "../Main/Paginations";
+import { Construction } from "@mui/icons-material";
 const StyledFreeBoard = styled.section`
   .freeborad-container {
     position: absolute;
@@ -41,12 +40,11 @@ const StyledFreeBoard = styled.section`
     flex-direction: row;
     justify-content: space-around;
     text-align: center;
-    margin-top: 20px;
+    margin: 20px;
   }
   .post {
-    border: #dedede 1px solid;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    text-align: center;
+    margin: 30px;
   }
   textarea {
     resize: none;
@@ -61,44 +59,144 @@ const StyledFreeBoard = styled.section`
   .submit-button {
     color: white;
   }
-  #filter-demo {
-    padding: 1px;
-  }
   .search-button {
     color: white;
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.pagination li {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+  }
+
+  ul.pagination li:first-child {
+    border-radius: 5px 0 0 5px;
+  }
+
+  ul.pagination li:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+
+  ul.pagination li a {
+    text-decoration: none;
+    color: #337ab7;
+    font-size: 1rem;
+  }
+
+  ul.pagination li.active a {
+    color: white;
+  }
+
+  ul.pagination li.active {
+    background-color: #337ab7;
+  }
+
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: blue;
+  }
+
+  .page-selection {
+    width: 48px;
+    height: 30px;
+    color: #337ab7;
+  }
+  .post-list {
+    /* border: #337ab7 solid 1px; */
+  }
+  .thead {
+    background-color: #dedede;
+  }
+  a {
+    text-decoration: none;
+    list-style: none;
+    color: black;
+  }
+  tr {
+    height: 40px;
   }
 `;
 
 const FreeBoard = () => {
   const { isLogin } = useContext(UserLogin);
   const [boardList, setBoardList] = useState([]);
-  //지역검색필터
-  const filterOptions = createFilterOptions({
-    matchFrom: "start",
-    stringify: (option) => option.title,
-  });
-  //필터목록
-  const stateFilter = [
-    { title: "서울특별시" },
-    { title: "경기도" },
-    { title: "충청도" },
-    { title: "전라도" },
-    { title: "강원도" },
-    { title: "제주도" },
-  ];
+  const [searchOp, setSearchOp] = useState("제목");
+  const [searchInput, setSearchInput] = useState("");
+  //페이지네이션
 
-  // cardList를 요청
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const offset = (page - 1) * limit;
+  //검색필터링
+  const handleSearchOption = (e) => {
+    setSearchOp(() => e.target.value);
+  };
+  //검색창 input
+  const handleInputChange = (e) => {
+    e.preventDefault();
+    setSearchInput(() => e.target.value);
+  };
+  //검색버튼
+  const handleInputSubmit = (e) => {
+    console.log(searchOp);
+    if (searchOp === "제목") {
+      let filtered = boardList.filter((el) => {
+        return el.title.includes(searchInput);
+      });
+      setBoardList([...filtered]);
+    }
+    if (searchOp === "내용") {
+      let filtered = boardList.filter((el) => {
+        return el.body.includes(searchInput);
+      });
+      setBoardList([...filtered]);
+    }
+  };
+
+  // 게시판list를 요청
+  const access_token = localStorage.getItem("access_token");
+
   useEffect(() => {
     const getBoardList = async () => {
-      fetch("http://localhost:3001/board")
+      let reqOption = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: access_token,
+        },
+      };
+
+      fetch(
+        "http://www.woodongs.site:8080/post?size=50&cursorId=100",
+        reqOption
+      )
         .then((res) => {
           if (!res.ok) {
-            throw Error("could not fetch the data for that resource");
+            throw Error("could not fetch the data for that resoure");
           }
           return res.json();
         })
         .then((data) => {
-          setBoardList(data);
+          console.log("data", data);
+          setBoardList(data.data);
         })
         .catch((err) => {
           console.log(err);
@@ -107,6 +205,14 @@ const FreeBoard = () => {
     getBoardList();
   }, []);
 
+  //페이지네이션
+  const changePage = (page) => {
+    setPage(page);
+    setBoardList(page);
+  };
+
+  // //무한스크롤관련
+
   return (
     <>
       <StyledFreeBoard>
@@ -114,25 +220,28 @@ const FreeBoard = () => {
           <section className="freeboard-nav-container">
             <Navbar />
           </section>
+
           <section className="freeboard-notice-container">
             <Notice />
           </section>
           <section className="freeboard-main-container">
             <main className="main-box">
               <section className="handle-box">
-                <div>
-                  <Autocomplete
-                    id="filter-demo"
-                    options={stateFilter}
-                    getOptionLabel={(option) => option.title}
-                    filterOptions={filterOptions}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </div>
                 <div className="handle-search-box">
-                  <Input placeholder="Search.." />
-                  <Button variant="contained" className="search-button">
+                  <select onChange={(e) => handleSearchOption(e)}>
+                    <option value="제목">제목</option>
+                    <option value="내용">내용</option>
+                  </select>
+                  <Input
+                    onChange={(e) => handleInputChange(e)}
+                    placeholder="Search.."
+                    value={searchInput}
+                  />
+                  <Button
+                    onClick={(e) => handleInputSubmit(e)}
+                    variant="contained"
+                    className="search-button"
+                  >
                     검색
                   </Button>
                 </div>
@@ -155,21 +264,36 @@ const FreeBoard = () => {
 
               <article className="post-box">
                 <div className="post-list">
-                  {boardList.map((el, idx) => {
-                    return (
-                      <>
-                        <div key={idx} className="post">
-                          <div>{`#[${el.tag}]`}</div>
-                          <Link to={"/SingleBoard/" + `${el.id}`}>
-                            <h1>{el.title}</h1>
-                          </Link>
-                          <body>{el.body}</body>
-                        </div>
-                      </>
-                    );
-                  })}
+                  <table>
+                    <thead className="thead">
+                      <tr>
+                        <td width="10%">번호</td>
+                        <td width="50%">제목</td>
+                        <td width="20%">작성자</td>
+                        <td width="20%">작성일</td>
+                      </tr>
+                    </thead>
+                    {boardList &&
+                      boardList.slice(offset, offset + limit).map((el, idx) => {
+                        return (
+                          <tbody key={idx} className="post">
+                            <tr className="tr">
+                              <td className="el">{el.postId}</td>
+                              <td>
+                                <Link to={"/SingleBoard/" + `${el.postId}`}>
+                                  {el.title}
+                                </Link>
+                              </td>
+                              <td>{el.memberResponseDto.nickName}</td>
+                              <td>{el.createdAt}</td>
+                            </tr>
+                          </tbody>
+                        );
+                      })}
+                  </table>
                 </div>
               </article>
+              <Paginations />
             </main>
           </section>
           <section className="freeboard-footer-container">

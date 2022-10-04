@@ -46,10 +46,11 @@ const AddStudyStyled = styled.div`
 
 const AddStudy = () => {
   const navigate = useNavigate();
-  const [content, setContent] = useState({
-    title: "",
-    body: "",
-  });
+  const [bodyValue, setBodyValue] = useState("");
+  const [headCountValue, setHeadCountValue] = useState("");
+  const [categoryValue, setCategoryValue] = useState("");
+  const [content, setContent] = useState({});
+
   const submitButton = () => {
     const access_token = localStorage.getItem("access_token");
     let reqPost = {
@@ -61,21 +62,23 @@ const AddStudy = () => {
         Authorization: access_token,
       },
       body: JSON.stringify({
-        // memberId : id,
         title: content.title,
         body: content.body,
-        category: checkedItems[0],
+        category: content.category,
+        headCount: content.headCount,
       }),
     };
     //대한님 59.16.126.210:8080
     //지훈님 14.6.86.98:8080
-    // fetch(`59.16.126.210:8080/study/${content.memberId}/recruit`, reqPost)
-    fetch(`59.16.126.210:8080/study/5/recruit`, reqPost)
+    // fetch(`http://59.16.126.210:8080/study/${content.memberId}/recruit`, reqPost)
+    fetch(`http://3.35.188.110:8080/study/recruit`, reqPost)
+      // fetch(`http://localhost:3001/card`, reqPost)
       .then((res) => {
         if (res.ok) {
           // console.log(content.title, content.body);
           // console.log(res.json());
-          navigate(`/`);
+          alert("새로운 스터디가 성공적으로 등록되었습니다 :D");
+          navigate(`/main`);
           return res.json();
         }
       })
@@ -83,10 +86,22 @@ const AddStudy = () => {
       .catch((err) => console.log(err));
   };
   const getValue = (e) => {
-    const { name, value } = e.target;
+    // e.preventDefault();
+    const { value } = e.target;
+    console.log(e.target.name);
+    console.log("value", value);
     setContent({
       ...content,
-      [name]: value,
+      title: value,
+    });
+  };
+  const getHeadValue = (e) => {
+    const { value } = e.target;
+    console.log(e.target.headCount);
+    console.log("headcount", value);
+    setContent({
+      ...content,
+      headCount: value,
     });
   };
   const CATEGORY_LIST = [
@@ -102,9 +117,16 @@ const AddStudy = () => {
   const [isChecked, setIsChecked] = useState(false); //체크여부
   const [checkedItems, setCheckedItems] = useState(new Set()); //체크된 요소들
 
-  const checkHandler = ({ target }) => {
-    setIsChecked(!isChecked);
-    checkedItemHandler(target.parentNode, target.value, target.checked);
+  const checkHandler = (e) => {
+    // setIsChecked(!isChecked);
+    // checkedItemHandler(target.parentNode, target.value, target.checked);
+    const { value } = e.target;
+    console.log(e.target.category);
+    console.log("category", value);
+    setContent({
+      ...content,
+      category: value,
+    });
   };
   const checkedItemHandler = (box, id, isChecked) => {
     if (isChecked) {
@@ -129,7 +151,7 @@ const AddStudy = () => {
             type="text"
             placeholder="3~20글자로 적어주세요. 예) 주말 공부 스터디"
             size="100"
-            onChange={getValue}
+            onChange={(e) => getValue(e)}
           />
           <h2>*스터디 분야</h2>
           <h4>❗️아래 분야 중 한가지를 선택해주세요.</h4>
@@ -139,7 +161,17 @@ const AddStudy = () => {
                 <input
                   type="checkbox"
                   value={item.name}
-                  onChange={(e) => checkHandler(e)}
+                  onChange={
+                    (e) => checkHandler(e)
+                    // ,(event) => {
+                    //   let category = event.target.value;
+                    //   setCategoryValue(category);
+                    //   setContent({
+                    //     category: categoryValue,
+                    //   });
+                    //   console.log(categoryValue);
+                    // }
+                  }
                 />
                 <div>{item.name}</div>
               </label>
@@ -150,20 +182,28 @@ const AddStudy = () => {
 
           <h2>*모집인원</h2>
           <h4>❗️3~4명을 추천합니다. (최대 9명, 추후변경가능)</h4>
-          <input type="text" placeholder="숫자만 적어주세요. " size="20" />
+          <input
+            type="text"
+            placeholder="숫자만 적어주세요. "
+            size="20"
+            onChange={(e) => getHeadValue(e)}
+          />
           <h2>*스터디 설명</h2>
           <h4>❗️스터디 참여조건에 대해서 기재해주세요</h4>
           <textarea
             rows="15"
             cols="97"
             placeholder="내용을 입력해주세요."
-            data=""
+            value={bodyValue}
+            maxLength={2000}
             onChange={(event) => {
-              const data = event.target.value;
-              this.setContent({
+              let data = event.target.value;
+              setBodyValue(data);
+              setContent({
                 ...content,
-                content: data,
+                body: bodyValue,
               });
+              console.log(bodyValue);
             }}
           >
             ● 스터디 목표 및 진행방식 [목표] : ( 예: 제이쿼리를 마스터하고자
