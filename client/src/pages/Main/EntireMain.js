@@ -115,7 +115,7 @@ const EntireMain = () => {
         },
       };
 
-      fetch("http://www.woodongs.site:8080/study?size=20", reqOption)
+      fetch("https://woodongs.site/study?size=20", reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);

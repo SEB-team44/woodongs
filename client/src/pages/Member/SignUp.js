@@ -68,12 +68,13 @@ export default function SignUp() {
     };
     // 'http://14.6.86.98:8080/member/signup' 지훈님
     // `http://59.16.126.210:8080/member/signup?ipAddress=${myip}` 대한님
-    fetch('http://www.woodongs.site:8080/member/signup', reqPost)
-    .then((response) => response.json())
+    fetch('https://woodongs.site/member/signup', reqPost)
+//    .then((response) => response.json())
+    .then((response) => response.text())
     .then((response) => {
       console.log(response)
       navigate("/login")
-      
+
     })
     .catch((err) => alert(err.message));
   };

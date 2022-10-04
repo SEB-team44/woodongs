@@ -46,7 +46,7 @@ function Copyright(props) {
 // localhost:3000
 // 3.35.188.110:8080
 const KAKAOPATH =
-  "http://www.woodongs.site:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/Redirect";
+  "https://woodongs.site/oauth2/authorization/kakao?redirect_uri=https://woodongs.site/Redirect";
 
 const theme = createTheme();
 
@@ -127,7 +127,8 @@ export default function Login() {
 
     //3.35.188.110:8080대한님
     //14.6.86.98:8080 지훈님
-    fetch("https://www.woodongs.site:8080/login", reqOAuthPost)
+
+    fetch("https://woodongs.site/login", reqOAuthPost)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -151,10 +152,10 @@ export default function Login() {
               latitude: localStorage.getItem("latitude"),
               longitude: localStorage.getItem("longitude"),
             });
-            fetch("https://www.woodongs.site:8080/member/locate", reqOAuthPost)
+            fetch("https://woodongs.site/member/locate", reqOAuthPost)
               .then((res) => console.log(res.json()))
               .then((res) => {
-                fetch("https://www.woodongs.site:8080/member/me", {
+                fetch("https://woodongs.site/member/me", {
                   headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",

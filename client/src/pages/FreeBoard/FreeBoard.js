@@ -185,7 +185,7 @@ const FreeBoard = () => {
       };
 
       fetch(
-        "http://www.woodongs.site:8080/post?size=50&cursorId=100",
+        "https://woodongs.site/post?size=50&cursorId=100",
         reqOption
       )
         .then((res) => {
