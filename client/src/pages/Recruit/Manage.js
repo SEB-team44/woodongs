@@ -31,7 +31,7 @@ const Manage = ({ id }) => {
 
   useEffect(() => {
     const getApplied = () => {
-      fetch(`http://3.35.188.110:8080/study/${id}/admin`, {
+      fetch(`https://woodongs.site/study/${id}/admin`, {
         method: "GET",
         headers: header,
       })
@@ -46,7 +46,7 @@ const Manage = ({ id }) => {
   }, []);
   const handleApplyAccept = (e, id) => {
     if (applyInfo)
-      fetch(`http://3.35.188.110:8080/study/${id}/accept`, {
+      fetch(`https://woodongs.site/study/${id}/accept`, {
         method: "POST",
         headers: header,
       }).then((res) => {
@@ -61,7 +61,7 @@ const Manage = ({ id }) => {
   };
 
   const handleApplyReject = (e, id) => {
-    fetch(`http://3.35.188.110:8080/study/${id}/refuse`, {
+    fetch(`https://woodongs.site/study/${id}/refuse`, {
       method: "POST",
       headers: header,
     }).then((res) => {

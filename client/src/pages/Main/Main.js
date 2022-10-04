@@ -165,7 +165,7 @@ const Main = () => {
         },
       };
       if (getlat) {
-        fetch("http://www.woodongs.site:8080/study/around?size=10", reqOption)
+        fetch("https://woodongs.site/study/around?size=10", reqOption)
           .then((res) => {
             console.log("res", res);
             return res.json();
@@ -191,7 +191,7 @@ const Main = () => {
         //   })
         //   .catch((error) => console.log("error",error))
       } else {
-        fetch("http://www.woodongs.site:8080/study?size=10", reqOption)
+        fetch("https://woodongs.site/study?size=10", reqOption)
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
