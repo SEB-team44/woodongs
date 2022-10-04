@@ -22,7 +22,7 @@ public class MessageController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @MessageMapping("/alarm")
     public void sendAlarm(ChatDto chatDto) {
-        messagingTemplate.convertAndSend("/sub/alarm" + chatDto.getReceiverId(), chatDto);
+        messagingTemplate.convertAndSend("/sub/alarm/" + chatDto.getReceiverId(), chatDto);
     }
 
     @Operation(summary = "채팅 보내기")
