@@ -8,10 +8,8 @@ import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { UserLogin } from "../../UserContext";
-import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-import Pagination from "../Main/Pagination";
-
+import Paginations from "../Main/Paginations";
+import { Construction } from "@mui/icons-material";
 const StyledFreeBoard = styled.section`
   .freeborad-container {
     position: absolute;
@@ -42,12 +40,11 @@ const StyledFreeBoard = styled.section`
     flex-direction: row;
     justify-content: space-around;
     text-align: center;
-    margin-top: 20px;
+    margin: 20px;
   }
   .post {
-    border: #dedede 1px solid;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    text-align: center;
+    margin: 30px;
   }
   textarea {
     resize: none;
@@ -62,27 +59,85 @@ const StyledFreeBoard = styled.section`
   .submit-button {
     color: white;
   }
-  #filter-demo {
-    padding: 1px;
-  }
   .search-button {
     color: white;
   }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+
   ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.pagination li {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+  }
+
+  ul.pagination li:first-child {
+    border-radius: 5px 0 0 5px;
+  }
+
+  ul.pagination li:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+
+  ul.pagination li a {
+    text-decoration: none;
+    color: #337ab7;
+    font-size: 1rem;
+  }
+
+  ul.pagination li.active a {
+    color: white;
+  }
+
+  ul.pagination li.active {
+    background-color: #337ab7;
+  }
+
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: blue;
+  }
+
+  .page-selection {
+    width: 48px;
+    height: 30px;
+    color: #337ab7;
+  }
+  .post-list {
+    /* border: #337ab7 solid 1px; */
+  }
+  .thead {
+    background-color: #dedede;
+  }
+  a {
+    text-decoration: none;
     list-style: none;
   }
 `;
 
 const FreeBoard = () => {
-  
   const { isLogin } = useContext(UserLogin);
   const [boardList, setBoardList] = useState([]);
   const [searchOp, setSearchOp] = useState("제목");
   const [searchInput, setSearchInput] = useState("");
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(15);
+  //페이지네이션
+
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const offset = (page - 1) * limit;
   //검색필터링
   const handleSearchOption = (e) => {
     setSearchOp(() => e.target.value);
@@ -108,27 +163,12 @@ const FreeBoard = () => {
       setBoardList([...filtered]);
     }
   };
-  //지역검색필터
-  const filterOptions = createFilterOptions({
-    matchFrom: "start",
-    stringify: (option) => option.title,
-  });
-  //필터목록
-  const stateFilter = [
-    { title: "서울특별시" },
-    { title: "경기도" },
-    { title: "충청도" },
-    { title: "전라도" },
-    { title: "강원도" },
-    { title: "제주도" },
-  ];
 
   // 게시판list를 요청
   const access_token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const getBoardList = async () => {
-      setLoading(true);
       let reqOption = {
         method: "GET",
         headers: {
@@ -141,7 +181,6 @@ const FreeBoard = () => {
       };
 
       fetch("http://www.woodongs.site:8080/post?size=15&cursorId=15", reqOption)
-
         .then((res) => {
           if (!res.ok) {
             throw Error("could not fetch the data for that resoure");
@@ -149,11 +188,8 @@ const FreeBoard = () => {
           return res.json();
         })
         .then((data) => {
-
-          console.log("data", data)
+          console.log("data", data);
           setBoardList(data.data);
-
-
         })
         .catch((err) => {
           console.log(err);
@@ -162,74 +198,13 @@ const FreeBoard = () => {
     getBoardList();
   }, []);
 
-  const indexOfLast = currentPage * postsPerPage;
-  const indexOfFirst = indexOfLast - postsPerPage;
-  const currentPosts = (posts) => {
-    let currentPosts = 0;
-    currentPosts = posts.slice(indexOfFirst, indexOfLast);
-    return currentPosts;
+  //페이지네이션
+  const changePage = (page) => {
+    setPage(page);
+    setBoardList(page);
   };
+
   // //무한스크롤관련
-  // const [item, setItem] = useState([]);
-  // const [target, setTarget] = useState(null);
-  // const page = 10;
-
-  // const fetchData = async () => {
-  //   let reqOption = {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json",
-  //       withCredentials: true,
-  //       "Access-Control-Allow-Origin": "*",
-  //       Authorization: access_token,
-  //     },
-  //   };
-  //   fetch(`http://3.35.188.110:8080/post`, reqOption)
-  //     .then((res) => {
-  //       if (!res.ok) {
-  //         throw Error("Couldn't fetch the data for that resource");
-  //       }
-  //       return res.json();
-  //     })
-  //     .then((data) => {
-  //       // page++;
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-  // useEffect(() => {
-  //   let observer;
-  //   if (target) {
-  //     const onIntersect = async ([entry], observer) => {
-  //       if (entry.isIntersecting) {
-  //         observer.unobserve(entry.target);
-  //         await fetchData();
-  //         observer.observe(entry.target);
-  //       }
-  //     };
-  //     observer = new IntersectionObserver(onIntersect, { threshold: 1 });
-  //     observer.observe(target);
-  //   }
-  //   return () => observer && observer.disconnect();
-  // }, [target]);
-
-  // let count = 0;
-  // window.onscroll = function (e) {
-  //   if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-  //     count++;
-  //     let addContent =
-  //       // document.createElement("div");
-  //       // addContent.classList.add("box");
-
-  //       '<div class="block"><p>' + count + "번째로 추가된 컨텐츠</p></div>";
-  //     document.querySelector("article").append(addContent);
-  //   }
-  // };
 
   return (
     <>
@@ -238,22 +213,13 @@ const FreeBoard = () => {
           <section className="freeboard-nav-container">
             <Navbar />
           </section>
+
           <section className="freeboard-notice-container">
             <Notice />
           </section>
           <section className="freeboard-main-container">
             <main className="main-box">
               <section className="handle-box">
-                <div>
-                  <Autocomplete
-                    id="filter-demo"
-                    options={stateFilter}
-                    getOptionLabel={(option) => option.title}
-                    filterOptions={filterOptions}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </div>
                 <div className="handle-search-box">
                   <select onChange={(e) => handleSearchOption(e)}>
                     <option value="제목">제목</option>
@@ -291,31 +257,38 @@ const FreeBoard = () => {
 
               <article className="post-box">
                 <div className="post-list">
-                  {boardList && boardList.map((el, idx) => {
-                    return (
-                      <>
-                        <ul>
-                          <li key={idx} className="post">
-                            <Link to={"/SingleBoard/" + `${el.postId}`}>
-                              <h1>{el.title}</h1>
-                              <div>{el.body.slice(0, 180)}</div>
-                            </Link>
-                          </li>
-                        </ul>
-                      </>
-                    );
-                  })}
+                  <table>
+                    <thead className="thead">
+                      <tr>
+                        <td width="10%">번호</td>
+                        <td width="50%">제목</td>
+                        <td width="20%">작성자</td>
+                        <td width="20%">작성일</td>
+                      </tr>
+                    </thead>
+                    {boardList &&
+                      boardList.slice(offset, offset + limit).map((el, idx) => {
+                        return (
+                          <tbody key={idx} className="post">
+                            <tr className="tr">
+                              <td className="el">{el.postId}</td>
+                              <td>
+                                <Link to={"/SingleBoard/" + `${el.postId}`}>
+                                  {el.title}
+                                </Link>
+                              </td>
+                              <td>{el.memberResponseDto.nickName}</td>
+                              <td>{el.createdAt}</td>
+                            </tr>
+                          </tbody>
+                        );
+                      })}
+                  </table>
                 </div>
               </article>
-              <Pagination>
-                postsPerPage={postsPerPage}
-                totalPosts={posts.length}
-                paginate = {setCurrentPage}
-              </Pagination>
+              <Paginations />
             </main>
           </section>
-          {/* <div ref={setTarget}>this is target</div> */}
-
           <section className="freeboard-footer-container">
             <Footer />
           </section>

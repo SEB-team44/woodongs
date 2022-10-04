@@ -8,39 +8,37 @@ import { TiTrash, TiPencil } from "react-icons/ti";
 
 const StyledSingleBoard = styled.section`
   .singleboard-main-container {
+    width: 800px;
     height: 100vh;
-    width: 1000px;
-    margin: 30px 300px;
+    margin: 50px auto;
     border: solid black 1px;
-    background-color: #f1f4f7;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     border-radius: 50px;
-    padding: 50px;
+    padding: 30px;
   }
   .singleboard-title {
-    border: 1px solid black;
-    height: 100px;
+    border-bottom: 1px solid black;
+    height: 80px;
+    font-size: 30px;
   }
   .singleboard-body {
-    border: 1px solid black;
+    border-bottom: 1px solid black;
     height: 500px;
-  }
-  .singleboard-tag {
-    border: 1px solid black;
+    margin-top: 20px;
   }
   .singleboard-comment {
     margin-bottom: 20px;
     border-left: black 1px solid;
     display: flex;
   }
-  /* .singleboard-comment-box {
-    border: 1px solid black;
-  } */
-  /* .singleboard-input-box {
-    border: 1px solid black;
-  } */
+  .singleboard-comment-box {
+    margin-top: 15px;
+  }
+  .singleboard-input-box {
+    display: flex;
+  }
   /* .singleboard-comment-view-box {
     background-color: #ffdddd;
     height: 100;
@@ -69,8 +67,10 @@ const StyledSingleBoard = styled.section`
     cursor: pointer;
   }
   .singleboard-textarea {
-    width: 53vw;
-    margin-top: 10px;
+    width: 38vw;
+  }
+  .input-button {
+    height: 40px;
   }
 `;
 
@@ -255,14 +255,11 @@ const SingleBoard = () => {
               </div>
 
               <section className="singleboard-title">
-                <div>제목: {board.title}</div>
+                <div>{board.title}</div>
               </section>
               <section className="singleboard-body">
-                <div>내용: {board.body}</div>
+                <div>{board.body}</div>
               </section>
-              {/* <section className="singleboard-tag">
-                <div>지역:</div>
-              </section> */}
             </section>
             <section className="singleboard-comment-box">
               <div className="singleboard-input-box">
