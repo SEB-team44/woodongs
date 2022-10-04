@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Pagination from "react-js-pagination";
 
 const Paginations = () => {
-  function Pagination({ total, limit, page, setPage }) {
+  function Paginations({ total, limit, page, setPage }) {
     const numPages = Math.ceil(total / limit);
 
     return (

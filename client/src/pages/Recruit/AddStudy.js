@@ -50,7 +50,7 @@ const AddStudy = () => {
   const [headCountValue, setHeadCountValue] = useState("");
   const [categoryValue, setCategoryValue] = useState("");
   const [content, setContent] = useState({});
-  
+
   const submitButton = () => {
     const access_token = localStorage.getItem("access_token");
     let reqPost = {
@@ -195,6 +195,7 @@ const AddStudy = () => {
             cols="97"
             placeholder="내용을 입력해주세요."
             value={bodyValue}
+            maxLength={2000}
             onChange={(event) => {
               let data = event.target.value;
               setBodyValue(data);

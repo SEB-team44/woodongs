@@ -125,6 +125,10 @@ const StyledFreeBoard = styled.section`
   a {
     text-decoration: none;
     list-style: none;
+    color: black;
+  }
+  tr {
+    height: 40px;
   }
 `;
 
@@ -180,7 +184,10 @@ const FreeBoard = () => {
         },
       };
 
-      fetch("http://www.woodongs.site:8080/post?size=15&cursorId=15", reqOption)
+      fetch(
+        "http://www.woodongs.site:8080/post?size=50&cursorId=100",
+        reqOption
+      )
         .then((res) => {
           if (!res.ok) {
             throw Error("could not fetch the data for that resoure");
