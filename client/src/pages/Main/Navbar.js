@@ -46,6 +46,7 @@ const StyledNav = styled.div`
   ol {
     margin: 0px;
   }
+  a,
   li {
     list-style: none;
     padding-right: 20px;
@@ -96,10 +97,6 @@ const StyledNav = styled.div`
     cursor: pointer;
     background-color: white;
   }
-  a {
-    text-decoration: none;
-    list-style: none;
-  }
 `;
 
 const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
@@ -110,8 +107,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const { isLogin } = useContext(UserLogin);
   const [searchOption, setSearchOption] = useState("제목");
 
-
-  console.log("userInfo" , userInfo)
+  console.log("userInfo", userInfo);
 
   const handleClick1 = (event) => {
     setAnchorEl1(anchorEl1 ? null : event.currentTarget);
@@ -255,7 +251,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                           }}
                         >
                           <div className="alert">
-                          <Alert></Alert>
+                            <Alert></Alert>
                           </div>
                         </Typography>
                       </Popover>
@@ -293,11 +289,9 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                           <div>
                             <Link to="/MyGroup">
                               <ul>
-                              {userInfo.studyResponseDtos.map((el)=>{
-                                return (
-                                <li key={el.studyId}>{el.title}</li>
-                                )
-                              })}
+                                {userInfo.studyResponseDtos.map((el) => {
+                                  return <li key={el.studyId}>{el.title}</li>;
+                                })}
                               </ul>
                             </Link>
                           </div>

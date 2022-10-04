@@ -258,7 +258,7 @@ const SingleBoard = () => {
                 <div>{board.title}</div>
               </section>
               <section className="singleboard-body">
-                <div>{board.body}</div>
+                <pre>{board.body}</pre>
               </section>
             </section>
             <section className="singleboard-comment-box">

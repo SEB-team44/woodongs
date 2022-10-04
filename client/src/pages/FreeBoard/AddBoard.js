@@ -128,6 +128,7 @@ const AddBoard = () => {
             <textarea
               rows="15"
               cols="97"
+              maxLength={2000}
               className="addboard-textarea body-textarea"
               value={bodyValue}
               onChange={(event) => {

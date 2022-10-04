@@ -94,6 +94,7 @@ const StyledMain = styled.div`
   a {
     text-decoration: none;
     list-style: none;
+    color: black;
   }
   .count {
     padding: 16px;

@@ -310,7 +310,7 @@ const Recruit = () => {
     })
       .then((res) => {
         if (res.ok) {
-          alert("신청을 성공하였습니다.")
+          alert("신청을 성공하였습니다.");
         }
       })
       .catch((error) => console.log(error));
@@ -389,13 +389,11 @@ const Recruit = () => {
                     </article>
                     <article>
                       <h2>✔️ 소개</h2>
-                      <p>{card.body}</p>
+                      <pre>{card.body}</pre>
                     </article>
                   </section>
                 ) : (
-
-                  <Manage id = {id}/>
-
+                  <Manage id={id} />
                 )}
               </section>
               <aside className="recruit-main-aside">
