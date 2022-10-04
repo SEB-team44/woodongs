@@ -54,9 +54,9 @@ const Redirect = () => {
 
     if (check_a_token) {
       reqOAuthPost.headers["Authorization"] = check_a_token;
-      fetch("http://3.35.188.110:8080/member/locate", reqOAuthPost).then(
+      fetch("https://woodongs.site/member/locate", reqOAuthPost).then(
         (res) => {
-          fetch("http://3.35.188.110:8080/member/me", {
+          fetch("https://woodongs.site/member/me", {
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",

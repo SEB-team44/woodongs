@@ -10,6 +10,8 @@ import Button from "@mui/material/Button";
 import { UserInfo, UserLogin } from "../../UserContext";
 import { TiTrash, TiPencil } from "react-icons/ti";
 import Manage from "./Manage";
+import SockJS from "sockjs-client";
+import StompJs from "stompjs";
 
 const StyledRecruit = styled.section`
   h1 {
@@ -120,7 +122,7 @@ const StyledRecruit = styled.section`
 
 const Recruit = () => {
   const navigate = useNavigate();
-  // const {UserInfo} = useContext(UserInfo);
+  const {userInfo} = useContext(UserInfo);
   const { isLogin } = useContext(UserLogin);
   const [keyword, setKeyword] = useState([]);
   //댓글리스트
@@ -130,15 +132,6 @@ const Recruit = () => {
   const [getcondition, setgetcondition] = useState(true);
   const [getconditions, setgetconditions] = useState(true);
   const [changeTab, setChangeTab] = useState(true);
-
-  const [recruitContent, setRecruitContent] = useState({
-    // studyId: "",
-    id: "",
-    title: "",
-    body: "",
-    category: "",
-    headCount: "",
-  });
 
   //질문목록에 맞는 데이터 받아오기
   //URL 파라미터 받기 card의 id
@@ -157,6 +150,17 @@ const Recruit = () => {
     Authorization: localStorage.getItem("access_token"),
   };
 
+  // recruit 페이지 나오자 마자 연결
+  let socketJs = new SockJS("https://woodongs.site/ws-stomp");
+  const stomp = StompJs.over(socketJs);
+
+  useEffect(() => {
+    stomp.connect({}, (e) => {});
+    return () => {
+      stomp.disconnect(() => {});
+    };
+  }, []);
+
   //댓글
   useEffect(() => {
     const getContent = () => {
@@ -164,7 +168,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch("http://3.35.188.110:8080/study/" + `${id}`, reqOption)
+      fetch("https://woodongs.site/study/" + `${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log("content", data);
@@ -183,7 +187,7 @@ const Recruit = () => {
     };
 
     // fetch("http://localhost:3001/card/" + `${id}`, reqDelete)
-    fetch("http://3.35.188.110:8080/study/" + `${id}`, reqDelete)
+    fetch("https://woodongs.site/study/" + `${id}`, reqDelete)
       .then((res) => {
         if (res.ok) {
           alert("해당 스터디가 삭제 되었습니다.");
@@ -199,7 +203,7 @@ const Recruit = () => {
   useEffect(() => {
     // const getKeywordList = async () => {
     //   // fetch("http://localhost:3001/keyword")
-    //   fetch("http://3.35.188.110:8080/study")
+    //   fetch("https://woodongs.site/study")
     //     .then((res) => {
     //       if (!res.ok) {
     //         throw Error("could not fetch the data for that resource");
@@ -219,7 +223,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
+      fetch(`https://woodongs.site/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data); //댓글배열로나옴
@@ -233,7 +237,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
+      fetch(`https://woodongs.site/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data); //나옴
@@ -257,7 +261,7 @@ const Recruit = () => {
       }),
     };
 
-    fetch(`http://3.35.188.110:8080/study/${id}/comment`, reqPost)
+    fetch(`https://woodongs.site/study/${id}/comment`, reqPost)
       .then((res) => res.json())
       .then(() => {
         setgetcondition(!getcondition);
@@ -290,7 +294,7 @@ const Recruit = () => {
 
   //삭제 버튼 클릭시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handeDeleteComment = (elID) => {
-    fetch(`http://3.35.188.110:8080/study/${id}/${elID}`, {
+    fetch(`https://woodongs.site/study/${id}/${elID}`, {
       method: "DELETE",
       headers: header,
     }).then(() => {
@@ -300,21 +304,47 @@ const Recruit = () => {
 
   //게시물 삭제 버튼 클릭 시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handleEditRecruit = (id) => {
-    fetch(`http://3.35.188.110:8080/study/${id}/comment`, {
+    fetch(`https://woodongs.site/study/${id}/comment`, {
       method: "DELETE",
     });
     setgetconditions(!getconditions);
   };
 
-  const handleApplyStudy = (id) => {
-    fetch(`http://3.35.188.110:8080/study/${id}/apply`, {
+  //신청하기 클릭시 동작하는 메서드
+  const handleApplyStudy = (memberid, id) => {
+    const access_token = localStorage.getItem("access_token");
+    // chatDto
+    let msg = {
+      senderId: userInfo.memberId,
+      senderNickname: userInfo.nickName,
+      receiverId: memberid,
+      message: "신청",
+    };
+
+    fetch(`https://woodongs.site/study/${id}/apply`, {
       method: "POST",
       headers: header,
     })
       .then((res) => {
         if (res.ok) {
           alert("신청을 성공하였습니다.");
+          // 구독
+          // stomp.connect(() => {
+            stomp.subscribe(`/sub/alarm/${memberid}`, (data) => {
+              console.log("connectsub" , data);
+            });
+          // })
+
         }
+      })
+      .then(() => {
+        stomp.send(
+          //알람 전송
+          `/pub/alarm`,
+          { token: access_token },
+          JSON.stringify(msg)
+        );
+
       })
       .catch((error) => console.log(error));
   };
@@ -414,7 +444,7 @@ const Recruit = () => {
                               />
                               {<h2 key={el.memberId}>{el.nickName}</h2>}
                             </>
-                          );
+                          )
                         }
                       })}
                   </div>
@@ -432,7 +462,12 @@ const Recruit = () => {
                     <Button
                       className="submit-button"
                       variant="contained"
-                      onClick={(e) => handleApplyStudy(content.studyId)}
+                      onClick={(e) =>
+                        handleApplyStudy(
+                          content.memberResponseDtos[0].memberId,
+                          content.studyId
+                        )
+                      }
                     >
                       신청하기
                     </Button>
