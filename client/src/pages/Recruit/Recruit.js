@@ -90,8 +90,8 @@ const StyledRecruit = styled.section`
     resize: none;
   }
   .recruit-inputbox {
-    align-items: center;
-    justify-content: center;
+    /* align-items: center;
+    justify-content: center; */
     display: flex;
   }
   .recruit-comment-name {
@@ -112,6 +112,9 @@ const StyledRecruit = styled.section`
     width: 125px;
     height: 125px;
     border-radius: 50%;
+  }
+  .input-button {
+    height: 40px;
   }
 `;
 
