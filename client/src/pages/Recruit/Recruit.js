@@ -335,7 +335,7 @@ const Recruit = () => {
         stomp.send(
           //알람 전송
           `/pub/alarm/`,
-          { token: access_token },
+          {},
           JSON.stringify(msg)
         );
       })
