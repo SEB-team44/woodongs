@@ -81,8 +81,11 @@ public class SecurityConfig {
                 .antMatchers("/user/**").hasAnyAuthority(RoleType.USER.getCode())
                 .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
                 .antMatchers("/ws-stomp", "/ws-stomp/**").permitAll() // stomp
-                .anyRequest().authenticated()
-//                .anyRequest().permitAll()
+                .antMatchers("app/**","/queue/**", "/topic/**").permitAll() // stomp
+                .antMatchers("/chat/**","/chat/room/").permitAll() // stomp
+                .antMatchers("/room.html", "/templates/**", "/webjars/**", "/favicon/**","/templates/chat/**","/resources/**").permitAll() // stomp
+//                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .oauth2Login()
                 .authorizationEndpoint()

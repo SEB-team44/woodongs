@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -15,6 +14,5 @@ public class ChatDto implements Serializable {
     private String senderNickname;
     private Long receiverId;
     private String message;
-    LocalDateTime createdAt = LocalDateTime.now();
 
 }

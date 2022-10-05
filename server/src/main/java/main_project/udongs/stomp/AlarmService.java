@@ -13,7 +13,7 @@ public class AlarmService {
     private final SimpMessageSendingOperations messagingTemplate;
 
     public void alarmByMessage(ChatDto chatDto) {
-        messagingTemplate.convertAndSend("/sub/alarm/" + chatDto.getReceiverId(), chatDto);
+        messagingTemplate.convertAndSend("/queue/alarm/" + chatDto.getReceiverId(), chatDto);
         System.out.println(chatDto.getMessage());
     }
 
