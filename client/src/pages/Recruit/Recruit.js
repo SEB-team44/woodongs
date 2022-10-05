@@ -309,10 +309,10 @@ const Recruit = () => {
     const access_token = localStorage.getItem("access_token");
     // chatDto
     let msg = {
-      senderId: userInfo.memberId,
-      senderNickname: userInfo.nickName,
-      receiverId: memberid,
-      message: "신청",
+      'senderId': Number(userInfo.memberId),
+      'senderNickname': userInfo.nickName,
+      'receiverId': Number(memberid),
+      'message': `${userInfo.nickName} 님께서 스터디 가입을 신청하였습니다.`,
     };
 
     fetch(`https://woodongs.site/study/${id}/apply`, {
@@ -322,13 +322,6 @@ const Recruit = () => {
       .then((res) => {
         if (res.ok) {
           alert("신청을 성공하였습니다.");
-          // 구독
-          // stomp.connect({token: access_token}, (frame) => {
-          //   console.log("열결됨 : " + frame)
-            stomp.subscribe(`/sub/alarm/${memberid}`, (data) => {
-              console.log("구독중" + JSON.parse(data));
-            // });
-          })
         }
       })
       .then(() => {
@@ -350,7 +343,7 @@ const Recruit = () => {
       'senderId': Number(userInfo.memberId),
       'senderNickname': userInfo.nickName,
       'receiverId': Number(memberid),
-      'message': "신청",
+      'message': "신청gkaslek",
     };
     stomp.send(
       //알람 전송
