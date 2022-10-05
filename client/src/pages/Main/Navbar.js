@@ -115,9 +115,9 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   let socketJs = new SockJS("https://woodongs.site/ws-stomp");
   const stomp = StompJs.over(socketJs);
   useEffect(() => {
-    stomp.connect({token : token}, (frame) => {
+    stomp.connect({token: token}, (frame) => {
       console.log('connecteed' + frame)
-      stomp.subscribe(`sub/alarm/${userInfo.memberId}`, function(respoonse){
+      stomp.subscribe(`/sub/alarm` , function(respoonse){
         console.log(respoonse);
         console.log(JSON.parse(respoonse.body));
       })
