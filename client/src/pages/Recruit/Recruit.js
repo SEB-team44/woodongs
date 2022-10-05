@@ -323,18 +323,18 @@ const Recruit = () => {
         if (res.ok) {
           alert("신청을 성공하였습니다.");
           // 구독
-          stomp.connect({token: access_token}, () => {
+          // stomp.connect({token: access_token}, (frame) => {
+          //   console.log("열결됨 : " + frame)
             stomp.subscribe(`/sub/alarm/${memberid}`, (data) => {
-              console.log("connectsub" , JSON.parse(data));
-            });
+              console.log("구독중" + JSON.parse(data));
+            // });
           })
-
         }
       })
       .then(() => {
         stomp.send(
           //알람 전송
-          `/pub/alarm/`,
+          `/pub/alarm`,
           {},
           JSON.stringify(msg)
         );
@@ -344,6 +344,21 @@ const Recruit = () => {
       })
       .catch((error) => console.log(error));
   };
+
+  const handleSendMessage = (memberid) => {
+    let msg = {
+      'senderId': Number(userInfo.memberId),
+      'senderNickname': userInfo.nickName,
+      'receiverId': Number(memberid),
+      'message': "신청",
+    };
+    stomp.send(
+      //알람 전송
+      `/pub/alarm`,
+      {},
+      JSON.stringify(msg)
+    );
+  }
 
   return (
     <>
@@ -467,6 +482,7 @@ const Recruit = () => {
                     >
                       신청하기
                     </Button>
+                    <button onClick={() => handleSendMessage(content.memberResponseDtos[0].memberId)}></button>
                   </article>
                 ) : null}
               </aside>
