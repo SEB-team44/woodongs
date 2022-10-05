@@ -40,7 +40,7 @@
 
 <br>
 
-[프로젝트 링크](www.woodongs.site) 
+[프로젝트 링크](http://www.woodongs.site) 
 // 계속 진행중입니다 (미완성)
 
 <br>
