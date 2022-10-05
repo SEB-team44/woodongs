@@ -154,12 +154,6 @@ const Recruit = () => {
   let socketJs = new SockJS("https://woodongs.site/ws-stomp");
   const stomp = StompJs.over(socketJs);
 
-  useEffect(() => {
-    stomp.connect({}, (e) => {});
-    return () => {
-      stomp.disconnect(() => {});
-    };
-  }, []);
 
   //댓글
   useEffect(() => {
@@ -329,22 +323,24 @@ const Recruit = () => {
         if (res.ok) {
           alert("신청을 성공하였습니다.");
           // 구독
-          // stomp.connect(() => {
+          stomp.connect({token: access_token}, () => {
             stomp.subscribe(`/sub/alarm/${memberid}`, (data) => {
-              console.log("connectsub" , data);
+              console.log("connectsub" , JSON.parse(data));
             });
-          // })
+          })
 
         }
       })
       .then(() => {
         stomp.send(
           //알람 전송
-          `/pub/alarm`,
+          `/pub/alarm/`,
           { token: access_token },
           JSON.stringify(msg)
         );
-
+      })
+      .then(()=>{
+        stomp.disconnect();
       })
       .catch((error) => console.log(error));
   };

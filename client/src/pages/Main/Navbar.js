@@ -9,6 +9,9 @@ import { UserLogin } from "../../UserContext";
 import { useContext, useState } from "react";
 import { UserInfo } from "../../UserContext";
 import Alert from "../Main/Alert";
+import SockJS from "sockjs-client";
+import StompJs from "stompjs";
+import { useEffect } from "react";
 
 const StyledNav = styled.div`
   .header-container {
@@ -106,8 +109,23 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const [searchInput, setSearchInput] = useState("");
   const { isLogin } = useContext(UserLogin);
   const [searchOption, setSearchOption] = useState("제목");
+  const token = localStorage.getItem("access_token")
 
-  console.log("userInfo", userInfo);
+  // console.log("userInfo", userInfo);
+  let socketJs = new SockJS("https://woodongs.site/ws-stomp");
+  const stomp = StompJs.over(socketJs);
+  useEffect(() => {
+    stomp.connect({token : token}, (frame) => {
+      console.log('connecteed' + frame)
+      stomp.subscribe(`sub/alarm/${userInfo.memberId}`, function(respoonse){
+        console.log(respoonse);
+        console.log(JSON.parse(respoonse.body));
+      })
+    });
+    return () => {
+      stomp.disconnect(() => {});
+    };
+  }, []);
 
   const handleClick1 = (event) => {
     setAnchorEl1(anchorEl1 ? null : event.currentTarget);
