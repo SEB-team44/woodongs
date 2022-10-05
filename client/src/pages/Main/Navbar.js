@@ -117,7 +117,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   useEffect(() => {
     stomp.connect({token: token}, (frame) => {
       console.log('connecteed' + frame)
-      stomp.subscribe(`/sub/alarm` , function(respoonse){
+      stomp.subscribe(`/sub/alarm/`+ userInfo.memberId , function(respoonse){
         console.log(respoonse);
         console.log(JSON.parse(respoonse.body));
       })
