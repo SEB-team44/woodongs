@@ -123,66 +123,6 @@ const Main = () => {
     Authorization: access_token,
   };
 
-  //무한스크롤관련
-  // const [size, setSize] = useState(10);
-  // const [cursorId, setCursorid] = useState(0);
-  // const [fetching, setFetching] = useState(false); //추가 데이터를 로드하는지 아닌지를 담기위한 state
-  // const fetchMore = async () => {
-  //   //추가데이터를 로드하는 상태로 전환
-  //   setFetching(true);
-  // };
-
-  // const scroll = () => {
-  //   const scrollHeight = document.documentElement.scrollHeight;
-  //   const scrollTop = document.documentElement.scrollTop;
-  //   const clientHeight = document.documentElement.clientHeight;
-  //   if (scrollTop + clientHeight >= scrollHeight && fetching === false) {
-  //     //페이지 끝에 닿으면 추가데이터를 받아온다
-  //     fetchMore();
-  //     setSize(size + 10);
-  //   }
-  // };
-  const size = 10; //한번의 요청으로 가져올 게시글의 개수
-  const getScrollTop = function () {
-    return window.pageYOffset !== undefined
-      ? window.pageYOffset
-      : document.documentElement || document.body;
-  };
-  const getDocumentHeight = function () {
-    const body = document.body;
-    const html = document.documentElement;
-
-    return Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-    );
-  };
-  const onscroll = function () {
-    if (getScrollTop() === getDocumentHeight() - window.innerHeight) {
-      const articleCards = document.querySelectorAll(".article");
-      const cursorId = Array.from(articleCards)
-        .map(function (card) {
-          return parseInt(card.id, 10);
-        })
-        .reduce(function (previous, current) {
-          return previous > current ? current : previous;
-        });
-      console.log(cursorId);
-      //현재 dom에 그려진 게시물 중 가장 작은 id값을 추려낸다.
-      //id값과 가져올게시물의 개수를 실어 요청?
-    }
-  };
-  // 만약 라이브러리 안쓰신다  대한님 방법
-  // 1. size state 를 만든다. (size 초기값 10)
-  // 2. 스크롤이 맨 밑에 닿을 때의 메소드를 만들어준다
-  // 3. 스크롤이 맨 밑에 닿을 때 메소드 안에다가 setSize(size + 10) 해서 size 갱신
-  // 4. 그것이 다시 164줄에 요청을해서 cardList 담아준다.
-  // 5. cardList는 맵을 돌면서 늘어난 사이즈만큼 추가해서 보여준다.
-  //6. cusor based pagination 은 size 10 넣고 10개의 목록이 나오면
-  //다음 파라미터로 cusorId를 마지막 나온 게시물 숫자? 10? 넣으면 이어서 다음10개가 나옴
 
   useEffect(() => {
     function getCardList() {
@@ -197,7 +137,7 @@ const Main = () => {
         },
       };
       if (getlat) {
-        fetch(`https://woodongs.site/study/around?size=${size}`, reqOption)
+        fetch(`https://woodongs.site/study/around?size=10`, reqOption)
           .then((res) => {
             console.log("res", res);
             return res.json();
@@ -223,7 +163,7 @@ const Main = () => {
         //   })
         //   .catch((error) => console.log("error",error))
       } else {
-        fetch(`https://woodongs.site/study?size=${size}`, reqOption)
+        fetch(`https://woodongs.site/study?size=10`, reqOption)
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
