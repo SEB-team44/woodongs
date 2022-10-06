@@ -13,16 +13,20 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-// import GoogleButton from "./GoogleButton";
-import { FacebookLoginButton } from "react-social-login-buttons";
 import KakaoButton from "react-kakao-button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as Links } from "react-router-dom";
 import { UserLogin } from "../../UserContext";
 import { UserInfo } from "../../UserContext";
+import styled from "styled-components";
 import LogOut from "./Logout";
 
+const StyledLogin = styled.div`
+  .social_login .btn_btn_block_social_btn_kakao {
+    justify-content: center;
+    align-items: center;
+  }
+`;
 function Copyright(props) {
   return (
     <Typography
@@ -191,105 +195,107 @@ export default function Login() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
+      <StyledLogin>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
 
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Login
-          </Typography>
+          <Box
+            sx={{
+              marginTop: 8,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Login
+            </Typography>
 
-          {isLogin ? (
-            <div>
-              <LogOut />
-            </div>
-          ) : (
-            <Box
-              component="form"
-              onSubmit={(e) => handleSubmit(e)}
-              noValidate
-              sx={{ mt: 1 }}
-            >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
-              {/* <Links to="/main"> */}
-              {isLoading ? (
-                <div className="login-loading">Loading.......</div>
-              ) : (
-                <Button
-                  type="submit"
+            {isLogin ? (
+              <div>
+                <LogOut />
+              </div>
+            ) : (
+              <Box
+                component="form"
+                onSubmit={(e) => handleSubmit(e)}
+                noValidate
+                sx={{ mt: 1 }}
+              >
+                <TextField
+                  margin="normal"
+                  required
                   fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  Login
-                </Button>
-              )}
-              {/* </Links> */}
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Links to="/SignUp">{"Don't have an account? Sign Up"}</Links>
-                </Grid>
-              </Grid>
-              {isLoading ? (
-                <div className="login-loading">Loading......</div>
-              ) : (
-                <div className="social_login">
-                  <FacebookLoginButton onClick={() => alert("Hello")} />
-
-                  {/* <GoogleButton/> */}
-                  {/* onClick={() => handleKakao()} */}
-                  <a
-                    className="btn btn-block social-btn kakao"
-                    href={KAKAOPATH}
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+                <FormControlLabel
+                  control={<Checkbox value="remember" color="primary" />}
+                  label="Remember me"
+                />
+                {/* <Links to="/main"> */}
+                {isLoading ? (
+                  <div className="login-loading">Loading.......</div>
+                ) : (
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
                   >
-                    <KakaoButton sx={{ mt: 8, mb: 4 }} />
-                  </a>
-                </div>
-              )}
-            </Box>
-          )}
-        </Box>
+                    Login
+                  </Button>
+                )}
+                {/* </Links> */}
+                <Grid container>
+                  <Grid item xs>
+                    <Link href="#" variant="body2">
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Links to="/SignUp">
+                      {"Don't have an account? Sign Up"}
+                    </Links>
+                  </Grid>
+                </Grid>
+                {isLoading ? (
+                  <div className="login-loading">Loading......</div>
+                ) : (
+                  <div className="social_login">
+                    {/* <GoogleButton/> */}
+                    {/* onClick={() => handleKakao()} */}
+                    <a
+                      className="btn_btn_block_social_btn_kakao"
+                      href={KAKAOPATH}
+                    >
+                      <KakaoButton sx={{ mt: 8, mb: 4 }} />
+                    </a>
+                  </div>
+                )}
+              </Box>
+            )}
+          </Box>
 
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
+          <Copyright sx={{ mt: 8, mb: 4 }} />
+        </Container>
+      </StyledLogin>
     </ThemeProvider>
   );
 }
