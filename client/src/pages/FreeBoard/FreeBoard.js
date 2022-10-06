@@ -183,7 +183,7 @@ const FreeBoard = () => {
     if (cursor) {
       url = `https://woodongs.site/post?size=5&cursorId=${cursor}`;
     } else {
-      url = `https://woodongs.site/post?size=10&cursorId=500`;
+      url = `https://woodongs.site/post?size=15`;
     }
     if (!isAvailable) {
       return;
@@ -206,7 +206,7 @@ const FreeBoard = () => {
   }
   useEffect(() => {
     getBoardList();
-  }, []);
+  }, [reRender]);
 
   useEffect(() => {
     const handleScroll = () => {
