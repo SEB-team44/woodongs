@@ -113,6 +113,9 @@ const Main = () => {
   const [reRender, setRerender] = useState(false);
   const { isLogin } = useContext(UserLogin);
   const { userInfo } = useContext(UserInfo);
+  const [size, setSize] = useState(10);
+  const [cursor, setCursor] = useState(0);
+  const [isAvailable, setIsAvailable] = useState(true);
 
   const myAround = true;
   const header = {
@@ -122,7 +125,6 @@ const Main = () => {
     "Access-Control-Allow-Origin": "*",
     Authorization: access_token,
   };
-
 
   useEffect(() => {
     function getCardList() {
@@ -137,7 +139,10 @@ const Main = () => {
         },
       };
       if (getlat) {
-        fetch(`https://woodongs.site/study/around?size=10`, reqOption)
+        fetch(
+          `https://woodongs.site/study/around?size=10&cursorId=100`,
+          reqOption
+        )
           .then((res) => {
             console.log("res", res);
             return res.json();
@@ -163,7 +168,7 @@ const Main = () => {
         //   })
         //   .catch((error) => console.log("error",error))
       } else {
-        fetch(`https://woodongs.site/study?size=10`, reqOption)
+        fetch(`https://woodongs.site/study?size=10&cursorId=100`, reqOption)
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
@@ -175,6 +180,62 @@ const Main = () => {
     getCardList();
   }, [reRender]);
 
+  function getCardList() {
+    let reqOption = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
+      },
+    };
+
+    let url;
+    if (cursor) {
+      url = `https://woodongs.site/study?size=5&cursorId=${cursor}`;
+    } else {
+      url = `https://woodongs.site/study?size=10`;
+    }
+    if (!isAvailable) {
+      return;
+    }
+    fetch(url, reqOption)
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      })
+      .then((data) => {
+        setCardList([...cardList, ...data.data]);
+        console.log(data.sliceInfo);
+        if (data.sliceInfo.nextAvailable) {
+          setCursor(data.sliceInfo.lastIdx);
+          console.log(data.sliceInfo.lastIdx, cursor, cardList);
+        } else {
+          setIsAvailable(false);
+        }
+      });
+  }
+  useEffect(() => {
+    getCardList();
+  }, [reRender]);
+
+  useEffect(() => {
+    // getCardList();
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollTop = document.documentElement.scrollTop;
+      const clientHeight = document.documentElement.clientHeight;
+      if (scrollTop + clientHeight >= scrollHeight) {
+        getCardList();
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
   //랜덤이미지?
   const images = ["study1", "study2", "study3", "study4", "study5"];
   const chosenImage = images[Math.floor(Math.random() * 4)];
