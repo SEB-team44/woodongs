@@ -181,9 +181,9 @@ const FreeBoard = () => {
     };
     let url;
     if (cursor) {
-      url = `https://woodongs.site/post?size=5&cursorId=${cursor}`;
+      url = `http://3.35.188.110:8080/post?size=5&cursorId=${cursor}`;
     } else {
-      url = `https://woodongs.site/post?size=15`;
+      url = `http://3.35.188.110:8080/post?size=15`;
     }
     if (!isAvailable) {
       return;
