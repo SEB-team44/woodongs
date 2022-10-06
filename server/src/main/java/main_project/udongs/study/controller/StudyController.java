@@ -105,7 +105,7 @@ public class StudyController {
     @Operation(summary = "전체 스터디 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
     @GetMapping
-    public ResponseEntity getStudies(long cursorId, Integer size, String titleKeyword, String cityKeyword, String categoryKeyword ) {
+    public ResponseEntity getStudies(Long cursorId, Integer size, String titleKeyword, String cityKeyword, String categoryKeyword) {
         log.debug("GET ALL STUDIES");
 
         Pageable pageable = PageRequest.of(0,size,Sort.by("studyId").descending());

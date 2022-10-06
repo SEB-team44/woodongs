@@ -101,11 +101,7 @@ public class PostController {
     @Operation(summary = "전체 게시글 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
     @GetMapping
-    public ResponseEntity getPosts(@RequestParam(name = "cursorId") Long cursorId,
-                                   @RequestParam(name = "size") Integer size,
-                                   @RequestParam(name = "titleKeyword", required = false) String titleKeyword,
-                                   @RequestParam(name = "bodyKeyword", required = false) String bodyKeyword,
-                                   @RequestParam(name = "cityKeyword", required = false) String cityKeyword ) {
+    public ResponseEntity getPosts(Long cursorId, Integer size, String titleKeyword, String cityKeyword, String bodyKeyword) {
         log.debug("GET ALL POSTS");
 
         Pageable pageable = PageRequest.of(0,size, Sort.by("postId").descending());
