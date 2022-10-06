@@ -102,29 +102,65 @@ const EntireMain = () => {
   const [cardList, setCardList] = useState([]);
   const [reRender, setRerender] = useState(false);
   const [size, setSize] = useState(10);
-  useEffect(() => {
-    function getCardList() {
-      let reqOption = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          withCredentials: true,
-          "Access-Control-Allow-Origin": "*",
-          Authorization: access_token,
-        },
-      };
+  const [cursor, setCursor] = useState(0);
+  const [isAvailable, setIsAvailable] = useState(true);
 
-      fetch("https://woodongs.site/study?size=20", reqOption)
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          return data;
-        })
-        .then((data) => setCardList(data.data));
+  function getCardList() {
+    let reqOption = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
+      },
+    };
+
+    let url;
+    if (cursor) {
+      url = `https://woodongs.site/study?size=5&cursorId=${cursor}`;
+    } else {
+      url = `https://woodongs.site/study?size=10`;
     }
+    if (!isAvailable) {
+      return;
+    }
+    fetch(url, reqOption)
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      })
+      .then((data) => {
+        setCardList([...cardList, ...data.data]);
+        console.log(data.sliceInfo);
+        if (data.sliceInfo.nextAvailable) {
+          setCursor(data.sliceInfo.lastIdx);
+          console.log(data.sliceInfo.lastIdx, cursor, cardList);
+        } else {
+          setIsAvailable(false);
+        }
+      });
+  }
+  useEffect(() => {
     getCardList();
   }, [reRender]);
+
+  useEffect(() => {
+    // getCardList();
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollTop = document.documentElement.scrollTop;
+      const clientHeight = document.documentElement.clientHeight;
+      if (scrollTop + clientHeight >= scrollHeight) {
+        getCardList();
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
 
   return (
     <>
