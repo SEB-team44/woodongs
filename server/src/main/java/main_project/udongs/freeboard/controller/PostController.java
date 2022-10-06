@@ -108,9 +108,9 @@ public class PostController {
         //검색 메서드 맨 아래쪽에 있음
         Slice<Post> searchedPosts = postService.searchFunction(cursorId, pageable, titleKeyword, cityKeyword, bodyKeyword);
 
-        List<Post> studies = searchedPosts.getContent();
-        Long lastIdx = studies.get(studies.size() - 1).getPostId();
-        return new ResponseEntity<>(new MultiResponseDto<>(mapper.postsToPostResponse(studies),searchedPosts, lastIdx), HttpStatus.OK);
+        List<Post> posts = searchedPosts.getContent();
+        Long lastIdx = posts.get(posts.size() - 1).getPostId();
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.postsToPostResponse(posts),searchedPosts, lastIdx), HttpStatus.OK);
     }
 
     @Operation(summary = "게시글에 대한 댓글 작성")

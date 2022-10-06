@@ -14,7 +14,9 @@ public class AlarmService {
 
     public void alarmByMessage(ChatDto chatDto) {
         messagingTemplate.convertAndSend("/queue/alarm/" + chatDto.getReceiverId(), chatDto);
-        System.out.println(chatDto.getMessage());
+        System.out.println("chatDto.getSenderId() = " + chatDto.getSenderId());
+        System.out.println("chatDto.getReceiverId = " + chatDto.getReceiverId());
+        System.out.println("chatDto.getMessage() = " + chatDto.getMessage());
     }
 
 }
