@@ -103,6 +103,7 @@ const EntireMain = () => {
   const [reRender, setRerender] = useState(false);
   const [size, setSize] = useState(10);
   const [cursor, setCursor] = useState(0);
+  const [isAvailable, setIsAvailable] = useState(true);
 
   function getCardList() {
     let reqOption = {
@@ -118,11 +119,13 @@ const EntireMain = () => {
 
     let url;
     if (cursor) {
-      url = `http://localhost:3000/study?size=5&cursorId=${cursor}`;
+      url = `https://woodongs.site/study?size=5&cursorId=${cursor}`;
     } else {
-      url = `http://localhost:3000/study?size=10`;
+      url = `https://woodongs.site/study?size=10`;
     }
-
+    if (!isAvailable) {
+      return;
+    }
     fetch(url, reqOption)
       .then((res) => res.json())
       .then((data) => {
@@ -134,6 +137,8 @@ const EntireMain = () => {
         if (data.sliceInfo.nextAvailable) {
           setCursor(data.sliceInfo.lastIdx);
           console.log(data.sliceInfo.lastIdx, cursor, cardList);
+        } else {
+          setIsAvailable(false);
         }
       });
   }

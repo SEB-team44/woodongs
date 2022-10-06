@@ -8,9 +8,6 @@ import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { UserLogin } from "../../UserContext";
-import Paginations from "../Main/Paginations";
-import { Construction } from "@mui/icons-material";
-import axios from "axios";
 const StyledFreeBoard = styled.section`
   .freeborad-container {
     position: absolute;
@@ -134,19 +131,16 @@ const StyledFreeBoard = styled.section`
 `;
 
 const FreeBoard = () => {
+  const access_token = localStorage.getItem("access_token");
   const { isLogin } = useContext(UserLogin);
   const [boardList, setBoardList] = useState([]);
   const [searchOp, setSearchOp] = useState("제목");
   const [searchInput, setSearchInput] = useState("");
-  //페이지네이션
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(10);
+  const [reRender, setRerender] = useState(false);
+  const [size, setSize] = useState(10);
+  const [cursor, setCursor] = useState(0);
+  const [isAvailable, setIsAvailable] = useState(true);
 
-  // const [limit, setLimit] = useState(10);
-  // const [page, setPage] = useState(1);
-  // const offset = (page - 1) * limit;
   //검색필터링
   const handleSearchOption = (e) => {
     setSearchOp(() => e.target.value);
@@ -174,53 +168,60 @@ const FreeBoard = () => {
   };
 
   // 게시판list를 요청
-  const access_token = localStorage.getItem("access_token");
-
-  useEffect(() => {
-    const getBoardList = async () => {
-      setLoading(true);
-      let reqOption = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          withCredentials: true,
-          "Access-Control-Allow-Origin": "*",
-          Authorization: access_token,
-        },
-      };
-      fetch("https://woodongs.site/post?size=50&cursorId=100", reqOption)
-        .then((res) => {
-          if (!res.ok) {
-            throw Error("could not fetch the data for that resoure");
-          }
-          return res.json();
-        })
-        .then((data) => {
-          console.log("data", data);
-          setBoardList(data.data);
-          setPosts(data.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+  function getBoardList() {
+    let reqOption = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
+      },
     };
+    let url;
+    if (cursor) {
+      url = `https://woodongs.site/post?size=5&cursorId=${cursor}`;
+    } else {
+      url = `https://woodongs.site/post?size=10&cursorId=500`;
+    }
+    if (!isAvailable) {
+      return;
+    }
+    fetch(url, reqOption)
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      })
+      .then((data) => {
+        setBoardList([...boardList, ...data.data]);
+        console.log(data.sliceInfo);
+        if (data.sliceInfo.nextAvailable) {
+          setCursor(data.sliceInfo.lastIdx);
+          console.log(data.sliceInfo.lastIdx, cursor, boardList);
+        } else {
+          setIsAvailable(false);
+        }
+      });
+  }
+  useEffect(() => {
     getBoardList();
   }, []);
-  console.log(posts);
-  const indexOfLast = currentPage * postsPerPage;
-  const indexOfFirst = indexOfLast - postsPerPage;
-  const currentPosts = (posts) => {
-    let currentPosts = 0;
-    currentPosts = posts.slice(indexOfFirst, indexOfLast);
-    return currentPosts;
-  };
-  //페이지네이션
-  // const changePage = (page) => {
-  //   setPage(page);
-  //   setBoardList(page);
-  // };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollTop = document.documentElement.scrollTop;
+      const clientHeight = document.documentElement.clientHeight;
+      if (scrollTop + clientHeight >= scrollHeight) {
+        getBoardList();
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
   return (
     <>
       <StyledFreeBoard>
@@ -283,7 +284,6 @@ const FreeBoard = () => {
                     </thead>
                     {boardList &&
                       boardList.map((el, idx) => {
-                        // boardList.slice(offset, offset + limit).map((el, idx) => {
                         return (
                           <tbody key={idx} className="post">
                             <tr className="tr">
@@ -302,12 +302,6 @@ const FreeBoard = () => {
                   </table>
                 </div>
               </article>
-              {/* <Posts posts = {currentPosts(posts)}loading = {loding}></Posts> */}
-              {/* <Paginations
-                postsPerPage={postsPerPage}
-                totalPosts={posts.length}
-                paginate={setCurrentPage}
-              ></Paginations> */}
             </main>
           </section>
           <section className="freeboard-footer-container">
