@@ -81,7 +81,7 @@ const SingleBoard = () => {
   const [inputComments, setInputComments] = useState("");
   const [getcondition, setgetCondition] = useState(true);
   const [getconditions, setgetconditions] = useState(true);
-  const [content, setContent] = useState([]);
+  const [content, setContent] = useState(null);
   const { id } = useParams();
   const { postId } = useParams();
   const access_token = localStorage.getItem("access_token");
@@ -92,7 +92,7 @@ const SingleBoard = () => {
       let reqOption = {
         method: "GET",
         headers: {
-          "content-type": "application/json",
+          "Content-type": "application/json",
           Accept: "application/json",
           withCredentials: true,
           "Access-Control-Allow-Origin": "*",
@@ -174,7 +174,7 @@ const SingleBoard = () => {
           console.log("댓글 입력한거 출력", data);
           return data;
         })
-        .then((data) => setContent(data));
+        .then((data) => setContent({ ...content, ...data }));
     }
     getContent();
   }, []);

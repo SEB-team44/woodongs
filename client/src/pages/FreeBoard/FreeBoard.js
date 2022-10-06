@@ -10,6 +10,7 @@ import Input from "@mui/material/Input";
 import { UserLogin } from "../../UserContext";
 import Paginations from "../Main/Paginations";
 import { Construction } from "@mui/icons-material";
+import axios from "axios";
 const StyledFreeBoard = styled.section`
   .freeborad-container {
     position: absolute;
@@ -138,10 +139,14 @@ const FreeBoard = () => {
   const [searchOp, setSearchOp] = useState("제목");
   const [searchInput, setSearchInput] = useState("");
   //페이지네이션
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(10);
 
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(1);
-  const offset = (page - 1) * limit;
+  // const [limit, setLimit] = useState(10);
+  // const [page, setPage] = useState(1);
+  // const offset = (page - 1) * limit;
   //검색필터링
   const handleSearchOption = (e) => {
     setSearchOp(() => e.target.value);
@@ -173,6 +178,7 @@ const FreeBoard = () => {
 
   useEffect(() => {
     const getBoardList = async () => {
+      setLoading(true);
       let reqOption = {
         method: "GET",
         headers: {
@@ -183,11 +189,7 @@ const FreeBoard = () => {
           Authorization: access_token,
         },
       };
-
-      fetch(
-        "https://woodongs.site/post?size=50&cursorId=100",
-        reqOption
-      )
+      fetch("https://woodongs.site/post?size=50&cursorId=100", reqOption)
         .then((res) => {
           if (!res.ok) {
             throw Error("could not fetch the data for that resoure");
@@ -197,6 +199,7 @@ const FreeBoard = () => {
         .then((data) => {
           console.log("data", data);
           setBoardList(data.data);
+          setPosts(data.data);
         })
         .catch((err) => {
           console.log(err);
@@ -204,14 +207,19 @@ const FreeBoard = () => {
     };
     getBoardList();
   }, []);
-
-  //페이지네이션
-  const changePage = (page) => {
-    setPage(page);
-    setBoardList(page);
+  console.log(posts);
+  const indexOfLast = currentPage * postsPerPage;
+  const indexOfFirst = indexOfLast - postsPerPage;
+  const currentPosts = (posts) => {
+    let currentPosts = 0;
+    currentPosts = posts.slice(indexOfFirst, indexOfLast);
+    return currentPosts;
   };
-
-  // //무한스크롤관련
+  //페이지네이션
+  // const changePage = (page) => {
+  //   setPage(page);
+  //   setBoardList(page);
+  // };
 
   return (
     <>
@@ -274,7 +282,8 @@ const FreeBoard = () => {
                       </tr>
                     </thead>
                     {boardList &&
-                      boardList.slice(offset, offset + limit).map((el, idx) => {
+                      boardList.map((el, idx) => {
+                        // boardList.slice(offset, offset + limit).map((el, idx) => {
                         return (
                           <tbody key={idx} className="post">
                             <tr className="tr">
@@ -293,7 +302,12 @@ const FreeBoard = () => {
                   </table>
                 </div>
               </article>
-              <Paginations />
+              {/* <Posts posts = {currentPosts(posts)}loading = {loding}></Posts> */}
+              {/* <Paginations
+                postsPerPage={postsPerPage}
+                totalPosts={posts.length}
+                paginate={setCurrentPage}
+              ></Paginations> */}
             </main>
           </section>
           <section className="freeboard-footer-container">

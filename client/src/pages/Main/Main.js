@@ -124,25 +124,57 @@ const Main = () => {
   };
 
   //무한스크롤관련
-  const [size, setSize] = useState(10);
-  const [cursorId, setCursorid] = useState(0);
-  const [fetching, setFetching] = useState(false); //추가 데이터를 로드하는지 아닌지를 담기위한 state
-  const fetchMore = async () => {
-    //추가데이터를 로드하는 상태로 전환
-    setFetching(true);
-  };
+  // const [size, setSize] = useState(10);
+  // const [cursorId, setCursorid] = useState(0);
+  // const [fetching, setFetching] = useState(false); //추가 데이터를 로드하는지 아닌지를 담기위한 state
+  // const fetchMore = async () => {
+  //   //추가데이터를 로드하는 상태로 전환
+  //   setFetching(true);
+  // };
 
-  const scroll = () => {
-    const scrollHeight = document.documentElement.scrollHeight;
-    const scrollTop = document.documentElement.scrollTop;
-    const clientHeight = document.documentElement.clientHeight;
-    if (scrollTop + clientHeight >= scrollHeight && fetching === false) {
-      //페이지 끝에 닿으면 추가데이터를 받아온다
-      fetchMore();
-      setSize(size + 10);
+  // const scroll = () => {
+  //   const scrollHeight = document.documentElement.scrollHeight;
+  //   const scrollTop = document.documentElement.scrollTop;
+  //   const clientHeight = document.documentElement.clientHeight;
+  //   if (scrollTop + clientHeight >= scrollHeight && fetching === false) {
+  //     //페이지 끝에 닿으면 추가데이터를 받아온다
+  //     fetchMore();
+  //     setSize(size + 10);
+  //   }
+  // };
+  const size = 10; //한번의 요청으로 가져올 게시글의 개수
+  const getScrollTop = function () {
+    return window.pageYOffset !== undefined
+      ? window.pageYOffset
+      : document.documentElement || document.body;
+  };
+  const getDocumentHeight = function () {
+    const body = document.body;
+    const html = document.documentElement;
+
+    return Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
+  };
+  const onscroll = function () {
+    if (getScrollTop() === getDocumentHeight() - window.innerHeight) {
+      const articleCards = document.querySelectorAll(".article");
+      const cursorId = Array.from(articleCards)
+        .map(function (card) {
+          return parseInt(card.id, 10);
+        })
+        .reduce(function (previous, current) {
+          return previous > current ? current : previous;
+        });
+      console.log(cursorId);
+      //현재 dom에 그려진 게시물 중 가장 작은 id값을 추려낸다.
+      //id값과 가져올게시물의 개수를 실어 요청?
     }
   };
-
   // 만약 라이브러리 안쓰신다  대한님 방법
   // 1. size state 를 만든다. (size 초기값 10)
   // 2. 스크롤이 맨 밑에 닿을 때의 메소드를 만들어준다
@@ -165,7 +197,7 @@ const Main = () => {
         },
       };
       if (getlat) {
-        fetch("https://woodongs.site/study/around?size=10", reqOption)
+        fetch(`https://woodongs.site/study/around?size=${size}`, reqOption)
           .then((res) => {
             console.log("res", res);
             return res.json();
@@ -191,7 +223,7 @@ const Main = () => {
         //   })
         //   .catch((error) => console.log("error",error))
       } else {
-        fetch("https://woodongs.site/study?size=10", reqOption)
+        fetch(`https://woodongs.site/study?size=${size}`, reqOption)
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
@@ -238,32 +270,32 @@ const Main = () => {
                       sx={{ maxWidth: 300 }}
                       className="cardlist"
                     >
-                      {/* <article > */}
-                      <CardMedia className="cardimg-box">
-                        <img
-                          className="cardimg"
-                          // src={bgImage}
-                          src={study2}
-                          // src={require("../../../src/img/businessplan.png")}
-                        ></img>
-                      </CardMedia>
-                      <CardContent className="study-info-box">
-                        <header className="study-info study-info-header">
-                          {/* <Link to="/recruit">{el.title}</Link> */}
-                          {/* <Link to={"/study/" + `${el.id}`}>{el.title}</Link> */}
-                          <Link to={"/study/" + `${el.studyId}`}>{`[${
-                            el.city === "" ? "전국" : el.city
-                          }]${el.title}`}</Link>
-                        </header>
-                        <a className="study-info">{el.content}</a>
-                        <ol className="study-info tags">
-                          <li>{el.category}</li>
-                        </ol>
-                      </CardContent>
-                      <div className="count">
-                        <a>모집완료 0/{el.headCount}</a>
-                      </div>
-                      {/* </article> */}
+                      <article className="article">
+                        <CardMedia className="cardimg-box">
+                          <img
+                            className="cardimg"
+                            // src={bgImage}
+                            src={study2}
+                            // src={require("../../../src/img/businessplan.png")}
+                          ></img>
+                        </CardMedia>
+                        <CardContent className="study-info-box">
+                          <header className="study-info study-info-header">
+                            {/* <Link to="/recruit">{el.title}</Link> */}
+                            {/* <Link to={"/study/" + `${el.id}`}>{el.title}</Link> */}
+                            <Link to={"/study/" + `${el.studyId}`}>{`[${
+                              el.city === "" ? "전국" : el.city
+                            }]${el.title}`}</Link>
+                          </header>
+                          <a className="study-info">{el.content}</a>
+                          <ol className="study-info tags">
+                            <li>{el.category}</li>
+                          </ol>
+                        </CardContent>
+                        <div className="count">
+                          <a>모집완료 0/{el.headCount}</a>
+                        </div>
+                      </article>
                     </Card>
                   );
                 })}
