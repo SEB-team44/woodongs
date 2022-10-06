@@ -140,7 +140,7 @@ const Main = () => {
       };
       if (getlat) {
         fetch(
-          `https://woodongs.site/study/around?size=10&cursorId=100`,
+          `http://3.35.188.110:8080/study/around?size=10&cursorId=100`,
           reqOption
         )
           .then((res) => {
@@ -168,7 +168,7 @@ const Main = () => {
         //   })
         //   .catch((error) => console.log("error",error))
       } else {
-        fetch(`https://woodongs.site/study?size=10&cursorId=100`, reqOption)
+        fetch(`http://3.35.188.110:8080/study?size=10&cursorId=100`, reqOption)
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
@@ -194,9 +194,9 @@ const Main = () => {
 
     let url;
     if (cursor) {
-      url = `https://woodongs.site/study?size=5&cursorId=${cursor}`;
+      url = `http://3.35.188.110:8080/study?size=5&cursorId=${cursor}`;
     } else {
-      url = `https://woodongs.site/study?size=10`;
+      url = `http://3.35.188.110:8080/study?size=10`;
     }
     if (!isAvailable) {
       return;
