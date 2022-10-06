@@ -194,23 +194,6 @@ const Recruit = () => {
 
   //카드 리스트와 댓글 리스트를 첫 랜더링 때 받아오자
   useEffect(() => {
-    // const getKeywordList = async () => {
-    //   // fetch("http://localhost:3001/keyword")
-    //   fetch("https://woodongs.site/study")
-    //     .then((res) => {
-    //       if (!res.ok) {
-    //         throw Error("could not fetch the data for that resource");
-    //       }
-    //       return res.json();
-    //     })
-    //     .then((data) => {
-    //       setKeyword(data);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // };
-
     function getCommentList() {
       let reqOption = {
         method: "GET",
@@ -337,20 +320,20 @@ const Recruit = () => {
       .catch((error) => console.log(error));
   };
 
-  const handleSendMessage = (memberid) => {
-    let msg = {
-      senderId: Number(userInfo.memberId),
-      senderNickname: userInfo.nickName,
-      receiverId: Number(memberid),
-      message: "신청gkaslek",
-    };
-    stomp.send(
-      //알람 전송
-      `/pub/alarm`,
-      {},
-      JSON.stringify(msg)
-    );
-  };
+  // const handleSendMessage = (memberid) => {
+  //   let msg = {
+  //     'senderId': Number(userInfo.memberId),
+  //     'senderNickname': userInfo.nickName,
+  //     'receiverId': Number(memberid),
+  //     'message': "신청1",
+  //   };
+  //   stomp.send(
+  //     //알람 전송
+  //     `/pub/alarm`,
+  //     {},
+  //     JSON.stringify(msg)
+  //   );
+  // }
 
   return (
     <>
@@ -475,13 +458,8 @@ const Recruit = () => {
                     >
                       신청하기
                     </Button>
-                    <button
-                      onClick={() =>
-                        handleSendMessage(
-                          content.memberResponseDtos[0].memberId
-                        )
-                      }
-                    ></button>
+                    {/* 임시 버튼 (운영배포시에 무조건 지워주자 ))/}
+                    {/* <button onClick={() => handleSendMessage(content.memberResponseDtos[0].memberId)}></button> */}
                   </article>
                 ) : null}
               </aside>
