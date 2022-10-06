@@ -119,11 +119,7 @@ const SingleBoard = () => {
           Authorization: access_token,
         },
       };
-<<<<<<< HEAD
-      fetch(`https://www.woodongs.site/post/${id}`, reqOption)
-=======
       fetch(`http://3.35.188.110:8080/post/${id}`, reqOption)
->>>>>>> 70d57e5732b3bbdb86606d328b3f1299b03ce423
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -147,11 +143,7 @@ const SingleBoard = () => {
         Authorization: access_token,
       },
     };
-<<<<<<< HEAD
-    fetch(`https://www.woodongs.site/post/${id}`, reqDelete)
-=======
     fetch(`http://3.35.188.110:8080/post/${id}`, reqDelete)
->>>>>>> 70d57e5732b3bbdb86606d328b3f1299b03ce423
       .then((res) => {
         if (res.ok) {
           alert("해당 게시물이 삭제 되었습니다 :-D");
@@ -177,11 +169,7 @@ const SingleBoard = () => {
           Authorization: access_token,
         },
       };
-<<<<<<< HEAD
-      fetch("https://www.woodongs.site/post/" + `${id}`, reqOption)
-=======
       fetch("http://3.35.188.110:8080/post/" + `${id}`, reqOption)
->>>>>>> 70d57e5732b3bbdb86606d328b3f1299b03ce423
         .then((res) => res.json())
         .then((data) => {
           console.log("댓글 입력한거 출력", data);
@@ -207,11 +195,7 @@ const SingleBoard = () => {
         body: inputComments,
       }),
     };
-<<<<<<< HEAD
-    fetch(`https://www.woodongs.site/post/${id}/comment`, reqPost)
-=======
     fetch(`http://3.35.188.110:8080/post/${id}/comment`, reqPost)
->>>>>>> 70d57e5732b3bbdb86606d328b3f1299b03ce423
       .then((res) => res.json())
       .then(() => {
         setgetconditions(!getconditions);
@@ -223,11 +207,7 @@ const SingleBoard = () => {
   //삭제 버튼 클릭 시, 들어온 id 값에 맞는 부분 삭제 요청 보냄
   //댓글 삭제
   const handleDeleteSBComment = (elID) => {
-<<<<<<< HEAD
-    fetch(`https://www.woodongs.site/post/${id}/${elID}`, {
-=======
     fetch(`http://3.35.188.110:8080/post/${id}/${elID}`, {
->>>>>>> 70d57e5732b3bbdb86606d328b3f1299b03ce423
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
