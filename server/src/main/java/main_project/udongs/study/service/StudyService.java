@@ -200,7 +200,13 @@ public class StudyService {
                     return dist < 3000;
                 }).limit(pageable.getPageSize()).collect(Collectors.toList());
 
-        Long lastIdx = aroundStudies.get(aroundStudies.size() - 1).getStudyId();
+        Long lastIdx;
+
+        if (!aroundStudies.isEmpty()) {
+            lastIdx = aroundStudies.get(aroundStudies.size() - 1).getStudyId();
+        } else {
+            lastIdx = 1L;
+        }
 
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(aroundStudies), studies, lastIdx), HttpStatus.OK);
     }

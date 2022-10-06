@@ -8,7 +8,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties({CorsProperties.class, AppProperties.class})
-
 public class UdongsApplication {
 
 	public static void main(String[] args) {

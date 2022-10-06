@@ -9,8 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import main_project.udongs.stomp.ChatDto;
-import main_project.udongs.stomp.AlarmService;
 import main_project.udongs.apply.dto.StudyApplyDto;
 import main_project.udongs.apply.entity.StudyApply;
 import main_project.udongs.apply.mapper.StudyApplyMapper;
@@ -19,6 +17,8 @@ import main_project.udongs.apply.service.StudyApplyService;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
+import main_project.udongs.stomp.AlarmService;
+import main_project.udongs.stomp.ChatDto;
 import main_project.udongs.study.entity.Study;
 import main_project.udongs.study.repository.StudyRepository;
 import main_project.udongs.study.service.StudyService;
@@ -27,7 +27,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -70,8 +69,8 @@ public class StudyApplyController {
 
         studyApplyService.createStudyApply(study,userPrincipal.getMember());
 
-        // 알람 전송 추가
-        alarmService.alarmByMessage(new ChatDto(userPrincipal.getMember().getMemberId(), userPrincipal.getMember().getNickName(), study.getMember().getMemberId(), "스터디 신청이 왔습니다", LocalDateTime.now()));
+//         알람 전송 추가
+        alarmService.alarmByMessage(new ChatDto(userPrincipal.getMember().getMemberId(), userPrincipal.getMember().getNickName(), study.getMember().getMemberId(), "알람서비스 : 스터디 신청이 왔습니다"));
 
         return ResponseEntity.ok("신청했습니다");
     }
@@ -109,7 +108,7 @@ public class StudyApplyController {
         }
 
         // 알람 전송 추가
-        alarmService.alarmByMessage(new ChatDto(userPrincipal.getMember().getMemberId(), userPrincipal.getMember().getNickName(), studyApply.getMember().getMemberId(), "스터디 신청이 승인됐습니다", LocalDateTime.now()));
+//        alarmService.alarmByMessage(new ChatDto(userPrincipal.getMember().getMemberId(), userPrincipal.getMember().getNickName(), studyApply.getMember().getMemberId(), "스터디 신청이 승인됐습니다"));
 
         return ResponseEntity.ok("승인했습니다");
     }
@@ -132,7 +131,7 @@ public class StudyApplyController {
         studyApplyRepository.save(studyApply);
 
         // 알람 전송 추가
-        alarmService.alarmByMessage(new ChatDto(userPrincipal.getMember().getMemberId(), userPrincipal.getMember().getNickName(), studyApply.getMember().getMemberId(), "스터디 신청이 거절됐습니다", LocalDateTime.now()));
+//        alarmService.alarmByMessage(new ChatDto(userPrincipal.getMember().getMemberId(), userPrincipal.getMember().getNickName(), studyApply.getMember().getMemberId(), "스터디 신청이 거절됐습니다"));
 
         return ResponseEntity.ok("거절했습니다");
     }
