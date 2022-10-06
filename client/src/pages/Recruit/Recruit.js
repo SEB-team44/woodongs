@@ -151,7 +151,7 @@ const Recruit = () => {
   };
 
   // recruit 페이지 나오자 마자 연결
-  let socketJs = new SockJS("https://woodongs.site/ws-stomp");
+  let socketJs = new SockJS("http://3.35.188.110:8080/ws-stomp");
   const stomp = StompJs.over(socketJs);
 
   //댓글
@@ -161,7 +161,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch("https://woodongs.site/study/" + `${id}`, reqOption)
+      fetch("http://3.35.188.110:8080/study/" + `${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log("content", data);
@@ -180,7 +180,7 @@ const Recruit = () => {
     };
 
     // fetch("http://localhost:3001/card/" + `${id}`, reqDelete)
-    fetch("https://woodongs.site/study/" + `${id}`, reqDelete)
+    fetch("http://3.35.188.110:8080/study/" + `${id}`, reqDelete)
       .then((res) => {
         if (res.ok) {
           alert("해당 스터디가 삭제 되었습니다.");
@@ -199,7 +199,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch(`https://woodongs.site/study/${id}`, reqOption)
+      fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data); //댓글배열로나옴
@@ -213,7 +213,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch(`https://woodongs.site/study/${id}`, reqOption)
+      fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data); //나옴
@@ -237,7 +237,7 @@ const Recruit = () => {
       }),
     };
 
-    fetch(`https://woodongs.site/study/${id}/comment`, reqPost)
+    fetch(`http://3.35.188.110:8080/study/${id}/comment`, reqPost)
       .then((res) => res.json())
       .then(() => {
         setgetcondition(!getcondition);
@@ -270,7 +270,7 @@ const Recruit = () => {
 
   //삭제 버튼 클릭시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handeDeleteComment = (elID) => {
-    fetch(`https://woodongs.site/study/${id}/${elID}`, {
+    fetch(`http://3.35.188.110:8080/study/${id}/${elID}`, {
       method: "DELETE",
       headers: header,
     }).then(() => {
@@ -280,7 +280,7 @@ const Recruit = () => {
 
   //게시물 삭제 버튼 클릭 시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handleEditRecruit = (id) => {
-    fetch(`https://woodongs.site/study/${id}/comment`, {
+    fetch(`http://3.35.188.110:8080/study/${id}/comment`, {
       method: "DELETE",
     });
     setgetconditions(!getconditions);
@@ -297,7 +297,7 @@ const Recruit = () => {
       message: `${userInfo.nickName} 님께서 스터디 가입을 신청하였습니다.`,
     };
 
-    fetch(`https://woodongs.site/study/${id}/apply`, {
+    fetch(`http://3.35.188.110:8080/study/${id}/apply`, {
       method: "POST",
       headers: header,
     })

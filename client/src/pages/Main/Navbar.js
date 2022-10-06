@@ -115,7 +115,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const token = localStorage.getItem("access_token");
   const [alarm, setAlarm] = useState([]);
   console.log("userInfo", userInfo);
-  let socketJs = new SockJS("https://woodongs.site/ws-stomp");
+  let socketJs = new SockJS("http://3.35.188.110:8080/ws-stomp");
   const stomp = StompJs.over(socketJs);
   useEffect(() => {
     stomp.connect({ token: token }, (frame) => {
