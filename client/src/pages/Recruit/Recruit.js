@@ -151,7 +151,7 @@ const Recruit = () => {
   };
 
   // recruit 페이지 나오자 마자 연결
-  let socketJs = new SockJS("https://woodongs.site/ws-stomp");
+  let socketJs = new SockJS("https://www.woodongs.site/ws-stomp");
   const stomp = StompJs.over(socketJs);
 
   useEffect(() => {
@@ -168,7 +168,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch("https://woodongs.site/study/" + `${id}`, reqOption)
+      fetch("https://www.woodongs.site/study/" + `${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log("content", data);
@@ -187,7 +187,7 @@ const Recruit = () => {
     };
 
     // fetch("http://localhost:3001/card/" + `${id}`, reqDelete)
-    fetch("https://woodongs.site/study/" + `${id}`, reqDelete)
+    fetch("https://www.woodongs.site/study/" + `${id}`, reqDelete)
       .then((res) => {
         if (res.ok) {
           alert("해당 스터디가 삭제 되었습니다.");
@@ -203,7 +203,7 @@ const Recruit = () => {
   useEffect(() => {
     // const getKeywordList = async () => {
     //   // fetch("http://localhost:3001/keyword")
-    //   fetch("https://woodongs.site/study")
+    //   fetch("https://www.woodongs.site/study")
     //     .then((res) => {
     //       if (!res.ok) {
     //         throw Error("could not fetch the data for that resource");
@@ -223,7 +223,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch(`https://woodongs.site/study/${id}`, reqOption)
+      fetch(`https://www.woodongs.site/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data); //댓글배열로나옴
@@ -237,7 +237,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch(`https://woodongs.site/study/${id}`, reqOption)
+      fetch(`https://www.woodongs.site/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data); //나옴
@@ -261,7 +261,7 @@ const Recruit = () => {
       }),
     };
 
-    fetch(`https://woodongs.site/study/${id}/comment`, reqPost)
+    fetch(`https://www.woodongs.site/study/${id}/comment`, reqPost)
       .then((res) => res.json())
       .then(() => {
         setgetcondition(!getcondition);
@@ -294,7 +294,7 @@ const Recruit = () => {
 
   //삭제 버튼 클릭시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handeDeleteComment = (elID) => {
-    fetch(`https://woodongs.site/study/${id}/${elID}`, {
+    fetch(`https://www.woodongs.site/study/${id}/${elID}`, {
       method: "DELETE",
       headers: header,
     }).then(() => {
@@ -304,7 +304,7 @@ const Recruit = () => {
 
   //게시물 삭제 버튼 클릭 시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handleEditRecruit = (id) => {
-    fetch(`https://woodongs.site/study/${id}/comment`, {
+    fetch(`https://www.woodongs.site/study/${id}/comment`, {
       method: "DELETE",
     });
     setgetconditions(!getconditions);
@@ -321,7 +321,7 @@ const Recruit = () => {
       message: "신청",
     };
 
-    fetch(`https://woodongs.site/study/${id}/apply`, {
+    fetch(`https://www.woodongs.site/study/${id}/apply`, {
       method: "POST",
       headers: header,
     })

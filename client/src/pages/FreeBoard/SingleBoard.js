@@ -99,7 +99,7 @@ const SingleBoard = () => {
           Authorization: access_token,
         },
       };
-      fetch(`https://woodongs.site/post/${id}`, reqOption)
+      fetch(`https://www.woodongs.site/post/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -118,7 +118,7 @@ const SingleBoard = () => {
           Authorization: access_token,
         },
       };
-      fetch(`https://woodongs.site/post/${id}`, reqOption)
+      fetch(`https://www.woodongs.site/post/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -142,7 +142,7 @@ const SingleBoard = () => {
         Authorization: access_token,
       },
     };
-    fetch(`https://woodongs.site/post/${id}`, reqDelete)
+    fetch(`https://www.woodongs.site/post/${id}`, reqDelete)
       .then((res) => {
         if (res.ok) {
           alert("해당 게시물이 삭제 되었습니다 :-D");
@@ -168,7 +168,7 @@ const SingleBoard = () => {
           Authorization: access_token,
         },
       };
-      fetch("https://woodongs.site/post/" + `${id}`, reqOption)
+      fetch("https://www.woodongs.site/post/" + `${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log("댓글 입력한거 출력", data);
@@ -194,7 +194,7 @@ const SingleBoard = () => {
         body: inputComments,
       }),
     };
-    fetch(`https://woodongs.site/post/${id}/comment`, reqPost)
+    fetch(`https://www.woodongs.site/post/${id}/comment`, reqPost)
       .then((res) => res.json())
       .then(() => {
         setgetconditions(!getconditions);
@@ -206,7 +206,7 @@ const SingleBoard = () => {
   //삭제 버튼 클릭 시, 들어온 id 값에 맞는 부분 삭제 요청 보냄
   //댓글 삭제
   const handleDeleteSBComment = (elID) => {
-    fetch(`https://woodongs.site/post/${id}/${elID}`, {
+    fetch(`https://www.woodongs.site/post/${id}/${elID}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

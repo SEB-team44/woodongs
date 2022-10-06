@@ -104,7 +104,7 @@ const MyPage = () => {
   useEffect(() => {
     const getMemberInfo = async () => {
       // {이름 , 인덱스, 소속된 스터디, 프로필{job, career, introduction}, 등급 }
-      fetch("https://woodongs.site/member/me", {
+      fetch("https://www.woodongs.site/member/me", {
         headers: header,
       })
         .then((res) => res.json())
@@ -118,7 +118,7 @@ const MyPage = () => {
           });
         })
         .then(() => {
-          fetch("https://woodongs.site/member/profile", {
+          fetch("https://www.woodongs.site/member/profile", {
             headers: header,
           })
             .then((res) => res.json())
@@ -188,7 +188,7 @@ const MyPage = () => {
 
   const handleDoneEdit = () => {
     const PatchNickName = async () => {
-      fetch("https://woodongs.site/member", {
+      fetch("https://www.woodongs.site/member", {
         method: "PATCH",
         headers: header,
         body: JSON.stringify({
@@ -204,7 +204,7 @@ const MyPage = () => {
           console.log(res)
         })
         .then(() => {
-          fetch("https://woodongs.site/member/profile", {
+          fetch("https://www.woodongs.site/member/profile", {
             method: "PATCH",
             headers: header,
             body: JSON.stringify({
@@ -264,7 +264,7 @@ const MyPage = () => {
     // 서버의 upload API 호출
     axios({
       // baseURL: "https://59.16.126.210:8080/member/imageupload",
-      url: "https://woodongs.site/member/imageupload",
+      url: "https://www.woodongs.site/member/imageupload",
       method: "POST",
       data: formData,
       headers: {

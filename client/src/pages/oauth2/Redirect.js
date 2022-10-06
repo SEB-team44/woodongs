@@ -54,9 +54,9 @@ const Redirect = () => {
 
     if (check_a_token) {
       reqOAuthPost.headers["Authorization"] = check_a_token;
-      fetch("https://woodongs.site/member/locate", reqOAuthPost).then(
+      fetch("https://www.woodongs.site/member/locate", reqOAuthPost).then(
         (res) => {
-          fetch("https://woodongs.site/member/me", {
+          fetch("https://www.woodongs.site/member/me", {
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
