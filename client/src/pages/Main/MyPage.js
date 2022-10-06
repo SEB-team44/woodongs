@@ -104,7 +104,7 @@ const MyPage = () => {
   useEffect(() => {
     const getMemberInfo = async () => {
       // {이름 , 인덱스, 소속된 스터디, 프로필{job, career, introduction}, 등급 }
-      fetch("https://www.woodongs.site/member/me", {
+      fetch("http://3.35.188.110:8080/member/me", {
         headers: header,
       })
         .then((res) => res.json())
@@ -118,7 +118,7 @@ const MyPage = () => {
           });
         })
         .then(() => {
-          fetch("https://www.woodongs.site/member/profile", {
+          fetch("http://3.35.188.110:8080/member/profile", {
             headers: header,
           })
             .then((res) => res.json())
@@ -188,7 +188,7 @@ const MyPage = () => {
 
   const handleDoneEdit = () => {
     const PatchNickName = async () => {
-      fetch("https://www.woodongs.site/member", {
+      fetch("http://3.35.188.110:8080/member", {
         method: "PATCH",
         headers: header,
         body: JSON.stringify({
@@ -199,12 +199,13 @@ const MyPage = () => {
           if (res.ok) {
             console.log("이름 수정 성공");
           }
-          return res.json()})
+          return res.json();
+        })
         .then((res) => {
-          console.log(res)
+          console.log(res);
         })
         .then(() => {
-          fetch("https://www.woodongs.site/member/profile", {
+          fetch("http://3.35.188.110:8080/member/profile", {
             method: "PATCH",
             headers: header,
             body: JSON.stringify({
@@ -264,7 +265,7 @@ const MyPage = () => {
     // 서버의 upload API 호출
     axios({
       // baseURL: "https://59.16.126.210:8080/member/imageupload",
-      url: "https://www.woodongs.site/member/imageupload",
+      url: "http://3.35.188.110:8080/member/imageupload",
       method: "POST",
       data: formData,
       headers: {

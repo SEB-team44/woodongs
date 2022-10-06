@@ -9,6 +9,9 @@ import { UserLogin } from "../../UserContext";
 import { useContext, useState } from "react";
 import { UserInfo } from "../../UserContext";
 import Alert from "../Main/Alert";
+import SockJS from "sockjs-client";
+import StompJs from "stompjs";
+import { useEffect } from "react";
 
 const StyledNav = styled.div`
   .header-container {
@@ -97,6 +100,9 @@ const StyledNav = styled.div`
     cursor: pointer;
     background-color: white;
   }
+  .alert {
+    height: 200px;
+  }
 `;
 
 const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
@@ -106,8 +112,24 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const [searchInput, setSearchInput] = useState("");
   const { isLogin } = useContext(UserLogin);
   const [searchOption, setSearchOption] = useState("제목");
-
+  const token = localStorage.getItem("access_token");
+  const [alarm, setAlarm] = useState([]);
   console.log("userInfo", userInfo);
+  let socketJs = new SockJS("http://3.35.188.110:8080/ws-stomp");
+  const stomp = StompJs.over(socketJs);
+  useEffect(() => {
+    stomp.connect({ token: token }, (frame) => {
+      console.log("connecteed" + frame);
+      stomp.subscribe(`/sub/alarm/` + userInfo.memberId, function (respoonse) {
+        console.log(JSON.parse(respoonse.body));
+        let resmessage = JSON.parse(respoonse.body);
+        setAlarm([...alarm, resmessage.senderNickname]);
+      });
+    });
+    return () => {
+      stomp.disconnect(() => {});
+    };
+  }, []);
 
   const handleClick1 = (event) => {
     setAnchorEl1(anchorEl1 ? null : event.currentTarget);
@@ -227,10 +249,17 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                         type="button"
                         onClick={handleClick1}
                       >
-                        <img
-                          className="myinfo-img myinfo-ball-img"
-                          src={require("../../../src/img/ball.png")}
-                        />
+                        {alarm.length === 0 ? (
+                          <img
+                            className="myinfo-img myinfo-ball-img"
+                            src={require("../../../src/img/ball.png")}
+                          />
+                        ) : (
+                          <img
+                            className="myinfo-img myinfo-ball-img"
+                            src={require("../../../src/img/bellring.png")}
+                          />
+                        )}
                       </button>
                       <Popover
                         id={id1}
@@ -250,9 +279,9 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                             textDecoration: "none",
                           }}
                         >
-                          <div className="alert">
-                            <Alert></Alert>
-                          </div>
+                          <p className="alert">
+                            <Alert alarm={alarm}></Alert>
+                          </p>
                         </Typography>
                       </Popover>
                     </div>

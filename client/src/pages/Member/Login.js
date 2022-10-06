@@ -127,8 +127,7 @@ export default function Login() {
 
     //3.35.188.110:8080대한님
     //14.6.86.98:8080 지훈님
-
-    fetch("https://www.woodongs.site/login", reqOAuthPost)
+    fetch("http://3.35.188.110:8080/login", reqOAuthPost)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -152,10 +151,10 @@ export default function Login() {
               latitude: localStorage.getItem("latitude"),
               longitude: localStorage.getItem("longitude"),
             });
-            fetch("https://www.woodongs.site/member/locate", reqOAuthPost)
+            fetch("http://3.35.188.110:8080/member/locate", reqOAuthPost)
               .then((res) => console.log(res.json()))
               .then((res) => {
-                fetch("https://www.woodongs.site/member/me", {
+                fetch("http://3.35.188.110:8080/member/me", {
                   headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",

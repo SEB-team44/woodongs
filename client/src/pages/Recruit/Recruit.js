@@ -122,7 +122,7 @@ const StyledRecruit = styled.section`
 
 const Recruit = () => {
   const navigate = useNavigate();
-  const {userInfo} = useContext(UserInfo);
+  const { userInfo } = useContext(UserInfo);
   const { isLogin } = useContext(UserLogin);
   const [keyword, setKeyword] = useState([]);
   //댓글리스트
@@ -151,15 +151,8 @@ const Recruit = () => {
   };
 
   // recruit 페이지 나오자 마자 연결
-  let socketJs = new SockJS("https://www.woodongs.site/ws-stomp");
+  let socketJs = new SockJS("http://3.35.188.110:8080/ws-stomp");
   const stomp = StompJs.over(socketJs);
-
-  useEffect(() => {
-    stomp.connect({}, (e) => {});
-    return () => {
-      stomp.disconnect(() => {});
-    };
-  }, []);
 
   //댓글
   useEffect(() => {
@@ -168,7 +161,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch("https://www.woodongs.site/study/" + `${id}`, reqOption)
+      fetch("http://3.35.188.110:8080/study/" + `${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log("content", data);
@@ -187,7 +180,7 @@ const Recruit = () => {
     };
 
     // fetch("http://localhost:3001/card/" + `${id}`, reqDelete)
-    fetch("https://www.woodongs.site/study/" + `${id}`, reqDelete)
+    fetch("http://3.35.188.110:8080/study/" + `${id}`, reqDelete)
       .then((res) => {
         if (res.ok) {
           alert("해당 스터디가 삭제 되었습니다.");
@@ -201,29 +194,12 @@ const Recruit = () => {
 
   //카드 리스트와 댓글 리스트를 첫 랜더링 때 받아오자
   useEffect(() => {
-    // const getKeywordList = async () => {
-    //   // fetch("http://localhost:3001/keyword")
-    //   fetch("https://www.woodongs.site/study")
-    //     .then((res) => {
-    //       if (!res.ok) {
-    //         throw Error("could not fetch the data for that resource");
-    //       }
-    //       return res.json();
-    //     })
-    //     .then((data) => {
-    //       setKeyword(data);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // };
-
     function getCommentList() {
       let reqOption = {
         method: "GET",
         headers: header,
       };
-      fetch(`https://www.woodongs.site/study/${id}`, reqOption)
+      fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data); //댓글배열로나옴
@@ -237,7 +213,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch(`https://www.woodongs.site/study/${id}`, reqOption)
+      fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data); //나옴
@@ -261,7 +237,7 @@ const Recruit = () => {
       }),
     };
 
-    fetch(`https://www.woodongs.site/study/${id}/comment`, reqPost)
+    fetch(`http://3.35.188.110:8080/study/${id}/comment`, reqPost)
       .then((res) => res.json())
       .then(() => {
         setgetcondition(!getcondition);
@@ -294,7 +270,7 @@ const Recruit = () => {
 
   //삭제 버튼 클릭시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handeDeleteComment = (elID) => {
-    fetch(`https://www.woodongs.site/study/${id}/${elID}`, {
+    fetch(`http://3.35.188.110:8080/study/${id}/${elID}`, {
       method: "DELETE",
       headers: header,
     }).then(() => {
@@ -304,7 +280,7 @@ const Recruit = () => {
 
   //게시물 삭제 버튼 클릭 시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handleEditRecruit = (id) => {
-    fetch(`https://www.woodongs.site/study/${id}/comment`, {
+    fetch(`http://3.35.188.110:8080/study/${id}/comment`, {
       method: "DELETE",
     });
     setgetconditions(!getconditions);
@@ -315,39 +291,49 @@ const Recruit = () => {
     const access_token = localStorage.getItem("access_token");
     // chatDto
     let msg = {
-      senderId: userInfo.memberId,
+      senderId: Number(userInfo.memberId),
       senderNickname: userInfo.nickName,
-      receiverId: memberid,
-      message: "신청",
+      receiverId: Number(memberid),
+      message: `${userInfo.nickName} 님께서 스터디 가입을 신청하였습니다.`,
     };
 
-    fetch(`https://www.woodongs.site/study/${id}/apply`, {
+    fetch(`http://3.35.188.110:8080/study/${id}/apply`, {
       method: "POST",
       headers: header,
     })
       .then((res) => {
         if (res.ok) {
           alert("신청을 성공하였습니다.");
-          // 구독
-          // stomp.connect(() => {
-            stomp.subscribe(`/sub/alarm/${memberid}`, (data) => {
-              console.log("connectsub" , data);
-            });
-          // })
-
         }
       })
       .then(() => {
         stomp.send(
           //알람 전송
           `/pub/alarm`,
-          { token: access_token },
+          {},
           JSON.stringify(msg)
         );
-
+      })
+      .then(() => {
+        stomp.disconnect();
       })
       .catch((error) => console.log(error));
   };
+
+  // const handleSendMessage = (memberid) => {
+  //   let msg = {
+  //     'senderId': Number(userInfo.memberId),
+  //     'senderNickname': userInfo.nickName,
+  //     'receiverId': Number(memberid),
+  //     'message': "신청1",
+  //   };
+  //   stomp.send(
+  //     //알람 전송
+  //     `/pub/alarm`,
+  //     {},
+  //     JSON.stringify(msg)
+  //   );
+  // }
 
   return (
     <>
@@ -366,7 +352,6 @@ const Recruit = () => {
               <div className="recruit-title">
                 <h1>{card.title}</h1>
               </div>
-              {/* <h1>{`[서울] 인터렉티브 웹 스터디`}</h1> */}
             </section>
             <section className="recruit-main-box">
               <section className="recruit-main-section">
@@ -405,7 +390,9 @@ const Recruit = () => {
                         {/* {console.log("card", card)} */}
                       </div>
                       <h2>✔️ 모집현황</h2>
-                      <p>프론트 엔드 스터디원 0/{card.headCount}</p>
+                      <p>
+                        {card.category} 0/{card.headCount}
+                      </p>
                     </article>
                     <article>
                       <h2>✔️ 스터디 키워드</h2>
@@ -444,7 +431,7 @@ const Recruit = () => {
                               />
                               {<h2 key={el.memberId}>{el.nickName}</h2>}
                             </>
-                          )
+                          );
                         }
                       })}
                   </div>
@@ -471,6 +458,8 @@ const Recruit = () => {
                     >
                       신청하기
                     </Button>
+                    {/* 임시 버튼 (운영배포시에 무조건 지워주자 ))/}
+                    {/* <button onClick={() => handleSendMessage(content.memberResponseDtos[0].memberId)}></button> */}
                   </article>
                 ) : null}
               </aside>

@@ -42,7 +42,6 @@
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "https://www.woodongs.site/",
   "scripts": {
     "start": "set PORT=3000 && react-scripts start",
     "build": "react-scripts build",
