@@ -59,7 +59,6 @@ public class PostService {
     }
 
 
-
     //게시글 삭제
     @Transactional
     public void deletePost(Post post) {
@@ -132,29 +131,32 @@ public class PostService {
     public Slice<Post> ifFirstpage(Pageable pageable, String titleKeyword, String cityKeyword, String bodyKeyword) {
         Slice<Post> searchedPosts = null;
 
-        if(titleKeyword == null && cityKeyword == null && bodyKeyword == null){
-            searchedPosts = getPosts(pageable);
-        } else if(titleKeyword !=null && cityKeyword == null && bodyKeyword == null) { //제목으로만 검색
-            searchedPosts = getPostByTitle(pageable, titleKeyword);
-        } else if(titleKeyword == null && cityKeyword != null && bodyKeyword == null) { //도시이름으로만 검색
-            searchedPosts = getPostByCity(pageable, cityKeyword);
-        } else if(titleKeyword == null && cityKeyword == null && bodyKeyword != null) { //본문으로만 검색
-            searchedPosts = getPostByBody(pageable, bodyKeyword);}
+        if (titleKeyword == null && cityKeyword == null && bodyKeyword == null) {
+            searchedPosts = postRepository.findAll(pageable);
+        } else if (titleKeyword != null && cityKeyword == null && bodyKeyword == null) { //제목으로만 검색
+            searchedPosts = postRepository.findByTitleContaining(titleKeyword, pageable);
+        } else if (titleKeyword == null && cityKeyword != null && bodyKeyword == null) { //도시이름으로만 검색
+            searchedPosts = postRepository.findByCityContaining(cityKeyword, pageable);
+        } else if (titleKeyword == null && cityKeyword == null && bodyKeyword != null) { //본문으로만 검색
+            searchedPosts = postRepository.findByBodyContaining(bodyKeyword, pageable);
 
+        }
         return searchedPosts;
     }
 
-    public Slice<Post> ifNotFirstpage(Long id, Pageable pageable, String titleKeyword, String cityKeyword, String bodyKeyword) {
+    public Slice<Post> ifNotFirstpage(Long id, Pageable pageable, String titleKeyword, String cityKeyword, String
+            bodyKeyword) {
         Slice<Post> searchedPosts = null;
 
-        if(titleKeyword == null && cityKeyword == null && bodyKeyword == null){
+        if (titleKeyword == null && cityKeyword == null && bodyKeyword == null) {
             searchedPosts = postRepository.findByPostIdLessThan(id, pageable);
-        } else if(titleKeyword !=null && cityKeyword == null && bodyKeyword == null) { //제목으로만 검색
+        } else if (titleKeyword != null && cityKeyword == null && bodyKeyword == null) { //제목으로만 검색
             searchedPosts = postRepository.findByPostIdLessThanAndTitleContaining(id, titleKeyword, pageable);
-        } else if(titleKeyword == null && cityKeyword != null && bodyKeyword == null) { //도시이름으로만 검색
+        } else if (titleKeyword == null && cityKeyword != null && bodyKeyword == null) { //도시이름으로만 검색
             searchedPosts = postRepository.findByPostIdLessThanAndCityContaining(id, cityKeyword, pageable);
-        } else if(titleKeyword == null && cityKeyword == null && bodyKeyword != null) { //본문으로만 검색
-            searchedPosts = postRepository.findByPostIdLessThanAndBodyContaining(id, bodyKeyword, pageable);}
+        } else if (titleKeyword == null && cityKeyword == null && bodyKeyword != null) { //본문으로만 검색
+            searchedPosts = postRepository.findByPostIdLessThanAndBodyContaining(id, bodyKeyword, pageable);
+        }
 
         return searchedPosts;
     }
@@ -166,13 +168,13 @@ public class PostService {
 
     //검색으로 게시글 조회 - 타이틀
     @Transactional
-    public Slice<Post> getPostByTitle(Pageable pageable, String titleKeyword){
+    public Slice<Post> getPostByTitle(Pageable pageable, String titleKeyword) {
         return postRepository.findByTitleContaining(titleKeyword, pageable);
     }
 
     //검색으로 게시글 조회 - 지역(city)
     @Transactional
-    public Slice<Post> getPostByCity(Pageable pageable, String cityKeyword){
+    public Slice<Post> getPostByCity(Pageable pageable, String cityKeyword) {
         return postRepository.findByCityContaining(cityKeyword, pageable);
     }
 

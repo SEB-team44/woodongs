@@ -12,7 +12,6 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     Slice<Post> findByBodyContaining(String bodyKeyword, Pageable pageable);
 
-
     Slice<Post> findByPostIdLessThan(Long id, Pageable pageable);
 
     Slice<Post> findByPostIdLessThanAndTitleContaining(Long postId, String titleKeyword, Pageable pageable);

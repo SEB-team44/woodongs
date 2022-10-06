@@ -136,6 +136,6 @@ class AlarmServiceTest {
     }
 
     private String getWsPath() {
-        return String.format("ws://localhost:%d/ws/chat", port);
+        return String.format("ws://localhost:%d/ws-stomp", port);
     }
 }
