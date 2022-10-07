@@ -109,7 +109,13 @@ public class PostController {
         Slice<Post> searchedPosts = postService.searchFunction(cursorId, pageable, titleKeyword, cityKeyword, bodyKeyword);
 
         List<Post> posts = searchedPosts.getContent();
-        Long lastIdx = posts.get(posts.size() - 1).getPostId();
+        Long lastIdx;
+        if (posts.size() >= 1) {
+            lastIdx = posts.get(posts.size() - 1).getPostId();
+        } else {
+            lastIdx = 0L;
+        }
+
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.postsToPostResponse(posts),searchedPosts, lastIdx), HttpStatus.OK);
     }
 

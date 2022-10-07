@@ -112,8 +112,12 @@ public class StudyController {
         // 클라에서 size에 초기값을 넣고 스크롤이 다 내려가면 size를 증가해서 다시 요청하는식으로??
         Slice<Study> searchedStudies = studyService.searchFunction(cursorId, pageable, titleKeyword, cityKeyword, categoryKeyword);
         List<Study> studies = searchedStudies.getContent();
-        Long lastIdx = studies.get(studies.size() - 1).getStudyId();
-
+        Long lastIdx;
+        if (studies.size() >= 1) {
+            lastIdx = studies.get(studies.size() - 1).getStudyId();
+        } else {
+            lastIdx = 0L;
+        }
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(studies), searchedStudies, lastIdx),HttpStatus.OK);
     }
 
