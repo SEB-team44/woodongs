@@ -41,7 +41,11 @@
 <br>
 
 [프로젝트 링크](http://www.woodongs.site) 
-// 계속 진행중입니다 (미완성)
+
+
+<br>
+
+[프로젝트 발표 자료](https://www.notion.so/codestates/39-Team044-1d1cf9268af045f78a0cb85eedbf7863#2208887488694281acd60c885a91b08a) 
 
 <br>
 
