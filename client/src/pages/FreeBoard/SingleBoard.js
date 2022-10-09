@@ -7,10 +7,18 @@ import Button from "@mui/material/Button";
 import { TiTrash, TiPencil } from "react-icons/ti";
 
 const StyledSingleBoard = styled.section`
+  .container {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100vw;
+  }
   .singleboard-main-container {
     width: 800px;
-    height: 100vh;
-    margin: 50px auto;
+    height: 100%;
+    margin: 30px 300px;
     border: solid black 1px;
     justify-content: center;
     align-items: center;
@@ -51,9 +59,6 @@ const StyledSingleBoard = styled.section`
   .button-container {
     height: 20px;
     margin: 5px;
-  }
-  .singleboard-comment-view-box {
-    height: 100px;
   }
   .singleboard-comment-name {
     font-weight: bold;
@@ -197,7 +202,7 @@ const SingleBoard = () => {
     fetch(`http://3.35.188.110:8080/post/${id}/comment`, reqPost)
       .then((res) => res.json())
       .then(() => {
-        setgetconditions(!getconditions);
+        setgetCondition(!getcondition);
         setInputComments("");
       });
     //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
@@ -215,7 +220,7 @@ const SingleBoard = () => {
         Authorization: access_token,
       },
     }).then(() => {
-      setgetconditions(!getconditions);
+      setgetCondition(!getcondition);
     });
   };
 
