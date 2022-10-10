@@ -288,7 +288,6 @@ const Recruit = () => {
 
   //신청하기 클릭시 동작하는 메서드
   const handleApplyStudy = (memberid, id) => {
-    const access_token = localStorage.getItem("access_token");
     // chatDto
     let msg = {
       senderId: Number(userInfo.memberId),
@@ -309,7 +308,7 @@ const Recruit = () => {
       .then(() => {
         stomp.send(
           //알람 전송
-          `/pub/alarm`,
+          `/app/alarm`,
           {},
           JSON.stringify(msg)
         );

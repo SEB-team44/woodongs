@@ -95,6 +95,11 @@ const StyledEntireMain = styled.div`
   .study-info-header {
     font-size: 1.5rem;
   }
+  .loading{
+    text-align: center;
+    background-color: white;
+    font-size: large
+  }
 `;
 
 const EntireMain = () => {
@@ -104,6 +109,7 @@ const EntireMain = () => {
   const [size, setSize] = useState(10);
   const [cursor, setCursor] = useState(0);
   const [isAvailable, setIsAvailable] = useState(true);
+  const [isLoading, setIsLoading] = useState(false) ;
 
   function getCardList() {
     let reqOption = {
@@ -132,14 +138,20 @@ const EntireMain = () => {
         return data;
       })
       .then((data) => {
-        setCardList([...cardList, ...data.data]);
-        console.log(data.sliceInfo);
-        if (data.sliceInfo.nextAvailable) {
-          setCursor(data.sliceInfo.lastIdx);
-          console.log(data.sliceInfo.lastIdx, cursor, cardList);
-        } else {
-          setIsAvailable(false);
-        }
+        setIsLoading(true)
+        setTimeout(() => {
+          setCardList([...cardList, ...data.data]);
+          console.log(data.sliceInfo);
+
+          if (data.sliceInfo.nextAvailable) {
+            setCursor(data.sliceInfo.lastIdx);
+            console.log(data.sliceInfo.lastIdx, cursor, cardList);
+          } else {
+            setIsAvailable(false);
+          }
+          setIsLoading(false)
+        }, 1000);
+
       });
   }
   useEffect(() => {
@@ -216,9 +228,10 @@ const EntireMain = () => {
                   );
                 })}
             </main>
+            {isLoading ? <div className="loading"> loading.... </div> : null}
           </section>
-
           <section className="main-footer-container">
+           
             <Footer />
           </section>
         </section>

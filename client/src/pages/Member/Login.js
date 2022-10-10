@@ -50,7 +50,7 @@ function Copyright(props) {
 // localhost:3000
 // 3.35.188.110:8080
 const KAKAOPATH =
-  "http://3.35.188.110:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/Redirect";
+  "http://3.35.188.110:8080/oauth2/authorization/kakao?redirect_uri=https://localhost:3000/Redirect";
 
 const theme = createTheme();
 

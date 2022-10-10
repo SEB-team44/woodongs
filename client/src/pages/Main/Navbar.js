@@ -12,6 +12,7 @@ import Alert from "../Main/Alert";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
 import { useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
 
 const StyledNav = styled.div`
   .header-container {
@@ -114,22 +115,46 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const [searchOption, setSearchOption] = useState("제목");
   const token = localStorage.getItem("access_token");
   const [alarm, setAlarm] = useState([]);
-  console.log("userInfo", userInfo);
+
+
   let socketJs = new SockJS("http://3.35.188.110:8080/ws-stomp");
   const stomp = StompJs.over(socketJs);
+
   useEffect(() => {
     stomp.connect({ token: token }, (frame) => {
       console.log("connecteed" + frame);
-      stomp.subscribe(`/sub/alarm/` + userInfo.memberId, function (respoonse) {
-        console.log(JSON.parse(respoonse.body));
-        let resmessage = JSON.parse(respoonse.body);
-        setAlarm([...alarm, resmessage.senderNickname]);
-      });
+      stomp.subscribe(
+        `/queue/alarm/` + userInfo.memberId,
+        function (respoonse) {
+          let resmessage = JSON.parse(respoonse.body);
+          setAlarm((alarm) => [...alarm, resmessage.senderNickname]);
+        }
+      );
     });
     return () => {
       stomp.disconnect(() => {});
     };
   }, []);
+
+  useEffect(() => {
+    const getMember = () => {
+      fetch("http://3.35.188.110:8080/member/me", {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: token,
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("로컬로그인정보 ", res);
+          setUserInfo({ ...res });
+        });
+    };
+    getMember();
+  }, [alarm]);
 
   const handleClick1 = (event) => {
     setAnchorEl1(anchorEl1 ? null : event.currentTarget);
@@ -176,6 +201,11 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
 
   const open2 = Boolean(anchorEl2);
   const id2 = open2 ? "simple-popper" : undefined;
+
+  const handleAlarmState = () => {
+    setAlarm([]);
+  };
+
   return (
     <>
       <StyledNav>
@@ -279,14 +309,17 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                             textDecoration: "none",
                           }}
                         >
-                          <p className="alert">
+                          <p className="alert" onClick={handleAlarmState}>
                             <Alert alarm={alarm}></Alert>
                           </p>
                         </Typography>
                       </Popover>
                     </div>
                     {/* 내그룹버튼 */}
+                    
+                   
                     <div className="group-img">
+                    <Link to = "/MyGroup">
                       <button
                         className="group-btn"
                         aria-describedby={id2}
@@ -298,35 +331,9 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                           src={require("../../../src/img/group.png")}
                         />
                       </button>
-                      <Popover
-                        id={id2}
-                        open={open2}
-                        anchorEl={anchorEl2}
-                        onClose={handleClose2}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left",
-                        }}
-                      >
-                        <Typography
-                          sx={{
-                            borderRadius: 7,
-                            p: 1,
-                            bgcolor: "background.paper",
-                          }}
-                        >
-                          <div>
-                            <Link to="/MyGroup">
-                              <ul>
-                                {userInfo.studyResponseDtos.map((el) => {
-                                  return <li key={el.studyId}>{el.title}</li>;
-                                })}
-                              </ul>
-                            </Link>
-                          </div>
-                        </Typography>
-                      </Popover>
+                      </Link>
                     </div>
+
 
                     <div className="my-info-btn">
                       <Link to="/MyPage">
