@@ -22,7 +22,7 @@ const MyPageStyled = styled.div`
     text-align: center;
     margin: 50px auto;
     border: 1px solid black;
-    border-radius: 50px;
+    border-radius: 10px;
     padding: 30px;
     width: 800px;
   }
@@ -330,9 +330,6 @@ const MyPage = () => {
                 ) : null}
               </div>
               <div className="mypage_button">
-                <div className="checknumber">
-                  <button>번호인증</button>
-                </div>
                 <div className="mypage_update">
                   <Button
                     onClick={() => handleEdit()}

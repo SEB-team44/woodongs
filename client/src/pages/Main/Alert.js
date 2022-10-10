@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useContext } from "react";
 import { UserInfo } from "../../UserContext";

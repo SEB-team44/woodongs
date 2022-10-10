@@ -8,44 +8,54 @@ import SockJS from "sockjs-client";
 import StompJs from "stompjs";
 import { useContext } from "react";
 import { UserInfo } from "../../UserContext";
+// background-color: #6A74CF;
 
 const MyGroupStyled = styled.div`
   .my-group-container {
     align-items: center;
-    margin: 50px auto;
+    margin-left: 50px;
+    margin-right: 50px;
     border: 1px solid black;
     border-radius: 20px;
-    padding: 30px;
-    width: 80%;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 90%;
     height: 100%;
     display: flex;
     background-color: #dedede;
+
     overflow: hidden;
   }
   .my-group__inner {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /* align-items: center;
-    text-align: center; */
     background-color: gray;
     margin-left: 20px;
     margin-right: 20px;
+    margin-top: 10px;
     width: 90%;
     height: 90vh;
-   
   }
-  .chat-message-box{
-     overflow: scroll;
+  .my-group__title {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    background-color: #dedede;
+  }
+  .chat-message-box {
+    overflow: scroll;
     border: black solid 1px;
-    width:100%;
+    width: 100%;
     height: 100%;
-    background-color: rgb(128,128,128);
-    &::-webkit-scrollbar{
+    background-color: rgb(128, 128, 128);
+    &::-webkit-scrollbar {
       border: solid black 1.5px;
       border-radius: 2px;
-      background-color: #C4D7E0;
-    } 
+      background-color: #dedede;
+    }
   }
   .chat-message {
     border: 1px solid black;
@@ -68,15 +78,30 @@ const MyGroupStyled = styled.div`
   .chat-group-name {
     text-align: center;
   }
-  .message-mine {
-    border: solid black 1px;
-    text-align: right;
-  }
-  .message-others {
-    border: solid red 1px;
-    text-align: left;
-  }
 
+  .message-others {
+    /* border: solid red 1px; */
+    display:flex;
+    flex-direction: row;
+    text-align: left;
+    color: white;
+    padding: 10px;
+  }
+  .chatInput {
+    width: 100%;
+  }
+  .message-nickname {
+    font-size: 20px;
+    margin-bottom: 7px;
+  }
+  .memberIng-box{
+    margin-right: 10px;
+  }
+  .memberImg {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+  }
 `;
 
 // 1. 다른 버튼으로 구독할 때, 이미 구독한것이 존재하면 그 구독을 끊고, 버튼 누른 것을 구독한다.
@@ -86,6 +111,7 @@ const MyGroup = () => {
   const { userInfo } = useContext(UserInfo);
   const token = localStorage.getItem("access_token");
   const chatInfo = userInfo.studyResponseDtos;
+  const [memberInfo, setmemberInfo] = useState([]);
   const [getStudyId, setGetstudyId] = useState(0);
 
   //채팅을 받기
@@ -96,6 +122,7 @@ const MyGroup = () => {
 
   let socketJs = new SockJS("http://3.35.188.110:8080/ws-stomp");
   const stomp = StompJs.over(socketJs);
+  const access_token = localStorage.getItem("access_token");
 
   // 모든 구독 취소하기
   const subscribeCancle = function () {
@@ -108,6 +135,19 @@ const MyGroup = () => {
   };
 
   const handleWebsocket = (studyId) => {
+    fetch("http://3.35.188.110:8080/study/" + `${studyId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => setmemberInfo([...res.memberResponseDtos]));
+
     // 같은 버튼을 클릭하지 않았을 때만 구독해줌.
     if (getStudyId !== studyId) {
       setGetchat([]);
@@ -174,63 +214,96 @@ const MyGroup = () => {
 
         <div className="my-group-container">
           <div className="sidebar_container">
-            {chatInfo.map((el) => {
-              return (
-                <>
-                  <div
-                    className="chat-groups"
-                    key={el.studyId}
-                    onClick={(e) => handleWebsocket(el.studyId)}
-                  >
-                    <div className="avatar">
-                      <FontAwesomeIcon icon={faUser} size="2x" />
+            {chatInfo &&
+              chatInfo.map((el) => {
+                return (
+                  <>
+                    <div
+                      className="chat-groups"
+                      key={el.studyId}
+                      onClick={(e) => handleWebsocket(el.studyId)}
+                    >
+                      <div className="avatar">
+                        <FontAwesomeIcon icon={faUser} size="2x" />
+                      </div>
+                      <div className="chat-group-name">
+                        {el.studyId}. {el.title}
+                      </div>
                     </div>
-                    <div className="chat-group-name">
-                      {el.studyId}. {el.title}
-                    </div>
-                  </div>
-                </>
-              );
-            })}
+                  </>
+                );
+              })}
           </div>
           <div className="my-group__inner">
-         
-              <div className="my-group__title">{getStudyId} : 번 채팅방 </div>
-              <div className="chat-message-box">
-                <div>
-                  {getChat.map((el) => {
+            <div className="my-group__title">{getStudyId}번 채팅방 </div>
+            <div className="chat-message-box">
+              <div>
+                {getChat &&
+                  getChat.map((el) => {
                     return (
                       <>
-                        <div
-                          key={el.senderId}
-                          className={
-                            el.senderId === userInfo.memberId
-                              ? "message-mine"
-                              : "message-others"
-                          }
-                        >
+                        <div key={el.senderId} className="message-others">
+                          <div className="memberIng-box">
+                            {memberInfo.map((element) => {
+                              if (element.memberId === el.senderId) {
+                                return (
+                                  <>
+                                    <img
+                                      className="memberImg"
+                                      src={element.profileImageUrl}
+                                    />
+                                  </>
+                                );
+                              }
+                            })}
+                          </div>
                           <div>
-                            {el.senderNickname}: {el.message}
+                            <div className="message-nickname">
+                              {el.senderNickname}
+                            </div>
+                            <div className="message-content">{el.message}</div>
                           </div>
                         </div>
                       </>
                     );
                   })}
-                </div>
               </div>
-            
-           
-              <div className="chatInput">
-                <textarea
-                  className="input"
-                  placeholder="내용을 입력하세요."
-                  onChange={(e) => handleChangeContent(e)}
-                  // onKeyPress={handleKeyPress}
-                  value={sendcontent}
-                />
-                <button onClick={(e) => handlePubChat(e)}>입력</button>
-              </div>
-           
+            </div>
+
+            <div className="chatInput">
+              {getStudyId === 0 ? (
+                <>
+                  <div>
+                    {" "}
+                    좌측 스터디 아이콘을 클릭하여 채팅방에 입장하세요.{" "}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <textarea
+                    className="input"
+                    placeholder="내용을 입력하세요."
+                    onChange={(e) => handleChangeContent(e)}
+                    // onKeyPress={handleKeyPress}
+                    value={sendcontent}
+                  />
+                  <button onClick={(e) => handlePubChat(e)}>입력</button>
+                </>
+              )}
+            </div>
+          </div>
+          <div>
+            {memberInfo &&
+              memberInfo.map((el) => {
+                return (
+                  <>
+                    <div>
+                      <img className="memberImg" src={el.profileImageUrl} />
+                    </div>
+                    <div>{el.nickName}</div>
+                  </>
+                );
+              })}
           </div>
         </div>
       </MyGroupStyled>

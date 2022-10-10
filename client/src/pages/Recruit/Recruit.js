@@ -28,7 +28,7 @@ const StyledRecruit = styled.section`
   }
   .recruit-main-container {
     border: solid black 1px;
-    border-radius: 50px;
+    border-radius: 2%;
     margin: 30px 300px;
     height: 100%;
     width: 1000px;
@@ -70,7 +70,7 @@ const StyledRecruit = styled.section`
   }
   .my-info {
     border: solid black 1px;
-    border-radius: 30px;
+    border-radius: 5%;
     background-color: #e6edfc;
     padding: 20px;
     flex-direction: row;
@@ -347,7 +347,6 @@ const Recruit = () => {
           })} */}
           <section className="recruit-main-container">
             <section className="recruit-title-box">
-              <button>스터디 네트워킹</button>
               <div className="recruit-title">
                 <h1>{card.title}</h1>
               </div>

@@ -104,6 +104,19 @@ const StyledNav = styled.div`
   .alert {
     height: 200px;
   }
+  .jb-text {
+    padding: 15px 20px;
+    background-color: white;
+    border: 0.05px solid black;
+    border-radius: 5px;
+    color: black;
+    position: absolute;
+    opacity: 0;
+    transition: all ease 0.5s;
+  }
+  .jb-title:hover + .jb-text {
+    opacity: 1;
+  }
 `;
 
 const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
@@ -115,7 +128,6 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const [searchOption, setSearchOption] = useState("제목");
   const token = localStorage.getItem("access_token");
   const [alarm, setAlarm] = useState([]);
-
 
   let socketJs = new SockJS("http://3.35.188.110:8080/ws-stomp");
   const stomp = StompJs.over(socketJs);
@@ -309,31 +321,44 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                             textDecoration: "none",
                           }}
                         >
-                          <p className="alert" onClick={handleAlarmState}>
-                            <Alert alarm={alarm}></Alert>
-                          </p>
+                          {alarm.length !== 0 ? (
+                            <p className="alert" onClick={handleAlarmState}>
+                              <Alert alarm={alarm}></Alert>
+                            </p>
+                          ) : (
+                            <p>스터디 신청이 없습니다.</p>
+                          )}
                         </Typography>
                       </Popover>
                     </div>
                     {/* 내그룹버튼 */}
-                    
-                   
+
                     <div className="group-img">
-                    <Link to = "/MyGroup">
-                      <button
-                        className="group-btn"
-                        aria-describedby={id2}
-                        type="button"
-                        onClick={handleClick2}
-                      >
+                      {userInfo.studyResponseDtos.length !== 0 ? (
+                        <Link to="/MyGroup">
+                          <button
+                            className="group-btn"
+                            aria-describedby={id2}
+                            type="button"
+                            onClick={handleClick2}
+                          >
+                            <img
+                              className="myinfo-img myinfo-group-img "
+                              src={require("../../../src/img/group.png")}
+                            />
+                            
+                          </button>
+                        </Link>
+                      ) : (
+                        <>
                         <img
-                          className="myinfo-img myinfo-group-img"
+                          className="myinfo-img myinfo-group-img jb-title"
                           src={require("../../../src/img/group.png")}
                         />
-                      </button>
-                      </Link>
+                        <div className = "jb-text" >스터디 참여시 활성화됩니다.</div>
+                        </>
+                      )}
                     </div>
-
 
                     <div className="my-info-btn">
                       <Link to="/MyPage">
