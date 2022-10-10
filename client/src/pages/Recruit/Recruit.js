@@ -278,10 +278,10 @@ const Recruit = () => {
     });
   };
 
-  //게시물 삭제 버튼 클릭 시, 들어온 id값에 맞는 부분 삭제 요청 보냄
-  const handleEditRecruit = (id) => {
-    fetch(`http://3.35.188.110:8080/study/${id}/comment`, {
-      method: "DELETE",
+  //게시물 수정 버튼 클릭 시, 들어온 id값에 맞는 부분 수정 요청 보냄
+  const handleEditRecruit = () => {
+    fetch(`http://3.35.188.110:8080/study/${id}`, {
+      method: "PATCH",
     });
     setgetconditions(!getconditions);
   };
@@ -379,7 +379,7 @@ const Recruit = () => {
                         </button>
                         <button
                           className="update-btn"
-                          onClick={() => handleEditRecruit()}
+                          // onClick={() => handleEditRecruit()}
                         >
                           <Link to="/study/EditRecruit">
                             <TiPencil />
