@@ -23,7 +23,7 @@ const StyledSingleBoard = styled.section`
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    border-radius: 50px;
+    border-radius: 20px;
     padding: 30px;
   }
   .singleboard-title {

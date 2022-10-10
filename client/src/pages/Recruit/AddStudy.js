@@ -13,7 +13,7 @@ const AddStudyStyled = styled.div`
     justify-content: center;
     margin: 50px auto;
     border: 1px solid black;
-    border-radius: 50px;
+    border-radius: 20px;
     padding: 30px;
     width: 800px;
   }
