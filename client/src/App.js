@@ -13,8 +13,6 @@ import FreeBoard from "./pages/FreeBoard/FreeBoard";
 import AddBoard from "./pages/FreeBoard/AddBoard";
 import SingleBoard from "./pages/FreeBoard/SingleBoard";
 import MyGroup from "./pages/Group/MyGroup";
-import ChatMessage from "./pages/Group/ChatMessage";
-import ChatSideBar from "./pages/Group/ChatSideBar";
 import { UserLogin } from "../src/UserContext";
 import { UserInfo } from "../src/UserContext";
 import Redirect from "./pages/oauth2/Redirect";
@@ -43,8 +41,6 @@ function App() {
               <Route path="/FreeBoard" element={<FreeBoard />} />
               <Route path="/AddBoard" element={<AddBoard />} />
               <Route path="/SingleBoard/:id" element={<SingleBoard />} />
-              <Route path="/ChatMessage" element={<ChatMessage />} />
-              <Route path="/ChatSideBar" element={<ChatSideBar />} />
               <Route path="/Redirect" element={<Redirect />} />
               <Route path="/Manage" element={<Manage/>}/>
             </Routes>

@@ -28,7 +28,7 @@ const StyledRecruit = styled.section`
   }
   .recruit-main-container {
     border: solid black 1px;
-    border-radius: 50px;
+    border-radius: 2%;
     margin: 30px 300px;
     height: 100%;
     width: 1000px;
@@ -70,7 +70,7 @@ const StyledRecruit = styled.section`
   }
   .my-info {
     border: solid black 1px;
-    border-radius: 30px;
+    border-radius: 5%;
     background-color: #e6edfc;
     padding: 20px;
     flex-direction: row;
@@ -278,17 +278,16 @@ const Recruit = () => {
     });
   };
 
-  //게시물 삭제 버튼 클릭 시, 들어온 id값에 맞는 부분 삭제 요청 보냄
-  const handleEditRecruit = (id) => {
-    fetch(`http://3.35.188.110:8080/study/${id}/comment`, {
-      method: "DELETE",
+  //게시물 수정 버튼 클릭 시, 들어온 id값에 맞는 부분 수정 요청 보냄
+  const handleEditRecruit = () => {
+    fetch(`http://3.35.188.110:8080/study/${id}`, {
+      method: "PATCH",
     });
     setgetconditions(!getconditions);
   };
 
   //신청하기 클릭시 동작하는 메서드
   const handleApplyStudy = (memberid, id) => {
-    const access_token = localStorage.getItem("access_token");
     // chatDto
     let msg = {
       senderId: Number(userInfo.memberId),
@@ -309,7 +308,7 @@ const Recruit = () => {
       .then(() => {
         stomp.send(
           //알람 전송
-          `/pub/alarm`,
+          `/app/alarm`,
           {},
           JSON.stringify(msg)
         );
@@ -348,7 +347,6 @@ const Recruit = () => {
           })} */}
           <section className="recruit-main-container">
             <section className="recruit-title-box">
-              <button>스터디 네트워킹</button>
               <div className="recruit-title">
                 <h1>{card.title}</h1>
               </div>
@@ -381,7 +379,7 @@ const Recruit = () => {
                         </button>
                         <button
                           className="update-btn"
-                          onClick={() => handleEditRecruit()}
+                          // onClick={() => handleEditRecruit()}
                         >
                           <Link to="/study/EditRecruit">
                             <TiPencil />

@@ -183,7 +183,7 @@ const FreeBoard = () => {
     if (cursor) {
       url = `http://3.35.188.110:8080/post?size=5&cursorId=${cursor}`;
     } else {
-      url = `http://3.35.188.110:8080/post?size=15`;
+      url = `http://3.35.188.110:8080/post?size=10&cursorId=500`;
     }
     if (!isAvailable) {
       return;
