@@ -139,7 +139,7 @@ const Notice = (props) => {
           <section className="location-container">
             <div className="location-box">
               <div className="now-location">
-                <p>현재 위치</p>
+                <p>탐색 위치</p>
               </div>
               {/* 전체 스터디 에서는 전국이 뜨게하고, 주변 스터디에서는 내위치가 뜨게 해야함. */}
               <div className="saved-location">

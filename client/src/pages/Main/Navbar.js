@@ -119,7 +119,7 @@ const StyledNav = styled.div`
   }
 `;
 
-const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
+const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender, setCursor }) => {
   const { userInfo, setUserInfo } = useContext(UserInfo); //로그인 한 사용자 정보
   const [anchorEl1, setAnchorEl1] = React.useState(null);
   const [anchorEl2, setAnchorEl2] = React.useState(null);
@@ -163,7 +163,8 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
         .then((res) => {
           console.log("로컬로그인정보 ", res);
           setUserInfo({ ...res });
-        });
+          return res 
+        })
     };
     getMember();
   }, [alarm]);
@@ -326,7 +327,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                               <Alert alarm={alarm}></Alert>
                             </p>
                           ) : (
-                            <p>스터디 신청이 없습니다.</p>
+                            <p>스터디 신청이 오지 않았습니다.</p>
                           )}
                         </Typography>
                       </Popover>
@@ -355,7 +356,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                           className="myinfo-img myinfo-group-img jb-title"
                           src={require("../../../src/img/group.png")}
                         />
-                        <div className = "jb-text" >스터디 참여시 활성화됩니다.</div>
+                        <div className = "jb-text" >스터디 생성 또는 참여시 활성화됩니다.</div>
                         </>
                       )}
                     </div>
