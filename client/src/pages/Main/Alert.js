@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
+import { useContext } from "react";
+import { UserInfo } from "../../UserContext";
 const StyledAlarm = styled.span`
-  .alarm-list{
-  }
-
-
 `;
 
 const Alarm = ({ alarm }) => {
+  const {userInfo} = useContext(UserInfo);
+
   return (
     <>
       <StyledAlarm>
