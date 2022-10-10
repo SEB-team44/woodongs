@@ -423,10 +423,18 @@ const Recruit = () => {
                         if (content.createdBy === el.memberId) {
                           return (
                             <>
-                              <img
-                                className="avatarimg"
-                                src={el.profileImageUrl}
-                              />
+                              {el.profileImageUrl ? (
+                                <img
+                                  className="avatarimg"
+                                  src={el.profileImageUrl}
+                                />
+                              ) : (
+                                <img
+                                  className="avatarImg"
+                                  src={require("../../../src/img/avatar.png")}
+                                />
+                              )}
+
                               {<h2 key={el.memberId}>{el.nickName}</h2>}
                             </>
                           );

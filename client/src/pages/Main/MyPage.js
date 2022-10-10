@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import Navbar from "./Navbar";
 import Button from "@mui/material/Button";
@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 // import { Avatar } from "antd";
 
-import { useState, useRef, useContext } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { UserInfo } from "../../UserContext";
 import LogOut from "../Member/Logout";
 
@@ -131,9 +131,7 @@ const MyPage = () => {
             });
         });
     };
-    // {job, career, introduction}
-    // const getMyPageInfo = async () => {};
-    // getMyPageInfo();
+
     getMemberInfo();
   }, [reRender]);
 
@@ -155,7 +153,6 @@ const MyPage = () => {
         ...changeInfo,
         nickName: e.target.value,
       });
-      console.log(changeInfo);
       return changeInfo;
     }
 
@@ -164,7 +161,6 @@ const MyPage = () => {
         ...changeInfo,
         job: e.target.value,
       });
-      console.log(changeInfo);
       return changeInfo;
     }
 
@@ -173,7 +169,6 @@ const MyPage = () => {
         ...changeInfo,
         career: e.target.value,
       });
-      console.log(changeInfo);
       return changeInfo;
     }
     if (e.target.className === "edit-introduction edit-infos") {
@@ -181,7 +176,6 @@ const MyPage = () => {
         ...changeInfo,
         introduction: e.target.value,
       });
-      console.log(changeInfo);
       return changeInfo;
     }
   };
@@ -247,7 +241,6 @@ const MyPage = () => {
   };
 
   const onImgChange = async (e) => {
-    console.log(e.target.files[0]);
     if (e.target.files[0]) {
       setFile({ ...e.target.files[0] });
     } else {
@@ -261,7 +254,6 @@ const MyPage = () => {
 
     const formData = new FormData();
     formData.append("images", e.target.files[0]);
-    console.log(e.target.files[0]);
     // 서버의 upload API 호출
     axios({
       // baseURL: "https://59.16.126.210:8080/member/imageupload",

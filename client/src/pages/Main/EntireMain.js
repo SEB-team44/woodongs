@@ -213,7 +213,7 @@ const EntireMain = () => {
                           {/* <Link to={"/study/" + `${el.id}`}>{el.title}</Link> */}
                           <Link to={"/study/" + `${el.studyId}`}>{`[${
                             el.city === "" ? "전국" : el.city
-                          }]${el.title}`}</Link>
+                          }]  ${el.title}`}</Link>
                         </header>
                         <a className="study-info">{el.content}</a>
                         <ol className="study-info tags">

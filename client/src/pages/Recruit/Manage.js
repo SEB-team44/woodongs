@@ -89,8 +89,8 @@ const Manage = ({ id }) => {
                   />{" "}
                   {el.memberResponseDto.nickName}
                 </div>
-                {/* {el.memberResponseDto.profile.job } */}
-                <div className="chart-element">직업 :</div>
+                {console.log(el)}
+                <div className="chart-element">직업 : </div>
                 {/* {el.memberResponseDto.profile.career } */}
                 <div className="chart-element">경력 :</div>
                 {/* {el.memberResponseDto.profile.introduction } */}

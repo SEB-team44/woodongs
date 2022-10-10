@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import Navbar from "../Main/Navbar";
 // import { useParams } from "react-router-dom";
@@ -34,6 +34,7 @@ const MyGroupStyled = styled.div`
     margin-left: 20px;
     margin-right: 20px;
     margin-top: 10px;
+    margin-bottom: 10px;
     width: 90%;
     height: 90vh;
   }
@@ -75,32 +76,52 @@ const MyGroupStyled = styled.div`
     text-align: center;
     margin-bottom: 20px;
   }
+  .chat-groups:hover{
+    border: 3px solid black;
+    transition: 0.3s;
+    font-weight: 700;
+  }
   .chat-group-name {
     text-align: center;
   }
 
   .message-others {
     /* border: solid red 1px; */
-    display:flex;
+    display: flex;
     flex-direction: row;
     text-align: left;
     color: white;
     padding: 10px;
   }
   .chatInput {
+    display: flex;
+    flex-direction: row;
     width: 100%;
   }
   .message-nickname {
     font-size: 20px;
     margin-bottom: 7px;
   }
-  .memberIng-box{
+  .memberIng-box {
     margin-right: 10px;
   }
   .memberImg {
     height: 50px;
     width: 50px;
     border-radius: 50%;
+  }
+  .init-input {
+    height: 600px;
+    font-size: 40px;
+    color: white;
+  }
+  .input {
+    width: 80%;
+    height: 100%;
+  }
+  .submit-btn {
+    width: 19%;
+    height: 100%;
   }
 `;
 
@@ -123,6 +144,8 @@ const MyGroup = () => {
   let socketJs = new SockJS("http://3.35.188.110:8080/ws-stomp");
   const stomp = StompJs.over(socketJs);
   const access_token = localStorage.getItem("access_token");
+
+  const messagesEndRef = useRef(null);
 
   // 모든 구독 취소하기
   const subscribeCancle = function () {
@@ -205,6 +228,14 @@ const MyGroup = () => {
     e.target.value = null;
   };
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest",
+    });
+  }, [getChat]);
+
   return (
     <>
       <MyGroupStyled>
@@ -226,8 +257,11 @@ const MyGroup = () => {
                       <div className="avatar">
                         <FontAwesomeIcon icon={faUser} size="2x" />
                       </div>
+                      <div className="chat-room-number">
+                        {el.studyId}번 채팅방 
+                      </div>
                       <div className="chat-group-name">
-                        {el.studyId}. {el.title}
+                        - {el.title} -
                       </div>
                     </div>
                   </>
@@ -245,13 +279,22 @@ const MyGroup = () => {
                         <div key={el.senderId} className="message-others">
                           <div className="memberIng-box">
                             {memberInfo.map((element) => {
+                              console.log(memberInfo);
                               if (element.memberId === el.senderId) {
                                 return (
                                   <>
-                                    <img
-                                      className="memberImg"
-                                      src={element.profileImageUrl}
-                                    />
+                                    {" "}
+                                    {element.profileImageUrl ? (
+                                      <img
+                                        className="memberImg"
+                                        src={element.profileImageUrl}
+                                      />
+                                    ) : (
+                                      <img
+                                        className="memberImg"
+                                        src={require("../../../src/img/avatar.png")}
+                                      />
+                                    )}
                                   </>
                                 );
                               }
@@ -263,6 +306,7 @@ const MyGroup = () => {
                             </div>
                             <div className="message-content">{el.message}</div>
                           </div>
+                          <div ref={messagesEndRef} />
                         </div>
                       </>
                     );
@@ -273,7 +317,7 @@ const MyGroup = () => {
             <div className="chatInput">
               {getStudyId === 0 ? (
                 <>
-                  <div>
+                  <div className="init-input">
                     {" "}
                     좌측 스터디 아이콘을 클릭하여 채팅방에 입장하세요.{" "}
                   </div>
@@ -287,7 +331,12 @@ const MyGroup = () => {
                     // onKeyPress={handleKeyPress}
                     value={sendcontent}
                   />
-                  <button onClick={(e) => handlePubChat(e)}>입력</button>
+                  <button
+                    className="submit-btn"
+                    onClick={(e) => handlePubChat(e)}
+                  >
+                    입력
+                  </button>
                 </>
               )}
             </div>
@@ -297,9 +346,17 @@ const MyGroup = () => {
               memberInfo.map((el) => {
                 return (
                   <>
-                    <div>
-                      <img className="memberImg" src={el.profileImageUrl} />
-                    </div>
+                    {" "}
+                    {!el.profileImageUrl ? (
+                      <img
+                        className="memberImg"
+                        src={require("../../../src/img/avatar.png")}
+                      />
+                    ) : (
+                      <div>
+                        <img className="memberImg" src={el.profileImageUrl} />
+                      </div>
+                    )}
                     <div>{el.nickName}</div>
                   </>
                 );
