@@ -68,18 +68,21 @@
 |<img src="https://img.shields.io/badge/JAVA-007396?style=for-the-badge&logo=java&logoColor=white">|<img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white">|<img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white">|<img src="https://img.shields.io/badge/SrpingSecurity-6DB33F?style=for-the-badge&logo=SpringSecurity&logoColor=white">|<img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">|
 |-----|-----|-----|-----|-----|
 
-#### CD/CI
-|![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)|![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white) | ![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white) | ![Apache Tomcat](https://img.shields.io/badge/apache%20tomcat-%23F8DC75.svg?style=for-the-badge&logo=apache-tomcat&logoColor=black) |
-|-----|-----|-----|-----|
+#### AWS/DEPLOYMENT
+|![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)|![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white) | ![Apache Tomcat](https://img.shields.io/badge/apache%20tomcat-%23F8DC75.svg?style=for-the-badge&logo=apache-tomcat&logoColor=black) |
+|-----|-----|-----|
 
 <br>
+## 6. INFRASTRUCTURE
 
-## 4. ERD 
+
+
+## 5. ERD 
 <img width="615" alt="스크린샷 2022-09-14 오후 6 20 07" src="https://github.com/codestates-seb/seb39_main_044/blob/BE/server/ERDv2.jpg">
 
 
 
-## 5. ACTION FLOW
+## 6. ACTION FLOW
 
 
 
