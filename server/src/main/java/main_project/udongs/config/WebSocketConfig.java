@@ -19,7 +19,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-//        registry.addEndpoint("/ws-stomp")
         registry.addEndpoint("/ws-stomp")
                 .setAllowedOriginPatterns("*")
                 .setHandshakeHandler(new CustomHandshakeHandler())
@@ -33,6 +32,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 //        registry.setApplicationDestinationPrefixes("/pub");
         registry.setApplicationDestinationPrefixes("/app");
     }
+
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {

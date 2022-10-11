@@ -101,7 +101,8 @@ public class PostController {
     @Operation(summary = "전체 게시글 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
     @GetMapping
-    public ResponseEntity getPosts(Long cursorId, Integer size, String titleKeyword, String cityKeyword, String bodyKeyword) {
+    public ResponseEntity getPosts(Long cursorId, Integer size, String titleKeyword, String bodyKeyword, String cityKeyword ) {
+
         log.debug("GET ALL POSTS");
 
         Pageable pageable = PageRequest.of(0,size, Sort.by("postId").descending());
@@ -109,7 +110,14 @@ public class PostController {
         Slice<Post> searchedPosts = postService.searchFunction(cursorId, pageable, titleKeyword, cityKeyword, bodyKeyword);
 
         List<Post> posts = searchedPosts.getContent();
-        Long lastIdx = posts.get(posts.size() - 1).getPostId();
+
+        Long lastIdx;
+        if (posts.size() >= 1) {
+            lastIdx = posts.get(posts.size() - 1).getPostId();
+        } else {
+            lastIdx = 0L;
+        }
+
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.postsToPostResponse(posts),searchedPosts, lastIdx), HttpStatus.OK);
     }
 

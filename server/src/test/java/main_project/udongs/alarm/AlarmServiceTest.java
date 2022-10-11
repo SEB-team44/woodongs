@@ -1,4 +1,3 @@
-/*
 package main_project.udongs.alarm;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -80,6 +79,7 @@ class AlarmServiceTest {
                 Arrays.asList(new WebSocketTransport(new StandardWebSocketClient()))));
     }
 
+
     @Test
     public void connectionFailedByInvalidateTokenTest() { // 유효하지않은 토큰 연결 테스트
 
@@ -93,7 +93,7 @@ class AlarmServiceTest {
             stompClient
                     .connect(getWsPath(), new WebSocketHttpHeaders() ,headers, new StompSessionHandlerAdapter() {})
                     .get(10, SECONDS);
-        }).isInstanceOf(ExecutionException.class);
+        }).isInstanceOf(RuntimeException.class);
     }
 
     @Test
@@ -139,5 +139,5 @@ class AlarmServiceTest {
     private String getWsPath() {
         return String.format("ws://localhost:%d/ws-stomp", port);
     }
+
 }
-*/
