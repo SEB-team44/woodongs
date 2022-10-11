@@ -7,7 +7,9 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
 import { useContext } from "react";
+import { IsChat } from "../../UserContext";
 import { UserInfo } from "../../UserContext";
+import Button from "@mui/material/Button";
 // background-color: #6A74CF;
 
 const MyGroupStyled = styled.div`
@@ -16,7 +18,7 @@ const MyGroupStyled = styled.div`
     margin-left: 50px;
     margin-right: 50px;
     border: 1px solid black;
-    border-radius: 20px;
+    border-radius: 5px;
     padding-left: 20px;
     padding-right: 20px;
     width: 90%;
@@ -27,10 +29,11 @@ const MyGroupStyled = styled.div`
     overflow: hidden;
   }
   .my-group__inner {
+    border: black solid 1px;
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: gray;
     margin-left: 20px;
     margin-right: 20px;
     margin-top: 10px;
@@ -44,18 +47,19 @@ const MyGroupStyled = styled.div`
     text-align: center;
     font-size: 30px;
     font-weight: 500;
-    background-color: #dedede;
+    background-color:  rgb(241,244,247);
   }
   .chat-message-box {
     overflow: scroll;
-    border: black solid 1px;
+
     width: 100%;
     height: 100%;
-    background-color: rgb(128, 128, 128);
+    background-color: rgb(241,244,247);
     &::-webkit-scrollbar {
-      border: solid black 1.5px;
+      border: solid black 1px;
+      border-right: 0px;
       border-radius: 2px;
-      background-color: #dedede;
+      background-color: rgb(241,244,247);
     }
   }
   .chat-message {
@@ -64,6 +68,7 @@ const MyGroupStyled = styled.div`
   .sidebar_container {
     flex-direction: column;
     align-items: left;
+ 
   }
 
   .avatar {
@@ -71,15 +76,19 @@ const MyGroupStyled = styled.div`
     padding: 20px;
   }
   .chat-groups {
-    border: 1px solid black;
+    background-color: rgb(153,183,223);
+    /* border: 1px solid black; */
     border-radius: 5%;
     text-align: center;
     margin-bottom: 20px;
+    padding: 10%;
+    color: rgb(255,255,255);
   }
   .chat-groups:hover {
     border: 3px solid black;
     transition: 0.3s;
     font-weight: 700;
+    color: black;
   }
   .chat-group-name {
     text-align: center;
@@ -87,16 +96,19 @@ const MyGroupStyled = styled.div`
 
   .message-others {
     /* border: solid red 1px; */
+    padding-left: 30px !important;
     display: flex;
     flex-direction: row;
     text-align: left;
-    color: white;
+    color: black;
     padding: 10px;
   }
   .chatInput {
     display: flex;
     flex-direction: row;
     width: 100%;
+    height: 20%;
+    background-color:rgb(241,244,247);
   }
   .message-nickname {
     font-size: 20px;
@@ -109,7 +121,7 @@ const MyGroupStyled = styled.div`
     height: 50px;
     width: 50px;
     border-radius: 50%;
-    margin-top: 20px;
+    margin-top: 0;
   }
   .init-input {
     height: 600px;
@@ -123,6 +135,7 @@ const MyGroupStyled = styled.div`
   .submit-btn {
     width: 19%;
     height: 100%;
+    /* color: white; */
   }
 `;
 
@@ -131,6 +144,7 @@ const MyGroupStyled = styled.div`
 
 const MyGroup = () => {
   const { userInfo } = useContext(UserInfo);
+  const {isChat, setIsChat} = useContext(IsChat);
   const token = localStorage.getItem("access_token");
   const header = {
     "Content-Type": "application/json",
@@ -148,6 +162,7 @@ const MyGroup = () => {
   const [sendcontent, setSendConetent] = useState("");
   const [subIdArr, setSubIdArr] = useState([]);
   const [validation, setValidation] = useState(false);
+ 
 
   let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
   const stomp = StompJs.over(socketJs);
@@ -162,7 +177,6 @@ const MyGroup = () => {
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log("res", res);
           setGetchat([...res, ...getChat])
         })
         .catch((error) => alert("채팅방을 클릭해주세요"));
@@ -227,8 +241,10 @@ const MyGroup = () => {
                 `/topic/chat/` + studyId,
                 function (respoonse) {
                   let res = JSON.parse(respoonse.body);
-                  console.log("resmessage: " + res);
-                  // chatData.push({ ...res });
+                  // 내가아닌 다른 사람에게 온 채팅은 알림 
+                  if(userInfo.memberId !== res.senderId){
+                    setIsChat(true);
+                  }
                   setGetchat((_chat_list) => [..._chat_list, res]);
                 }
               );
@@ -283,11 +299,12 @@ const MyGroup = () => {
     <>
       <MyGroupStyled>
         <section className="main-nav-container">
-          <Navbar />
+          <Navbar/>
         </section>
 
         <div className="my-group-container">
           <div className="sidebar_container">
+            {/* 채팅 그룹 출력  */}
             {chatInfo &&
               chatInfo.map((el) => {
                 return (
@@ -313,6 +330,7 @@ const MyGroup = () => {
             <div className="my-group__title">{getStudyId}번 채팅방 </div>
             <div className="chat-message-box">
               <div>
+                {/* 채팅 내용출력 */}
                 {getChat &&
                   getChat.map((el) => {
                     return (
@@ -320,7 +338,6 @@ const MyGroup = () => {
                         <div key={el.senderId} className="message-others">
                           <div className="memberIng-box">
                             {memberInfo.map((element) => {
-                              console.log(memberInfo);
                               if (element.memberId === el.senderId) {
                                 return (
                                   <>
@@ -338,7 +355,7 @@ const MyGroup = () => {
                                     )}
                                   </>
                                 );
-                              }
+                              } 
                             })}
                           </div>
                           <div>
@@ -372,12 +389,13 @@ const MyGroup = () => {
                     // onKeyPress={handleKeyPress}
                     value={sendcontent}
                   />
-                  <button
+                  <Button
                     className="submit-btn"
                     onClick={(e) => handlePubChat(e)}
+                    // variant="outlined"
                   >
                     입력
-                  </button>
+                  </Button>
                 </>
               ) : null}
             </div>
