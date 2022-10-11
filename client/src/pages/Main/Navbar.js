@@ -143,9 +143,15 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender}) => {
         }
       );
     });
+    console.log(stomp)
     return () => {
-      stomp.disconnect(() => {});
+      //연결되기 전에 닫히는 문제 해결 
+      if(stomp.ws.readyState === 1){
+        stomp.disconnect(() => {});
+      }
     };
+
+
   }, []);
 
   useEffect(() => {

@@ -286,6 +286,7 @@ const Recruit = () => {
   };
 
 
+
   //신청하기 클릭시 동작하는 메서드
   const handleApplyStudy = (memberid, id) => {
     // chatDto

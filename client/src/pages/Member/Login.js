@@ -50,7 +50,7 @@ function Copyright(props) {
 // localhost:3000
 // 3.35.188.110:8080
 const KAKAOPATH =
-  "https://api.woodongs.site/oauth2/authorization/kakao?redirect_uri=https://localhost:3000/Redirect";
+  "https://api.woodongs.site/oauth2/authorization/kakao?redirect_uri=https://www.woodongs.site/Redirect";
 
 const theme = createTheme();
 
