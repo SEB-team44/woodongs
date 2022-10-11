@@ -125,9 +125,9 @@ const EntireMain = () => {
 
     let url;
     if (cursor) {
-      url = `http://3.35.188.110:8080/study?size=5&cursorId=${cursor}`;
+      url = `https://api.woodongs.site/study?size=5&cursorId=${cursor}`;
     } else {
-      url = `http://3.35.188.110:8080/study?size=10`;
+      url = `https://api.woodongs.site/study?size=10`;
     }
     if (!isAvailable) {
       return;
@@ -193,7 +193,7 @@ const EntireMain = () => {
           <section className="main-cardlist-container">
             <main className="cardlists-box">
               {cardList &&
-                cardList.map((el, idx) => {
+                cardList.map((el) => {
                   return (
                     <Card
                       key={el.studyId}

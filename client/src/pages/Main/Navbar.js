@@ -119,7 +119,7 @@ const StyledNav = styled.div`
   }
 `;
 
-const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender, setCursor }) => {
+const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender}) => {
   const { userInfo, setUserInfo } = useContext(UserInfo); //로그인 한 사용자 정보
   const [anchorEl1, setAnchorEl1] = React.useState(null);
   const [anchorEl2, setAnchorEl2] = React.useState(null);
@@ -129,7 +129,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender, setCur
   const token = localStorage.getItem("access_token");
   const [alarm, setAlarm] = useState([]);
 
-  let socketJs = new SockJS("http://3.35.188.110:8080/ws-stomp");
+  let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
   const stomp = StompJs.over(socketJs);
 
   useEffect(() => {
@@ -150,7 +150,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender, setCur
 
   useEffect(() => {
     const getMember = () => {
-      fetch("http://3.35.188.110:8080/member/me", {
+      fetch("https://api.woodongs.site/member/me", {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",

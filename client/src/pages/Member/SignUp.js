@@ -68,7 +68,7 @@ export default function SignUp() {
     };
     // 'http://14.6.86.98:8080/member/signup' 지훈님
     // `http://59.16.126.210:8080/member/signup?ipAddress=${myip}` 대한님
-    fetch('http://3.35.188.110:8080/member/signup', reqPost)
+    fetch('https://api.woodongs.site/member/signup', reqPost)
     .then((response) => response.json())
     .then((response) => {
       alert("회원가입 성공")
