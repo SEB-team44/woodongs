@@ -140,7 +140,7 @@ const Main = () => {
       };
       if (getlat) {
         fetch(
-          `http://3.35.188.110:8080/study/around?size=10&cursorId=100`,
+          `https://api.woodongs.site/study/around?size=10&cursorId=100`,
           reqOption
         )
           .then((res) => {
@@ -154,7 +154,7 @@ const Main = () => {
           .then((data) => setCardList(data.data))
           .catch((error) => console.log(error));
 
-        // fetch("http://3.35.188.110:8080/study/recruit/dummy", {
+        // fetch("https://api.woodongs.site/study/recruit/dummy", {
         //   method : "POST",
         //   headers : header,
         //   body: JSON.stringify({
@@ -168,7 +168,7 @@ const Main = () => {
         //   })
         //   .catch((error) => console.log("error",error))
       } else {
-        fetch(`http://3.35.188.110:8080/study?size=10&cursorId=100`, reqOption)
+        fetch(`https://api.woodongs.site/study?size=10&cursorId=100`, reqOption)
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
@@ -194,9 +194,9 @@ const Main = () => {
 
     let url;
     if (cursor) {
-      url = `http://3.35.188.110:8080/study?size=5&cursorId=${cursor}`;
+      url = `https://api.woodongs.site/study?size=5&cursorId=${cursor}`;
     } else {
-      url = `http://3.35.188.110:8080/study?size=10`;
+      url = `https://api.woodongs.site/study?size=10`;
     }
     if (!isAvailable) {
       return;

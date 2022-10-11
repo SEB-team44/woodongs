@@ -109,6 +109,7 @@ const MyGroupStyled = styled.div`
     height: 50px;
     width: 50px;
     border-radius: 50%;
+    margin-top: 20px;
   }
   .init-input {
     height: 600px;
@@ -141,7 +142,7 @@ const MyGroup = () => {
   const [subIdArr, setSubIdArr] = useState([]);
   var stomp1 = null;
 
-  let socketJs = new SockJS("http://3.35.188.110:8080/ws-stomp");
+  let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
   const stomp = StompJs.over(socketJs);
   const access_token = localStorage.getItem("access_token");
 
@@ -158,7 +159,7 @@ const MyGroup = () => {
   };
 
   const handleWebsocket = (studyId) => {
-    fetch("http://3.35.188.110:8080/study/" + `${studyId}`, {
+    fetch("https://api.woodongs.site/study/" + `${studyId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -174,7 +175,7 @@ const MyGroup = () => {
     // 같은 버튼을 클릭하지 않았을 때만 구독해줌.
     if (getStudyId !== studyId) {
       setGetchat([]);
-      let socketJs = new SockJS("http://3.35.188.110:8080/ws-stomp");
+      let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
       const stomp = StompJs.over(socketJs);
 
       stomp1 = stomp.connect({ token: token }, (frame) => {
@@ -341,6 +342,7 @@ const MyGroup = () => {
               )}
             </div>
           </div>
+         
           <div>
             {memberInfo &&
               memberInfo.map((el) => {

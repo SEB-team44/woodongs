@@ -104,7 +104,7 @@ const MyPage = () => {
   useEffect(() => {
     const getMemberInfo = async () => {
       // {이름 , 인덱스, 소속된 스터디, 프로필{job, career, introduction}, 등급 }
-      fetch("http://3.35.188.110:8080/member/me", {
+      fetch("https://api.woodongs.site/member/me", {
         headers: header,
       })
         .then((res) => res.json())
@@ -118,7 +118,7 @@ const MyPage = () => {
           });
         })
         .then(() => {
-          fetch("http://3.35.188.110:8080/member/profile", {
+          fetch("https://api.woodongs.site/member/profile", {
             headers: header,
           })
             .then((res) => res.json())
@@ -182,7 +182,7 @@ const MyPage = () => {
 
   const handleDoneEdit = () => {
     const PatchNickName = async () => {
-      fetch("http://3.35.188.110:8080/member", {
+      fetch("https://api.woodongs.site/member", {
         method: "PATCH",
         headers: header,
         body: JSON.stringify({
@@ -199,7 +199,7 @@ const MyPage = () => {
           console.log(res);
         })
         .then(() => {
-          fetch("http://3.35.188.110:8080/member/profile", {
+          fetch("https://api.woodongs.site/member/profile", {
             method: "PATCH",
             headers: header,
             body: JSON.stringify({
@@ -257,7 +257,7 @@ const MyPage = () => {
     // 서버의 upload API 호출
     axios({
       // baseURL: "https://59.16.126.210:8080/member/imageupload",
-      url: "http://3.35.188.110:8080/member/imageupload",
+      url: "https://api.woodongs.site/member/imageupload",
       method: "POST",
       data: formData,
       headers: {
@@ -375,8 +375,8 @@ const MyPage = () => {
                     ></textarea>
                   </div>
                   <div>
-                    <button onClick={() => handleDoneEdit()}>완료</button>
-                    <button onClick={() => handleCancelEdit()}>취소</button>
+                    <Button onClick={() => handleDoneEdit()}>완료</Button>
+                    <Button onClick={() => handleCancelEdit()}>취소</Button>
                   </div>
                 </div>
               ) : (
