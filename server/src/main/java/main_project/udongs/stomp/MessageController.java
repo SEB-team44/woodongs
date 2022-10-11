@@ -36,6 +36,7 @@ public class MessageController {
         messagingTemplate.convertAndSend("/topic/chat/"+chatDto.getReceiverId(), chatDto);
     }
 
+
 //     이거는 그냥 혼자 해봤습니다
     @MessageMapping("/chat/message")
     public void enter(ChatMessage message) {

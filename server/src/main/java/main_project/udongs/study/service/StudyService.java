@@ -169,7 +169,7 @@ public class StudyService {
             searchedPosts = studyRepository.findByStudyIdLessThanAndTitleContaining(id, titleKeyword, pageable);
         } else if (titleKeyword == null && cityKeyword != null && categoryKeyword == null) { //도시이름으로만 검색
             searchedPosts = studyRepository.findByStudyIdLessThanAndCityContaining(id, cityKeyword, pageable);
-        } else if (titleKeyword == null && cityKeyword == null && categoryKeyword != null) { //본문으로만 검색
+        } else if (titleKeyword == null && cityKeyword == null && categoryKeyword != null) { //카테고리로만 검색
             searchedPosts = studyRepository.findByStudyIdLessThanAndCategoryContaining(id, categoryKeyword, pageable);
         }
 
@@ -196,8 +196,8 @@ public class StudyService {
                 .filter(study -> {
                     Double lat = study.getLatitude();
                     Double lon = study.getLongitude();
-                    double dist = distance.calculateDistance(nowLat, nowLon, lat, lon, "meter");
-                    return dist < 3000;
+                    double dist = distance.calculateDistance(nowLat, nowLon, lat, lon, "kilometer");
+                    return dist < 6000;
                 }).limit(pageable.getPageSize()).collect(Collectors.toList());
 
         Long lastIdx;

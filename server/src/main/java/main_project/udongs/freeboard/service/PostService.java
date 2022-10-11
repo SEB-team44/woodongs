@@ -59,7 +59,6 @@ public class PostService {
     }
 
 
-
     //게시글 삭제
     @Transactional
     public void deletePost(Post post) {
