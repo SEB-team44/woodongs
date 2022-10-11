@@ -221,7 +221,7 @@ const EntireMain = () => {
                         </ol>
                       </CardContent>
                       <div className="count">
-                        <a>모집완료 0/{el.headCount}</a>
+                        <a>모집완료 {el.nowHeadCount}/{el.headCount}</a>
                       </div>
                       {/* </article> */}
                     </Card>
