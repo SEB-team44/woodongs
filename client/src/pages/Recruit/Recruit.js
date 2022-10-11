@@ -140,6 +140,7 @@ const Recruit = () => {
   const [data, setData] = useState({});
   const [content, setContent] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  
 
   // const access_token =
   const header = {
@@ -377,7 +378,7 @@ const Recruit = () => {
                       </div>
                       <h2>✔️ 모집현황</h2>
                       <p>
-                        {card.category} 0/{card.headCount}
+                        {card.category} {card.nowHeadCount}/{card.headCount}
                       </p>
                     </article>
                     <article>
