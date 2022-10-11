@@ -76,7 +76,7 @@ const MyGroupStyled = styled.div`
     text-align: center;
     margin-bottom: 20px;
   }
-  .chat-groups:hover{
+  .chat-groups:hover {
     border: 3px solid black;
     transition: 0.3s;
     font-weight: 700;
@@ -126,12 +126,19 @@ const MyGroupStyled = styled.div`
   }
 `;
 
-// 1. 다른 버튼으로 구독할 때, 이미 구독한것이 존재하면 그 구독을 끊고, 버튼 누른 것을 구독한다.
-// 2. 동일한 버튼을 2번 이상 연속으로 누르면, 한번만 눌리게 된다.
+// 1. 다른 버튼으로 구독할 때, 이미 구독한것이 존재하면 그 구독을 끊고, 버튼 누른 것을 구독한다. () 
+// 2. 동일한 버튼을 2번 이상 연속으로 누르면, 한번만 눌리게 된다. (v)
 
 const MyGroup = () => {
   const { userInfo } = useContext(UserInfo);
   const token = localStorage.getItem("access_token");
+  const header = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    withCredentials: true,
+    "Access-Control-Allow-Origin": "*",
+    Authorization: token,
+  }
   const chatInfo = userInfo.studyResponseDtos;
   const [memberInfo, setmemberInfo] = useState([]);
   const [getStudyId, setGetstudyId] = useState(0);
@@ -140,66 +147,83 @@ const MyGroup = () => {
   const [getChat, setGetchat] = useState([]);
   const [sendcontent, setSendConetent] = useState("");
   const [subIdArr, setSubIdArr] = useState([]);
-  var stomp1 = null;
+  const [validation, setValidation] = useState(false);
 
   let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
   const stomp = StompJs.over(socketJs);
-  const access_token = localStorage.getItem("access_token");
-
   const messagesEndRef = useRef(null);
 
-  // 모든 구독 취소하기
-  const subscribeCancle = function () {
-    const length = subIdArr.length;
-    for (let i = 0; i < length; i++) {
-      const sid = subIdArr.pop();
-      stomp.unsubscribe(sid.id);
-      console.log("============unsubscribeed==========");
-    }
-  };
+  var subscribeId = null;
 
+  // 모든 구독 취소하기
+  // const subscribeCancle = function () {
+  //   const length = subIdArr.length;
+  //   for (let i = 0; i < length; i++) {
+  //     const sid = subIdArr.pop();
+  //     stomp.unsubscribe(sid.id);
+  //     console.log("============unsubscribeed==========");
+  //   }
+  //   stomp.disconnect(() => {});
+  // };
+
+
+  // 채팅방 클릭시 핸들링
   const handleWebsocket = (studyId) => {
     fetch("https://api.woodongs.site/study/" + `${studyId}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
-        Authorization: access_token,
-      },
+      headers: header
     })
       .then((res) => res.json())
-      .then((res) => setmemberInfo([...res.memberResponseDtos]));
+      .then((res) => setmemberInfo([...res.memberResponseDtos]))
+      // .then(() => {
+      //   if(stomp) {
+      //     subscribeCancle();
+      //   }
+      // })
+      .then(() => {
+        setValidation(false)
+        // 같은 버튼을 클릭하지 않았을 때만 구독해줌.
+        if (getStudyId !== studyId) {
+          setGetchat([]);
+          let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
+          const stomp = StompJs.over(socketJs);
 
-    // 같은 버튼을 클릭하지 않았을 때만 구독해줌.
-    if (getStudyId !== studyId) {
-      setGetchat([]);
-      let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
-      const stomp = StompJs.over(socketJs);
+          // stomp.subscriptions = {};
+          stomp.connect({ token: token }, (frame) => {
+            console.log("connecteed" + frame);
+            console.log("subArr", subIdArr);
+            console.log(stomp);
 
-      stomp1 = stomp.connect({ token: token }, (frame) => {
-        console.log("connecteed" + frame);
-        console.log("subArr", subIdArr);
+            if (stomp.ws.readyState === 1) {
+              setTimeout(() => {
+                setValidation(true);
+              }, 1000);
+ 
+              if (subscribeId !== null) {
+                subscribeId.unsubscribe();
+              }
 
-        //존재하는 모든 구독을 끊어줌
-        subscribeCancle();
+              subscribeId = stomp.subscribe(
+                `/topic/chat/` + studyId,
+                function (respoonse) {
+                  let res = JSON.parse(respoonse.body);
+                  console.log("resmessage: " + res);
+                  // chatData.push({ ...res });
+                  setGetchat((_chat_list) => [..._chat_list, res]);
+                }
+              );
 
-        const subscribeId = stomp.subscribe(
-          `/topic/chat/` + studyId,
-          function (respoonse) {
-            let res = JSON.parse(respoonse.body);
-            console.log("resmessage: " + res);
-            // chatData.push({ ...res });
-            setGetchat((_chat_list) => [..._chat_list, res]);
-          }
-        );
-        setSubIdArr((subIdArr) => {
-          return [...subIdArr, { ...subscribeId }];
-        });
-        console.log(subscribeId);
-      });
-    }
+              setSubIdArr((subIdArr) => {
+                return [...subIdArr, { ...subscribeId }];
+              });
+            }
+          });
+        }
+      })
+
+      .then(() => {})
+      .catch((error) => alert(error));
+
     setGetstudyId(studyId);
   };
 
@@ -259,11 +283,9 @@ const MyGroup = () => {
                         <FontAwesomeIcon icon={faUser} size="2x" />
                       </div>
                       <div className="chat-room-number">
-                        {el.studyId}번 채팅방 
+                        {el.studyId}번 채팅방
                       </div>
-                      <div className="chat-group-name">
-                        - {el.title} -
-                      </div>
+                      <div className="chat-group-name">- {el.title} -</div>
                     </div>
                   </>
                 );
@@ -323,7 +345,7 @@ const MyGroup = () => {
                     좌측 스터디 아이콘을 클릭하여 채팅방에 입장하세요.{" "}
                   </div>
                 </>
-              ) : (
+              ) : validation ? (
                 <>
                   <textarea
                     className="input"
@@ -339,10 +361,10 @@ const MyGroup = () => {
                     입력
                   </button>
                 </>
-              )}
+              ) : null}
             </div>
           </div>
-         
+
           <div>
             {memberInfo &&
               memberInfo.map((el) => {
