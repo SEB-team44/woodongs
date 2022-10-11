@@ -8,6 +8,7 @@ import Input from "@mui/material/Input";
 import { UserLogin } from "../../UserContext";
 import { useContext, useState } from "react";
 import { UserInfo } from "../../UserContext";
+import { IsChat } from "../../UserContext";
 import Alert from "../Main/Alert";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
@@ -121,6 +122,7 @@ const StyledNav = styled.div`
 
 const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const { userInfo, setUserInfo } = useContext(UserInfo); //로그인 한 사용자 정보
+  const { isChat, setIsChat } = useContext(IsChat);
   const [anchorEl1, setAnchorEl1] = React.useState(null);
   const [anchorEl2, setAnchorEl2] = React.useState(null);
   const [searchInput, setSearchInput] = useState("");
@@ -222,6 +224,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const id2 = open2 ? "simple-popper" : undefined;
 
   const handleAlarmState = () => {
+    setIsChat(false);
     setAlarm([]);
   };
 
@@ -298,7 +301,31 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                         type="button"
                         onClick={handleClick1}
                       >
+                  
                         {alarm.length === 0 ? (
+                          !isChat ? (
+                            <img
+                              className="myinfo-img myinfo-ball-img"
+                              src={require("../../../src/img/ball.png")}
+                            />
+                          ) : (
+                            <img
+                              className="myinfo-img myinfo-ball-img"
+                              src={require("../../../src/img/bellring.png")}
+                            />
+                          )
+                        ) : isChat ? (
+                          <img
+                            className="myinfo-img myinfo-ball-img"
+                            src={require("../../../src/img/bellring.png")}
+                          />
+                        ) : (
+                          <img
+                            className="myinfo-img myinfo-ball-img"
+                            src={require("../../../src/img/ball.png")}
+                          />
+                        )}
+                        {/* {alarm.length === 0 || !isChat ? (
                           <img
                             className="myinfo-img myinfo-ball-img"
                             src={require("../../../src/img/ball.png")}
@@ -308,7 +335,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                             className="myinfo-img myinfo-ball-img"
                             src={require("../../../src/img/bellring.png")}
                           />
-                        )}
+                        )} */}
                       </button>
                       <Popover
                         id={id1}
@@ -328,8 +355,19 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                             textDecoration: "none",
                           }}
                         >
+                          {isChat ? (
+                            <p
+                              className="alert"
+                              onClick={() => handleAlarmState()}
+                            >
+                              채팅이 도착했습니다.
+                            </p>
+                          ) : null}
                           {alarm.length !== 0 ? (
-                            <p className="alert" onClick={handleAlarmState}>
+                            <p
+                              className="alert"
+                              onClick={() => handleAlarmState()}
+                            >
                               <Alert alarm={alarm}></Alert>
                             </p>
                           ) : (
@@ -353,18 +391,18 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                               horizontal: "left",
                             }}
                           > */}
-                            <button
-                              className="group-btn"
-                              aria-describedby={id2}
-                              type="button"
-                              onClick={handleClick2}
-                            >
-                              <img
-                                className="myinfo-img myinfo-group-img "
-                                src={require("../../../src/img/group.png")}
-                              />
-                            </button>{" "}
-                            {/* <Typography
+                          <button
+                            className="group-btn"
+                            aria-describedby={id2}
+                            type="button"
+                            onClick={handleClick2}
+                          >
+                            <img
+                              className="myinfo-img myinfo-group-img "
+                              src={require("../../../src/img/group.png")}
+                            />
+                          </button>{" "}
+                          {/* <Typography
                               sx={{
                                 borderRadius: 7,
                                 p: 1,
