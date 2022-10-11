@@ -14,5 +14,4 @@ public class ChatDto implements Serializable {
     private String senderNickname;
     private Long receiverId;
     private String message;
-
 }

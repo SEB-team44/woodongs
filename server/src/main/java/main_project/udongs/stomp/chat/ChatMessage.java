@@ -1,24 +1,34 @@
 package main_project.udongs.stomp.chat;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import main_project.udongs.member.entity.Member;
+
+import javax.persistence.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Entity
 public class ChatMessage {
-    public enum MessageType {
-        ENTER, TALK
-    }
 
-    private MessageType type;
-    //채팅방 ID
-    private String roomId;
-    //보내는 사람
-    private String sender;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long chatMessageId;
+
+    @ManyToOne
+    @JoinColumn(name = "chatRoomId")
+    private ChatRoom chatRoom;
+
+//    보내는 사람
+    @ManyToOne
+    @JoinColumn(name = "senderId")
+    private Member sender;
+
+
     //내용
+    @Column
     private String message;
+
 }
