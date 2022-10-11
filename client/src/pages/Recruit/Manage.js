@@ -90,12 +90,18 @@ const Manage = ({ id }) => {
                   {el.memberResponseDto.nickName}
                 </div>
                 {console.log(el)}
-                <div className="chart-element">직업 : </div>
-                {/* {el.memberResponseDto.profile.career } */}
-                <div className="chart-element">경력 :</div>
-                {/* {el.memberResponseDto.profile.introduction } */}
-                <div className="chart-element">소개 : </div>
-                <div className="chart-element">상태 : {el.state}</div>
+                <div className="chart-element">
+                  직업 <p>{el.memberResponseDto.profile.job}</p>
+                </div>
+                <div className="chart-element">
+                  경력 <p>{el.memberResponseDto.profile.career}</p>
+                </div>
+                <div className="chart-element">
+                  소개 <p>{el.memberResponseDto.profile.introduction}</p>
+                </div>
+                <div className="chart-element">
+                  상태 <p>{el.state}</p>
+                </div>
 
                 {el.state === "WAITING" ? (
                   <>
