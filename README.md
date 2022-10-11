@@ -29,8 +29,9 @@
 1. [개발 일정](#개발-일정)
 2. [프로젝트 팀원](#프로젝트-팀원)
 3. [사용 기술 스택](#사용-기술-스택)
-4. [ERD](#ERD)
-5. [ACTION FLOW](#ACTION-FLOW)
+4. [INFRA](#INFRASTRUCTURE)
+5. [ERD](#ERD)
+6. [ACTION FLOW](#ACTION-FLOW)
 
 <br>
 
