@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.webjars.bower:vue:2.5.16">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bower/vue/2.5.16/6245023995672d4b22e92ee945f6ea7081ab9870/vue-2.5.16.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bower/vue/2.5.16/b04f3ee8f5e43fa3b162981b50bb72fe1acabb33/vue-2.5.16-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -14,6 +14,8 @@ import main_project.udongs.globaldto.MultiResponseDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.service.MemberService;
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
+import main_project.udongs.stomp.chat.ChatRoom;
+import main_project.udongs.stomp.chat.ChatRoomRepository;
 import main_project.udongs.study.dto.SingleResponseStudyDto;
 import main_project.udongs.study.dto.StudyCommentDto;
 import main_project.udongs.study.dto.StudyDto;
@@ -48,6 +50,7 @@ public class StudyController {
     private final MemberService memberService;
     private final StudyRepository studyRepository;
     private final StudySearchService studySearchService;
+    private final ChatRoomRepository chatRoomRepository;
 
     @Operation(summary = "스터디 모집 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "CREATED", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
@@ -68,6 +71,8 @@ public class StudyController {
 
         Study study = mapper.studyPostToStudy(requestBody);
         Study savedStudy = studyService.createStudy(study, member);
+        chatRoomRepository.save(new ChatRoom());
+
         StudyDto.Response response = mapper.studyToStudyResponse(savedStudy);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);

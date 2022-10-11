@@ -13,6 +13,8 @@ public enum ExceptionCode {
         STUDY_NOT_FOUND(404, "Study not found"),
         POST_NOT_FOUND(404, "Post not found"),
         COMMENT_NOT_FOUND(404, "Comment not found"),
+        CHAT_MESSAGE_NOT_FOUND(404, "ChatMessage not found"),
+        CHATROOM_NOT_FOUND(404, "ChatRoom not found"),
         STUDY_EXISTS(409, "Study already exists"),
         APPLICATION_EXIST(409, "Application already exists"),
         STUDY_BE_FULL(409, "Study Members are already full"),
