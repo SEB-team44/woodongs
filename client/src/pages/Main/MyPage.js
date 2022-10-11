@@ -23,6 +23,7 @@ const MyPageStyled = styled.div`
     margin: 50px auto;
     border: 1px solid black;
     border-radius: 10px;
+    background-color: rgb(241,244,247);
     padding: 30px;
     width: 800px;
   }
