@@ -31,7 +31,7 @@ const Manage = ({ id }) => {
 
   useEffect(() => {
     const getApplied = () => {
-      fetch(`http://3.35.188.110:8080/study/${id}/admin`, {
+      fetch(`https://api.woodongs.site/study/${id}/admin`, {
         method: "GET",
         headers: header,
       })
@@ -46,7 +46,7 @@ const Manage = ({ id }) => {
   }, []);
   const handleApplyAccept = (e, id) => {
     if (applyInfo)
-      fetch(`http://3.35.188.110:8080/study/${id}/accept`, {
+      fetch(`https://api.woodongs.site/study/${id}/accept`, {
         method: "POST",
         headers: header,
       }).then((res) => {
@@ -61,7 +61,7 @@ const Manage = ({ id }) => {
   };
 
   const handleApplyReject = (e, id) => {
-    fetch(`http://3.35.188.110:8080/study/${id}/refuse`, {
+    fetch(`https://api.woodongs.site/study/${id}/refuse`, {
       method: "POST",
       headers: header,
     }).then((res) => {
@@ -89,8 +89,8 @@ const Manage = ({ id }) => {
                   />{" "}
                   {el.memberResponseDto.nickName}
                 </div>
-                {/* {el.memberResponseDto.profile.job } */}
-                <div className="chart-element">직업 :</div>
+                {console.log(el)}
+                <div className="chart-element">직업 : </div>
                 {/* {el.memberResponseDto.profile.career } */}
                 <div className="chart-element">경력 :</div>
                 {/* {el.memberResponseDto.profile.introduction } */}

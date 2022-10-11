@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import Navbar from "./Navbar";
 import Button from "@mui/material/Button";
@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 // import { Avatar } from "antd";
 
-import { useState, useRef, useContext } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { UserInfo } from "../../UserContext";
 import LogOut from "../Member/Logout";
 
@@ -104,7 +104,7 @@ const MyPage = () => {
   useEffect(() => {
     const getMemberInfo = async () => {
       // {이름 , 인덱스, 소속된 스터디, 프로필{job, career, introduction}, 등급 }
-      fetch("http://3.35.188.110:8080/member/me", {
+      fetch("https://api.woodongs.site/member/me", {
         headers: header,
       })
         .then((res) => res.json())
@@ -118,7 +118,7 @@ const MyPage = () => {
           });
         })
         .then(() => {
-          fetch("http://3.35.188.110:8080/member/profile", {
+          fetch("https://api.woodongs.site/member/profile", {
             headers: header,
           })
             .then((res) => res.json())
@@ -131,9 +131,7 @@ const MyPage = () => {
             });
         });
     };
-    // {job, career, introduction}
-    // const getMyPageInfo = async () => {};
-    // getMyPageInfo();
+
     getMemberInfo();
   }, [reRender]);
 
@@ -155,7 +153,6 @@ const MyPage = () => {
         ...changeInfo,
         nickName: e.target.value,
       });
-      console.log(changeInfo);
       return changeInfo;
     }
 
@@ -164,7 +161,6 @@ const MyPage = () => {
         ...changeInfo,
         job: e.target.value,
       });
-      console.log(changeInfo);
       return changeInfo;
     }
 
@@ -173,7 +169,6 @@ const MyPage = () => {
         ...changeInfo,
         career: e.target.value,
       });
-      console.log(changeInfo);
       return changeInfo;
     }
     if (e.target.className === "edit-introduction edit-infos") {
@@ -181,14 +176,13 @@ const MyPage = () => {
         ...changeInfo,
         introduction: e.target.value,
       });
-      console.log(changeInfo);
       return changeInfo;
     }
   };
 
   const handleDoneEdit = () => {
     const PatchNickName = async () => {
-      fetch("http://3.35.188.110:8080/member", {
+      fetch("https://api.woodongs.site/member", {
         method: "PATCH",
         headers: header,
         body: JSON.stringify({
@@ -205,7 +199,7 @@ const MyPage = () => {
           console.log(res);
         })
         .then(() => {
-          fetch("http://3.35.188.110:8080/member/profile", {
+          fetch("https://api.woodongs.site/member/profile", {
             method: "PATCH",
             headers: header,
             body: JSON.stringify({
@@ -247,7 +241,6 @@ const MyPage = () => {
   };
 
   const onImgChange = async (e) => {
-    console.log(e.target.files[0]);
     if (e.target.files[0]) {
       setFile({ ...e.target.files[0] });
     } else {
@@ -261,11 +254,10 @@ const MyPage = () => {
 
     const formData = new FormData();
     formData.append("images", e.target.files[0]);
-    console.log(e.target.files[0]);
     // 서버의 upload API 호출
     axios({
       // baseURL: "https://59.16.126.210:8080/member/imageupload",
-      url: "http://3.35.188.110:8080/member/imageupload",
+      url: "https://api.woodongs.site/member/imageupload",
       method: "POST",
       data: formData,
       headers: {
@@ -383,8 +375,8 @@ const MyPage = () => {
                     ></textarea>
                   </div>
                   <div>
-                    <button onClick={() => handleDoneEdit()}>완료</button>
-                    <button onClick={() => handleCancelEdit()}>취소</button>
+                    <Button onClick={() => handleDoneEdit()}>완료</Button>
+                    <Button onClick={() => handleCancelEdit()}>취소</Button>
                   </div>
                 </div>
               ) : (

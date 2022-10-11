@@ -81,8 +81,8 @@ const AddBoard = () => {
       }),
     };
 
-    fetch("http://3.35.188.110:8080/post", reqPost)
-      //fetch("http://3.35.188.110:8080/post?size=10&cursorId=10", reqPost)
+    fetch("https://api.woodongs.site/post", reqPost)
+      //fetch("https://api.woodongs.site/post?size=10&cursorId=10", reqPost)
 
       .then((res) => {
         if (res.ok) {

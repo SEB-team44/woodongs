@@ -151,7 +151,7 @@ const Recruit = () => {
   };
 
   // recruit 페이지 나오자 마자 연결
-  let socketJs = new SockJS("http://3.35.188.110:8080/ws-stomp");
+  let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
   const stomp = StompJs.over(socketJs);
 
   //댓글
@@ -161,7 +161,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch("http://3.35.188.110:8080/study/" + `${id}`, reqOption)
+      fetch("https://api.woodongs.site/study/" + `${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log("content", data);
@@ -180,7 +180,7 @@ const Recruit = () => {
     };
 
     // fetch("http://localhost:3001/card/" + `${id}`, reqDelete)
-    fetch("http://3.35.188.110:8080/study/" + `${id}`, reqDelete)
+    fetch("https://api.woodongs.site/study/" + `${id}`, reqDelete)
       .then((res) => {
         if (res.ok) {
           alert("해당 스터디가 삭제 되었습니다.");
@@ -199,7 +199,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
+      fetch(`https://api.woodongs.site/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data); //댓글배열로나옴
@@ -213,7 +213,7 @@ const Recruit = () => {
         method: "GET",
         headers: header,
       };
-      fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
+      fetch(`https://api.woodongs.site/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log(data); //나옴
@@ -237,7 +237,7 @@ const Recruit = () => {
       }),
     };
 
-    fetch(`http://3.35.188.110:8080/study/${id}/comment`, reqPost)
+    fetch(`https://api.woodongs.site/study/${id}/comment`, reqPost)
       .then((res) => res.json())
       .then(() => {
         setgetcondition(!getcondition);
@@ -270,7 +270,7 @@ const Recruit = () => {
 
   //삭제 버튼 클릭시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handeDeleteComment = (elID) => {
-    fetch(`http://3.35.188.110:8080/study/${id}/${elID}`, {
+    fetch(`https://api.woodongs.site/study/${id}/${elID}`, {
       method: "DELETE",
       headers: header,
     }).then(() => {
@@ -278,13 +278,13 @@ const Recruit = () => {
     });
   };
 
-  //게시물 수정 버튼 클릭 시, 들어온 id값에 맞는 부분 수정 요청 보냄
-  const handleEditRecruit = () => {
-    fetch(`http://3.35.188.110:8080/study/${id}`, {
-      method: "PATCH",
+  const handleEditRecruit = (id) => {
+    fetch(`https://api.woodongs.site/study/${id}/comment`, {
+      method: "DELETE",
     });
     setgetconditions(!getconditions);
   };
+
 
   //신청하기 클릭시 동작하는 메서드
   const handleApplyStudy = (memberid, id) => {
@@ -296,7 +296,7 @@ const Recruit = () => {
       message: `${userInfo.nickName} 님께서 스터디 가입을 신청하였습니다.`,
     };
 
-    fetch(`http://3.35.188.110:8080/study/${id}/apply`, {
+    fetch(`https://api.woodongs.site/study/${id}/apply`, {
       method: "POST",
       headers: header,
     })
@@ -319,20 +319,6 @@ const Recruit = () => {
       .catch((error) => console.log(error));
   };
 
-  // const handleSendMessage = (memberid) => {
-  //   let msg = {
-  //     'senderId': Number(userInfo.memberId),
-  //     'senderNickname': userInfo.nickName,
-  //     'receiverId': Number(memberid),
-  //     'message': "신청1",
-  //   };
-  //   stomp.send(
-  //     //알람 전송
-  //     `/pub/alarm`,
-  //     {},
-  //     JSON.stringify(msg)
-  //   );
-  // }
 
   return (
     <>
@@ -423,10 +409,18 @@ const Recruit = () => {
                         if (content.createdBy === el.memberId) {
                           return (
                             <>
-                              <img
-                                className="avatarimg"
-                                src={el.profileImageUrl}
-                              />
+                              {el.profileImageUrl ? (
+                                <img
+                                  className="avatarimg"
+                                  src={el.profileImageUrl}
+                                />
+                              ) : (
+                                <img
+                                  className="avatarImg"
+                                  src={require("../../../src/img/avatar.png")}
+                                />
+                              )}
+
                               {<h2 key={el.memberId}>{el.nickName}</h2>}
                             </>
                           );
@@ -456,8 +450,6 @@ const Recruit = () => {
                     >
                       신청하기
                     </Button>
-                    {/* 임시 버튼 (운영배포시에 무조건 지워주자 ))/}
-                    {/* <button onClick={() => handleSendMessage(content.memberResponseDtos[0].memberId)}></button> */}
                   </article>
                 ) : null}
               </aside>
