@@ -126,7 +126,7 @@ const MyGroupStyled = styled.div`
   }
 `;
 
-// 1. 다른 버튼으로 구독할 때, 이미 구독한것이 존재하면 그 구독을 끊고, 버튼 누른 것을 구독한다. () 
+// 1. 다른 버튼으로 구독할 때, 이미 구독한것이 존재하면 그 구독을 끊고, 버튼 누른 것을 구독한다. ()
 // 2. 동일한 버튼을 2번 이상 연속으로 누르면, 한번만 눌리게 된다. (v)
 
 const MyGroup = () => {
@@ -138,7 +138,7 @@ const MyGroup = () => {
     withCredentials: true,
     "Access-Control-Allow-Origin": "*",
     Authorization: token,
-  }
+  };
   const chatInfo = userInfo.studyResponseDtos;
   const [memberInfo, setmemberInfo] = useState([]);
   const [getStudyId, setGetstudyId] = useState(0);
@@ -152,38 +152,56 @@ const MyGroup = () => {
   let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
   const stomp = StompJs.over(socketJs);
   const messagesEndRef = useRef(null);
-
   var subscribeId = null;
 
-  // 모든 구독 취소하기
-  // const subscribeCancle = function () {
-  //   const length = subIdArr.length;
-  //   for (let i = 0; i < length; i++) {
-  //     const sid = subIdArr.pop();
-  //     stomp.unsubscribe(sid.id);
-  //     console.log("============unsubscribeed==========");
-  //   }
-  //   stomp.disconnect(() => {});
-  // };
+  useEffect(() => {
+    const getPreviousChat = () => {
+      fetch(`https://api.woodongs.site/chatroom/${getStudyId}`, {
+        method: "GET",
+        headers: header,
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("res", res);
+          setGetchat([...res, ...getChat])
+        })
+        .catch((error) => alert("채팅방을 클릭해주세요"));
+    };
+    getPreviousChat();
+  }, [getStudyId]);
 
+
+
+
+  // 모든 구독 취소하기
+  const subscribeCancle = function () {
+    const length = subIdArr.length;
+    for (let i = 0; i < length; i++) {
+      const sid = subIdArr.pop();
+      stomp.unsubscribe(sid.id);
+      console.log("============unsubscribeed==========");
+    }
+    stomp.disconnect(() => {});
+  };
 
   // 채팅방 클릭시 핸들링
   const handleWebsocket = (studyId) => {
     fetch("https://api.woodongs.site/study/" + `${studyId}`, {
       method: "GET",
-      headers: header
+      headers: header,
     })
       .then((res) => res.json())
       .then((res) => setmemberInfo([...res.memberResponseDtos]))
       // .then(() => {
-      //   if(stomp) {
-      //     subscribeCancle();
-      //   }
+      //   // if (stomp) {
+      //   //   // subscribeCancle();
+      //   // }
       // })
       .then(() => {
-        setValidation(false)
+        setValidation(false);
         // 같은 버튼을 클릭하지 않았을 때만 구독해줌.
         if (getStudyId !== studyId) {
+          setGetstudyId(studyId);
           setGetchat([]);
           let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
           const stomp = StompJs.over(socketJs);
@@ -198,9 +216,11 @@ const MyGroup = () => {
               setTimeout(() => {
                 setValidation(true);
               }, 1000);
- 
+
               if (subscribeId !== null) {
                 subscribeId.unsubscribe();
+                subscribeCancle();
+                console.log("구독취소");
               }
 
               subscribeId = stomp.subscribe(
@@ -223,8 +243,6 @@ const MyGroup = () => {
 
       .then(() => {})
       .catch((error) => alert(error));
-
-    setGetstudyId(studyId);
   };
 
   const pubChatData = () => {
@@ -325,7 +343,7 @@ const MyGroup = () => {
                           </div>
                           <div>
                             <div className="message-nickname">
-                              {el.senderNickname}
+                              {el.senderNickname || el.senderNickName}
                             </div>
                             <div className="message-content">{el.message}</div>
                           </div>

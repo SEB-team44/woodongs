@@ -51,6 +51,7 @@ const Manage = ({ id }) => {
         headers: header,
       }).then((res) => {
         if (res.ok) {
+          console.log(res.json())
           alert("신청이 수락되었습니다.");
           const filtered = applyInfo.filter((el) => {
             return el.studyApplyId !== id;

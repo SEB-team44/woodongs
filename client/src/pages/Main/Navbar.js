@@ -119,7 +119,7 @@ const StyledNav = styled.div`
   }
 `;
 
-const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender}) => {
+const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const { userInfo, setUserInfo } = useContext(UserInfo); //로그인 한 사용자 정보
   const [anchorEl1, setAnchorEl1] = React.useState(null);
   const [anchorEl2, setAnchorEl2] = React.useState(null);
@@ -143,15 +143,15 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender}) => {
         }
       );
     });
-    console.log(stomp)
+
     return () => {
-      //연결되기 전에 닫히는 문제 해결 
-      if(stomp.ws.readyState === 1){
+      //연결되기 전에 닫히는 문제 해결
+
+      if (stomp.ws.readyState === 1) {
+        console.log(stomp.ws.readyState);
         stomp.disconnect(() => {});
       }
     };
-
-
   }, []);
 
   useEffect(() => {
@@ -169,8 +169,8 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender}) => {
         .then((res) => {
           console.log("로컬로그인정보 ", res);
           setUserInfo({ ...res });
-          return res 
-        })
+          return res;
+        });
     };
     getMember();
   }, [alarm]);
@@ -343,26 +343,48 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender}) => {
                     <div className="group-img">
                       {userInfo.studyResponseDtos.length !== 0 ? (
                         <Link to="/MyGroup">
-                          <button
-                            className="group-btn"
-                            aria-describedby={id2}
-                            type="button"
-                            onClick={handleClick2}
-                          >
-                            <img
-                              className="myinfo-img myinfo-group-img "
-                              src={require("../../../src/img/group.png")}
-                            />
-                            
-                          </button>
+                          {/* <Popover
+                            id={id2}
+                            open={open2}
+                            anchorEl={anchorEl2}
+                            onClose={handleClose2}
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "left",
+                            }}
+                          > */}
+                            <button
+                              className="group-btn"
+                              aria-describedby={id2}
+                              type="button"
+                              onClick={handleClick2}
+                            >
+                              <img
+                                className="myinfo-img myinfo-group-img "
+                                src={require("../../../src/img/group.png")}
+                              />
+                            </button>{" "}
+                            {/* <Typography
+                              sx={{
+                                borderRadius: 7,
+                                p: 1,
+                                bgcolor: "background.paper",
+                                textDecoration: "none",
+                              }}
+                            >
+                              {" "}
+                            </Typography>
+                          </Popover> */}
                         </Link>
                       ) : (
                         <>
-                        <img
-                          className="myinfo-img myinfo-group-img jb-title"
-                          src={require("../../../src/img/group.png")}
-                        />
-                        <div className = "jb-text" >스터디 생성 또는 참여시 활성화됩니다.</div>
+                          <img
+                            className="myinfo-img myinfo-group-img jb-title"
+                            src={require("../../../src/img/group.png")}
+                          />
+                          <div className="jb-text">
+                            스터디 생성 또는 참여시 활성화됩니다.
+                          </div>
                         </>
                       )}
                     </div>
