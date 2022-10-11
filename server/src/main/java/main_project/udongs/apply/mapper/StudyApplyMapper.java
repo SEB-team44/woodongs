@@ -23,6 +23,7 @@ public interface StudyApplyMapper {
                 .email(member.getEmail())
                 .phoneNumber(member.getPhoneNumber())
                 .city(member.getCity())
+                .profile(member.getProfile())
                 .emailVerifiedYn(member.getEmailVerifiedYn())
                 .profileImageUrl(member.getProfileImageUrl())
                 .providerType(member.getProviderType())
