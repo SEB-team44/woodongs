@@ -263,7 +263,7 @@ const Main = () => {
           </section>
           <section className="main-cardlist-container">
             <main className="cardlists-box">
-              {cardList &&
+              {cardList.length !== 0 ? 
                 cardList.map((el, idx) => {
                   return (
                     <Card
@@ -296,8 +296,8 @@ const Main = () => {
                         </div>
                       </article>
                     </Card>
-                  );
-                })}
+                  )
+                }) : <div> 주변에 스터디가 없습니다.</div>}
             </main>
           </section>
           <section className="main-footer-container">

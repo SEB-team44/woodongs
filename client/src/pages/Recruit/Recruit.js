@@ -365,14 +365,14 @@ const Recruit = () => {
                         >
                           <TiTrash />
                         </button>
-                        <button
+                        {/* <button
                           className="update-btn"
                           // onClick={() => handleEditRecruit()}
                         >
                           <Link to="/study/EditRecruit">
                             <TiPencil />
                           </Link>
-                        </button>
+                        </button> */}
                         {/* {console.log("card", card)} */}
                       </div>
                       <h2>✔️ 모집현황</h2>
