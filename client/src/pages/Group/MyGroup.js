@@ -232,7 +232,7 @@ const MyGroup = () => {
               }, 1000);
 
               if (subscribeId !== null) {
-                subscribeId.unsubscribe();
+                subscribeId.disconnect();
                 subscribeCancle();
                 console.log("구독취소");
               }

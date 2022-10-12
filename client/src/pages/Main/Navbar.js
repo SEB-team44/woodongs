@@ -280,9 +280,9 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                       <Button onClick={(e) => handleInputSubmit(e)}>
                         검색
                       </Button>
-                      <Button onClick={(e) => handleClearSubmit(e)}>
+                      {/* <Button onClick={(e) => handleClearSubmit(e)}>
                         초기화
-                      </Button>
+                      </Button> */}
                     </div>
                   )}
 
