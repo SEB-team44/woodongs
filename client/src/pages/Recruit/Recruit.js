@@ -2,7 +2,7 @@ import { React, useContext } from "react";
 import axios from "axios";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import Navbar from "../Main/Navbar";
-import EditeRecruit from "./EditRecruit";
+import EditRecruit from "../Recruit/EditRecruit";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import Footer from "../Main/Footer";
@@ -140,7 +140,6 @@ const Recruit = () => {
   const [data, setData] = useState({});
   const [content, setContent] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  
 
   // const access_token =
   const header = {
@@ -278,15 +277,13 @@ const Recruit = () => {
       setgetcondition(!getcondition);
     });
   };
-
-  const handleEditRecruit = (id) => {
-    fetch(`https://api.woodongs.site/study/${id}/comment`, {
-      method: "DELETE",
+  //수정
+  const handleEditRecruit = () => {
+    fetch(`https://api.woodongs.site/study/${id}`, {
+      method: "PATCH",
     });
-    setgetconditions(!getconditions);
+    setgetcondition(!getcondition);
   };
-
-
 
   //신청하기 클릭시 동작하는 메서드
   const handleApplyStudy = (memberid, id) => {
@@ -320,7 +317,6 @@ const Recruit = () => {
       })
       .catch((error) => console.log(error));
   };
-
 
   return (
     <>
@@ -365,14 +361,14 @@ const Recruit = () => {
                         >
                           <TiTrash />
                         </button>
-                        {/* <button
-                          className="update-btn"
-                          // onClick={() => handleEditRecruit()}
-                        >
-                          <Link to="/study/EditRecruit">
+                        <Link to="/EditRecruit">
+                          <button
+                            className="update-btn"
+                            // onClick={() => handleEditRecruit()}
+                          >
                             <TiPencil />
-                          </Link>
-                        </button> */}
+                          </button>
+                        </Link>
                         {/* {console.log("card", card)} */}
                       </div>
                       <h2>✔️ 모집현황</h2>

@@ -139,10 +139,7 @@ const Main = () => {
         },
       };
       if (getlat) {
-        fetch(
-          `https://api.woodongs.site/study/around?size=10&cursorId=100`,
-          reqOption
-        )
+        fetch(`https://api.woodongs.site/study/around?size=10`, reqOption)
           .then((res) => {
             console.log("res", res);
             return res.json();
@@ -168,7 +165,8 @@ const Main = () => {
         //   })
         //   .catch((error) => console.log("error",error))
       } else {
-        fetch(`https://api.woodongs.site/study/?size=10&cursorId=100`, reqOption)
+
+        fetch(`https://api.woodongs.site/study?size=10`, reqOption)
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
@@ -292,7 +290,9 @@ const Main = () => {
                           </ol>
                         </CardContent>
                         <div className="count">
-                          <a>모집완료 {el.nowHeadCount}/{el.headCount}</a>
+                          <a>
+                            모집완료 {el.nowHeadCount}/{el.headCount}
+                          </a>
                         </div>
                       </article>
                     </Card>
