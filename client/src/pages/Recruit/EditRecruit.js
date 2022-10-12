@@ -1,11 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import React from "react";
+import { React, useContext } from "react";
 import { useSelector } from "react-redux";
 import { Button } from "@mui/material";
 
-const EditeRecruit = () => {
+
+const EditRecruit = () => {
   //작성한 사람이 수정할 수 있게?? 토큰있는 사람만??
   const access_token = useSelector((state) => state.accessToken);
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const EditeRecruit = () => {
           Authorization: access_token,
         },
       };
-      fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
+      fetch(`https://api.woodongs.site/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
           console.log("content", data);
@@ -75,19 +76,19 @@ const EditeRecruit = () => {
     <div className="addRecruit-wrapper">
       <div className="addRecruit-header">게시물 수정하기</div>
       <div className="submitButton">
-        {canSubmit() ? (
-          <Button
-            onClick={handleSubmit}
-            className="success-button"
-            // variant="outlined"
-          >
-            수정하기
-          </Button>
-        ) : (
-          <Button className="disable-button" variant="outlined" size="large">
-            제목과 내용을 모두 입력하세요
-          </Button>
-        )}
+        {/* {canSubmit() ? ( */}
+        <Button
+          // onClick={handleSubmit}
+          className="success-button"
+          // variant="outlined"
+        >
+          수정하기
+        </Button>
+        {/* ) : ( */}
+        <Button className="disable-button" variant="outlined" size="large">
+          제목과 내용을 모두 입력하세요
+        </Button>
+        {/* )} */}
       </div>
       <div className="addRecruit-body">
         <textarea
@@ -101,4 +102,4 @@ const EditeRecruit = () => {
   );
 };
 
-export default EditeRecruit;
+export default EditRecruit;

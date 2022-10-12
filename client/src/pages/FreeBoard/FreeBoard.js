@@ -166,7 +166,17 @@ const FreeBoard = () => {
       setBoardList([...filtered]);
     }
   };
-
+  const Time = () => {
+    let today = new Date();
+    let time = {
+      year: today.getFullYear(), //현재 년도
+      month: today.getMonth() + 1, //현재 월
+      data: today.getData(), //현재 날짜
+      hours: today.getHours(), //현재시간
+      minutes: today.getMinutes(), //현재 분
+    };
+    let timestring = `${time.year}/${time.month}/${time.date} ${time.hours}:${time.minutes}`;
+  };
   // 게시판list를 요청
   function getBoardList() {
     let reqOption = {
@@ -222,6 +232,15 @@ const FreeBoard = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   });
+  const createTime = () => {
+    let today = new Date();
+    let year = today.getFullYear(); //현재 년도
+    let month = today.getMonth() + 1; //현재 월
+    let data = today.getData(); //현재 날짜
+    let hours = today.getHours(); //현재시간
+    let minutes = today.getMinutes(); //현재 분
+    return year + "." + month + "." + hours + ":" + minutes;
+  };
   return (
     <>
       <StyledFreeBoard>
@@ -277,7 +296,7 @@ const FreeBoard = () => {
                     <thead className="thead">
                       <tr>
                         <td width="10%">번호</td>
-                        <td width="50%">제목</td>
+                        <td width="60%">제목</td>
                         <td width="20%">작성자</td>
                         <td width="20%">작성일</td>
                       </tr>
@@ -294,7 +313,8 @@ const FreeBoard = () => {
                                 </Link>
                               </td>
                               <td>{el.memberResponseDto.nickName}</td>
-                              <td>{el.createdAt}</td>
+                              {/* <td>{el.createdAt}</td> */}
+                              <td>{el.createdAt.slice(0, 10)}</td>
                             </tr>
                           </tbody>
                         );
