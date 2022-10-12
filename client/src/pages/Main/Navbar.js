@@ -301,7 +301,6 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                         type="button"
                         onClick={handleClick1}
                       >
-                  
                         {alarm.length === 0 ? (
                           !isChat ? (
                             <img
@@ -322,7 +321,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                         ) : (
                           <img
                             className="myinfo-img myinfo-ball-img"
-                            src={require("../../../src/img/ball.png")}
+                            src={require("../../../src/img/bellring.png")}
                           />
                         )}
                         {/* {alarm.length === 0 || !isChat ? (
