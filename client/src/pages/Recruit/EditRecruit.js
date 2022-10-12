@@ -22,9 +22,23 @@ const EditeRecruit = () => {
   //컴포넌트가 마운트 되고 uri 파라미터에 해당하는 data를 가져와
   //title,body,category,headcount의 상태를 바꿔줌
   useEffect(() => {
-    const getData = async () => {
-      const { data } = await axios.get(`/study/card/${id}`);
-      return data;
+    const getData = () => {
+      let reqOption = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          withCredentials: true,
+          "Access-Control-Allow-Origin": "*",
+          Authorization: access_token,
+        },
+      };
+      fetch(`http://3.35.188.110:8080/study/${id}`, reqOption)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("content", data);
+          return data;
+        });
     };
     getData().then((result) => {
       setTitle(result.title);
