@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import main_project.udongs.exception.BusinessLogicException;
 import main_project.udongs.exception.ExceptionCode;
 import main_project.udongs.globaldto.MultiResponseDto;
+import main_project.udongs.globaldto.SliceInfo;
 import main_project.udongs.member.entity.Member;
+import main_project.udongs.oauth2.oauth.entity.RoleType;
 import main_project.udongs.study.dto.StudyDto;
 import main_project.udongs.study.entity.Distance;
 import main_project.udongs.study.entity.Study;
@@ -14,6 +16,7 @@ import main_project.udongs.study.repository.StudyCommentRepository;
 import main_project.udongs.study.repository.StudyRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -112,6 +115,9 @@ public class StudyService {
         return commentRepository.save(foundComment);
     }
 
+    //스터디 댓글 조회
+
+
     //스터디 모집글 질문 삭제
     @Transactional
     public void deleteStudyComment(Long commentId, Member member) {
@@ -182,25 +188,47 @@ public class StudyService {
     // 일단 주석처리
     public ResponseEntity getAroundStudy(Long id, Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword,
                                          Double nowLat, Double nowLon) {
-        Slice<Study> studies;
+        List<Study> searchedStudies;
 
         if (id == null) {
-            // 첫 페이지 조회
-            studies = ifFirstpage(pageable, titleKeyword, cityKeyword, categoryKeyword);
-        } else {
-            // 다음 페이지 조회
-            studies = ifNotFirstpage(id, pageable, titleKeyword, cityKeyword, categoryKeyword);
+            if (titleKeyword == null && cityKeyword == null && categoryKeyword == null) {
+                searchedStudies = studyRepository.findAll(Sort.by(Sort.Direction.DESC, "studyId"));
+            } else if (titleKeyword != null && cityKeyword == null && categoryKeyword == null) { //제목으로만 검색
+                searchedStudies = studyRepository.findByTitleContainingOrderByStudyIdDesc(titleKeyword);
+            } else if (titleKeyword == null && cityKeyword != null && categoryKeyword == null) { //도시이름으로만 검색
+                searchedStudies = studyRepository.findByCityContainingOrderByStudyIdDesc(cityKeyword);
+            } else { //카테고리로만 검색
+                searchedStudies = studyRepository.findByCategoryContainingOrderByStudyIdDesc(categoryKeyword);
+            }
         }
 
-        List<Study> aroundStudies = studies.stream()
+        else {
+            if (titleKeyword == null && cityKeyword == null && categoryKeyword == null) {
+                searchedStudies = studyRepository.findByStudyIdLessThanOrderByStudyIdDesc(id);
+            } else if (titleKeyword != null && cityKeyword == null && categoryKeyword == null) { //제목으로만 검색
+                searchedStudies = studyRepository.findByStudyIdLessThanAndTitleContainingOrderByStudyIdDesc(id, titleKeyword);
+            } else if (titleKeyword == null && cityKeyword != null && categoryKeyword == null) { //도시이름으로만 검색
+                searchedStudies = studyRepository.findByStudyIdLessThanAndCityContainingOrderByStudyIdDesc(id, cityKeyword);
+            } else { //카테고리로만 검색
+                searchedStudies = studyRepository.findByStudyIdLessThanAndCategoryContainingOrderByStudyIdDesc(id, categoryKeyword);
+            }
+        }
+
+        Long lastIdx;
+
+        List<Study> aroundStudies = searchedStudies.stream()
                 .filter(study -> {
                     Double lat = study.getLatitude();
                     Double lon = study.getLongitude();
-                    double dist = distance.calculateDistance(nowLat, nowLon, lat, lon, "kilometer");
-                    return dist < 6000;
-                }).limit(pageable.getPageSize()).collect(Collectors.toList());
+                    double dist = distance.calculateDistance(nowLat, nowLon, lat, lon, "meter");
+                    return dist < 3000;
+                }).limit(pageable.getPageSize()+1).collect(Collectors.toList());
 
-        Long lastIdx;
+        boolean hasNext = aroundStudies.size() > pageable.getPageSize();
+
+        if (hasNext) {
+            aroundStudies.remove(aroundStudies.size() - 1);
+        }
 
         if (!aroundStudies.isEmpty()) {
             lastIdx = aroundStudies.get(aroundStudies.size() - 1).getStudyId();
@@ -208,6 +236,20 @@ public class StudyService {
             lastIdx = 1L;
         }
 
-        return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(aroundStudies), studies, lastIdx), HttpStatus.OK);
+
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(aroundStudies), new SliceInfo(pageable.getPageSize(), aroundStudies.size(), hasNext, lastIdx)), HttpStatus.OK);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isWriterOrAdmin(Member currentUser, Member writer) {
+        if (currentUser.getRoleType() == (RoleType.ADMIN)) {
+            return true;
+        }
+
+        if (!currentUser.getMemberId().equals(writer.getMemberId())) {
+            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+        }
+
+        return true;
     }
 }
