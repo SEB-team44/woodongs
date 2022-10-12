@@ -7,7 +7,7 @@ import Login from "./pages/Member/Login";
 import SignUp from "./pages/Member/SignUp";
 import Recruit from "./pages/Recruit/Recruit";
 import AddStudy from "./pages/Recruit/AddStudy";
-import EditeRecruit from "./pages/Recruit/EditRecruit";
+import EditRecruit from "./pages/Recruit/EditRecruit";
 import MyPage from "./pages/Main/MyPage";
 import FreeBoard from "./pages/FreeBoard/FreeBoard";
 import AddBoard from "./pages/FreeBoard/AddBoard";
@@ -22,7 +22,7 @@ import Manage from "./pages/Recruit/Manage";
 function App() {
   const [isLogin, setIslogin] = useState(false);
   const [userInfo, setUserInfo] = useState({});
-  const [isChat, setIsChat] = useState(false)
+  const [isChat, setIsChat] = useState(false);
 
   return (
     <>
@@ -38,7 +38,7 @@ function App() {
                 <Route path="/SignUp" element={<SignUp />} />
                 <Route path="/study/:id" element={<Recruit />} />
                 <Route path="/study/recruit" element={<AddStudy />} />
-                <Route path="/study/edite" element={<EditeRecruit />} />
+                <Route path="/EditRecruit" element={<EditRecruit />} />
                 <Route path="/MyPage" element={<MyPage />} />
                 <Route path="/MyGroup" element={<MyGroup />} />
                 <Route path="/FreeBoard" element={<FreeBoard />} />
