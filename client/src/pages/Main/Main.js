@@ -168,7 +168,7 @@ const Main = () => {
         //   })
         //   .catch((error) => console.log("error",error))
       } else {
-        fetch(`https://api.woodongs.site/study?size=10&cursorId=100`, reqOption)
+        fetch(`https://api.woodongs.site/study/?size=10&cursorId=100`, reqOption)
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
@@ -194,9 +194,9 @@ const Main = () => {
 
     let url;
     if (cursor) {
-      url = `https://api.woodongs.site/study?size=5&cursorId=${cursor}`;
+      url = `https://api.woodongs.site/study/around?size=5&cursorId=${cursor}`;
     } else {
-      url = `https://api.woodongs.site/study?size=10`;
+      url = `https://api.woodongs.site/study/around?size=10`;
     }
     if (!isAvailable) {
       return;
