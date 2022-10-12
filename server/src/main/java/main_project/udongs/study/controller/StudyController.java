@@ -82,10 +82,10 @@ public class StudyController {
     @Operation(summary = "스터디 모집 내용 수정")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
     @PatchMapping("/{study-id}")
-    public ResponseEntity patchStudy(@Valid @PathVariable("study-id") Long studyId, @RequestBody StudyDto.Patch requestBody) {
+    public ResponseEntity patchStudy(@Valid @PathVariable("study-id") Long studyId, @RequestBody StudyDto.Patch requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("PATCH STUDY");
-
         Study findStudy = studyService.findVerifiedStudy(studyId);
+        studyService.isWriterOrAdmin(userPrincipal.getMember(), findStudy.getMember());
         Study study = studyService.patchStudy(findStudy, requestBody);
 
         return ResponseEntity.ok(new SingleResponseStudyDto<>(List.of(mapper.studyToStudyResponse(study))));
@@ -130,9 +130,10 @@ public class StudyController {
     @Operation(summary = "해당 스터디 삭제")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @DeleteMapping("/{study-id}")
-    public ResponseEntity deleteStudy(@Valid @PathVariable("study-id") Long studyId) {
+    public ResponseEntity deleteStudy(@Valid @PathVariable("study-id") Long studyId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("DELETE STUDY");
-
+        Study verifiedStudy = studyService.findVerifiedStudy(studyId);
+        studyService.isWriterOrAdmin(userPrincipal.getMember(), verifiedStudy.getMember());
         studyService.deleteStudy(studyId);
 
         return new ResponseEntity<>("스터디가 삭제 되었습니다.",HttpStatus.OK);
