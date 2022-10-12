@@ -279,7 +279,6 @@ const Recruit = () => {
     });
   };
 
-  //게시물 삭제 버튼 클릭 시, 들어온 id값에 맞는 부분 삭제 요청 보냄
   const handleEditRecruit = (id) => {
     fetch(`https://api.woodongs.site/study/${id}/comment`, {
       method: "DELETE",
@@ -288,7 +287,7 @@ const Recruit = () => {
   };
 
 
-  
+
   //신청하기 클릭시 동작하는 메서드
   const handleApplyStudy = (memberid, id) => {
     // chatDto
@@ -368,7 +367,7 @@ const Recruit = () => {
                         </button>
                         <button
                           className="update-btn"
-                          onClick={() => handleEditRecruit()}
+                          // onClick={() => handleEditRecruit()}
                         >
                           <Link to="/study/EditRecruit">
                             <TiPencil />
