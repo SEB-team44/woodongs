@@ -13,7 +13,8 @@ const Footer = () => {
         variant="body2"
         color="text.secondary"
         align="center"
-        {...props}
+        {...props} 
+        //
       >
         {"Copyright © "}
 
