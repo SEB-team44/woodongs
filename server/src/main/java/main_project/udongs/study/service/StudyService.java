@@ -197,7 +197,8 @@ public class StudyService {
                     Double lat = study.getLatitude();
                     Double lon = study.getLongitude();
                     double dist = distance.calculateDistance(nowLat, nowLon, lat, lon, "kilometer");
-                    return dist < 4;
+                    return dist < 3;
+
                 }).limit(pageable.getPageSize()).collect(Collectors.toList());
 
         Long lastIdx;
