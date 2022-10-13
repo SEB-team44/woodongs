@@ -15,6 +15,12 @@ configurations {
 	}
 }
 
+bootJar{
+	archivesBaseName = 'Woodongs'
+	archiveFileName = 'woodongs.jar'
+	archiveVersion = "0.0.1"
+}
+
 repositories {
 	mavenCentral()
 }
