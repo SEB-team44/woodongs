@@ -13,78 +13,61 @@ on:
   pull_request:
     branches: [ "production" ]
 
+env:
+  AWS_REGION: ap-northeast-2
+  S3_BUCKET_NAME: mainproject-bucket
+  CODE_DEPLOY_APPLICATION_NAME: woodongs-deploy-be
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: woodongs-deploy-be-group
+
 permissions:
   contents: read
 
 jobs:
-  build:
-
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
+    environment: production
 #    permissions:
 #      contents: read
 #      packages: write
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'temurin'
+
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
           #      with:
           #        arguments: build
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-        shell: bash
+      # (4) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-        #BUILD
-      - name: Build with Gradle
-        run: ./gradlew clean build
-
-        #CREATE DIR
-      - name: Make Directory for deliver
-        run: mkdir deploy
-
-        #COPY .JAR
-      - name: Copy Jar
-        run: cp ./build/libs/*.jar ./deploy/
-
-#  nonstop - try later       
-#        #COPY appspec.yml
-#      - name: Copy appspec
-#        run: cp ./appspec.yml ./deploy/
-#        
-#        #COPY SCRIPTS
-#      - name: Copy shell
-#        run: cp ./scripts/* ./deploy/
-
-        #CREATE ZIP FOR TRANSFER
-      - name: Make zip file
-        run: zip -r -qq -j ./woodongs-be.zip ./deploy
-
-        #COPY TO S3
-      - name: Deliver to AWS S3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
+      # (5) 빌드 결과물을 S3 버킷에 업로드
+      - name: Upload to AWS S3
         run: |
-          aws s3 cp \
-          --region ap-northeast-2 \
-          --acl private \ ./woodongs-be.zip s3://mainproject-deploy
+          aws deploy push \
+            --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+            --ignore-hidden-files \
+            --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
+            --source .
 
-        #DEPLOY
-      - name: Deploy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # (6) S3 버킷에 있는 파일을 대상으로 CodeDeploy 실행
+      - name: Deploy to AWS EC2 from S3
         run: |
           aws deploy create-deployment \
-          --application-name woodongs-deploy-be \
-          --deployment-group-name woodongs-deploy-be-group \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=mainproject-deploy,bundleType=zip,key=woodongs-be.zip \
-          --region ap-northeast-2
+            --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+            --deployment-config-name CodeDeployDefault.AllAtOnce \
+            --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+            --s3-location bucket=$S3_BUCKET_NAME,key=$GITHUB_SHA.zip,bundleType=zip
