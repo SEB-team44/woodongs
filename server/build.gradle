@@ -15,6 +15,10 @@ configurations {
 	}
 }
 
+jar {
+	enabled = false
+}
+
 bootJar{
 	archivesBaseName = 'Woodongs'
 	archiveFileName = 'woodongs.jar'
