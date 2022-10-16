@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.webjars.bower:axios:0.17.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bower/axios/0.17.1/727068bca53208713e3a18ea0921be3e6887ac3c/axios-0.17.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bower/axios/0.17.1/b04f3ee8f5e43fa3b162981b50bb72fe1acabb33/axios-0.17.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
