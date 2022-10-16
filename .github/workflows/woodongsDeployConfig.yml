@@ -49,7 +49,7 @@ jobs:
         working-directory: ./server
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -x test
         working-directory: ./server
 
         #uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
