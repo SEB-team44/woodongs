@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PROJECT_ROOT="/home/ubuntu/deploy"
-JAR_FILE="$PROJECT_ROOT/server/build/libs/woodongs.jar"
+JAR_FILE="$PROJECT_ROOT/woodongs.jar"
 
 APP_LOG="$PROJECT_ROOT/application.log"
 ERROR_LOG="$PROJECT_ROOT/error.log"
@@ -10,8 +10,8 @@ DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
 TIME_NOW=$(date +%c)
 
 # build 파일 복사
-#echo "$TIME_NOW > $JAR_FILE 파일 복사" >> $DEPLOY_LOG
-#cp $PROJECT_ROOT/server/build/libs/*.jar $JAR_FILE
+echo "$TIME_NOW > $JAR_FILE 파일 복사" >> $DEPLOY_LOG
+cp $PROJECT_ROOT/server/build/libs/*.jar $JAR_FILE
 
 # jar 파일 실행
 echo "$TIME_NOW > $JAR_FILE 파일 실행" >> $DEPLOY_LOG
