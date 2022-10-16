@@ -3,7 +3,7 @@
 PROJECT_ROOT="/home/ubuntu/deploy"
 JAR_FILE="$PROJECT_ROOT/woodongs.jar"
 
-DEPLOY_LOG="$PROJECT_ROOT/log/deploy.log"
+DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
 
 TIME_NOW=$(date +%c)
 

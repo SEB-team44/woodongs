@@ -4,8 +4,8 @@ PROJECT_ROOT="/home/ubuntu/deploy"
 JAR_FILE="$PROJECT_ROOT/woodongs.jar"
 
 APP_LOG="$PROJECT_ROOT/application.log"
-ERROR_LOG="$PROJECT_ROOT/log/error.log"
-DEPLOY_LOG="$PROJECT_ROOT/log/deploy.log"
+ERROR_LOG="$PROJECT_ROOT/error.log"
+DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
 
 TIME_NOW=$(date +%c)
 
