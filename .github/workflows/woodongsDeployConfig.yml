@@ -47,7 +47,7 @@ jobs:
       - name: make application-sensitive.yml
         run: |
             # create application-sensitive.yml
-            cd /server/src/main/resources
+            cd server/src/main/resources
 
             # application-sensitive.yml 파일 생성
             touch ./application-sensitive.yml
