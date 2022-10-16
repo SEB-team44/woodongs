@@ -9,9 +9,9 @@ name: BE AWS CI/CD
 
 on:
   push:
-    branches: [ "production" ]
+    branches: [ "be-production" ]
   pull_request:
-    branches: [ "production" ]
+    branches: [ "be-production" ]
 
 env:
   AWS_REGION: ap-northeast-2
