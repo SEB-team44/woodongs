@@ -46,7 +46,6 @@ jobs:
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-        run: ./gradlew build
         #with:
         #  arguments: clean build -x test
 
