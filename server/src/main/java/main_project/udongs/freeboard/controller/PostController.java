@@ -41,7 +41,7 @@ public class PostController {
 
     @Operation(summary = "게시글 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "CREATED", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PostDto.Response.class))))})
-    @PostMapping()
+    @PostMapping
     public ResponseEntity postPost(@RequestBody PostDto.Post requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("POST POST");
 
@@ -170,4 +170,17 @@ public class PostController {
 
         return new ResponseEntity<>(ans,HttpStatus.OK);
     }
+
+    @Operation(summary = "내 게시글 조회")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
+    @GetMapping("/myposts")
+    public ResponseEntity getMyPosts(@AuthenticationPrincipal UserPrincipal userPrincipal ) {
+
+        log.debug("GET ALL POSTS");
+
+        return postService.getMyPosts(userPrincipal.getMember());
+
+        }
+
+
 }

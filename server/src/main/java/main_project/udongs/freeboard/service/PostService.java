@@ -7,16 +7,21 @@ import main_project.udongs.freeboard.dto.PostCommentDto;
 import main_project.udongs.freeboard.dto.PostDto;
 import main_project.udongs.freeboard.entity.Post;
 import main_project.udongs.freeboard.entity.PostComment;
+import main_project.udongs.freeboard.mapper.PostMapper;
 import main_project.udongs.freeboard.repository.PostCommentRepository;
 import main_project.udongs.freeboard.repository.PostRepository;
 import main_project.udongs.member.entity.Member;
+import main_project.udongs.member.service.MemberService;
 import main_project.udongs.oauth2.oauth.entity.RoleType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,11 +29,14 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
     private final PostCommentRepository commentRepository;
+    private final PostMapper mapper;
+    private final MemberService memberService;
+
 
     //게시글 등록
-    @Transactional
+//    @Transactional
     public Post createPost(Post post, Member member) {
-
+//        Member findMember = memberService.getMember(member.getMemberId());
         post.setCreatedAt(LocalDateTime.now());
         post.setCity(member.getCity());
         post.setMember(member);
@@ -204,4 +212,15 @@ public class PostService {
 //    public Page<Post> getPostByAllFilter(Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword) {
 //        return postRepository.findByTitleContainingAndCityContainingAndCategoryContaining(titleKeyword, cityKeyword, categoryKeyword, pageable);
 //    }
+
+//    @Transactional(readOnly = true)
+    public ResponseEntity getMyPosts(Member member) {
+//        Member findMember = memberService.getMember(member.getMemberId());
+//        System.out.println("findMember.getPosts() = " + findMember.getPosts());
+//        System.out.println("findMember.getPosts().size() = " + findMember.getPosts().size());
+//        List<Post> posts = findMember.getPosts();
+        List<Post> posts = postRepository.findByMember(member);
+        List<PostDto.Response> responses = mapper.postsToPostResponse(posts);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
 }
