@@ -224,6 +224,7 @@ public class StudyService {
                     return dist < 3000;
                 }).limit(pageable.getPageSize()+1).collect(Collectors.toList());
 
+
         boolean hasNext = aroundStudies.size() > pageable.getPageSize();
 
         if (hasNext) {
