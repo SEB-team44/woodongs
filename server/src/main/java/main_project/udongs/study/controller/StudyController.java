@@ -14,6 +14,8 @@ import main_project.udongs.globaldto.MultiResponseDto;
 import main_project.udongs.member.entity.Member;
 import main_project.udongs.member.service.MemberService;
 import main_project.udongs.oauth2.oauth.entity.UserPrincipal;
+import main_project.udongs.stomp.chat.ChatRoom;
+import main_project.udongs.stomp.chat.ChatRoomRepository;
 import main_project.udongs.study.dto.SingleResponseStudyDto;
 import main_project.udongs.study.dto.StudyCommentDto;
 import main_project.udongs.study.dto.StudyDto;
@@ -48,6 +50,7 @@ public class StudyController {
     private final MemberService memberService;
     private final StudyRepository studyRepository;
     private final StudySearchService studySearchService;
+    private final ChatRoomRepository chatRoomRepository;
 
     @Operation(summary = "스터디 모집 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "CREATED", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
@@ -68,6 +71,8 @@ public class StudyController {
 
         Study study = mapper.studyPostToStudy(requestBody);
         Study savedStudy = studyService.createStudy(study, member);
+        chatRoomRepository.save(new ChatRoom());
+
         StudyDto.Response response = mapper.studyToStudyResponse(savedStudy);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -77,10 +82,10 @@ public class StudyController {
     @Operation(summary = "스터디 모집 내용 수정")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StudyDto.Response.class))))})
     @PatchMapping("/{study-id}")
-    public ResponseEntity patchStudy(@Valid @PathVariable("study-id") Long studyId, @RequestBody StudyDto.Patch requestBody) {
+    public ResponseEntity patchStudy(@Valid @PathVariable("study-id") Long studyId, @RequestBody StudyDto.Patch requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("PATCH STUDY");
-
         Study findStudy = studyService.findVerifiedStudy(studyId);
+        studyService.isWriterOrAdmin(userPrincipal.getMember(), findStudy.getMember());
         Study study = studyService.patchStudy(findStudy, requestBody);
 
         return ResponseEntity.ok(new SingleResponseStudyDto<>(List.of(mapper.studyToStudyResponse(study))));
@@ -112,8 +117,12 @@ public class StudyController {
         // 클라에서 size에 초기값을 넣고 스크롤이 다 내려가면 size를 증가해서 다시 요청하는식으로??
         Slice<Study> searchedStudies = studyService.searchFunction(cursorId, pageable, titleKeyword, cityKeyword, categoryKeyword);
         List<Study> studies = searchedStudies.getContent();
-        Long lastIdx = studies.get(studies.size() - 1).getStudyId();
-
+        Long lastIdx;
+        if (studies.size() >= 1) {
+            lastIdx = studies.get(studies.size() - 1).getStudyId();
+        } else {
+            lastIdx = 0L;
+        }
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.studiesToStudyResponse(studies), searchedStudies, lastIdx),HttpStatus.OK);
     }
 
@@ -121,9 +130,10 @@ public class StudyController {
     @Operation(summary = "해당 스터디 삭제")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @DeleteMapping("/{study-id}")
-    public ResponseEntity deleteStudy(@Valid @PathVariable("study-id") Long studyId) {
+    public ResponseEntity deleteStudy(@Valid @PathVariable("study-id") Long studyId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("DELETE STUDY");
-
+        Study verifiedStudy = studyService.findVerifiedStudy(studyId);
+        studyService.isWriterOrAdmin(userPrincipal.getMember(), verifiedStudy.getMember());
         studyService.deleteStudy(studyId);
 
         return new ResponseEntity<>("스터디가 삭제 되었습니다.",HttpStatus.OK);

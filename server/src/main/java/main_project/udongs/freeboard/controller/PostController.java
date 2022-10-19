@@ -41,7 +41,7 @@ public class PostController {
 
     @Operation(summary = "게시글 등록")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "CREATED", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PostDto.Response.class))))})
-    @PostMapping()
+    @PostMapping
     public ResponseEntity postPost(@RequestBody PostDto.Post requestBody, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.debug("POST POST");
 
@@ -101,20 +101,23 @@ public class PostController {
     @Operation(summary = "전체 게시글 조회")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
     @GetMapping
-    public ResponseEntity getPosts(@RequestParam(name = "cursorId") Long cursorId,
-                                   @RequestParam(name = "size") Integer size,
-                                   @RequestParam(name = "titleKeyword", required = false) String titleKeyword,
-                                   @RequestParam(name = "bodyKeyword", required = false) String bodyKeyword,
-                                   @RequestParam(name = "cityKeyword", required = false) String cityKeyword ) {
+    public ResponseEntity getPosts(Long cursorId, Integer size, String titleKeyword, String bodyKeyword, String cityKeyword ) {
         log.debug("GET ALL POSTS");
 
         Pageable pageable = PageRequest.of(0,size, Sort.by("postId").descending());
         //검색 메서드 맨 아래쪽에 있음
         Slice<Post> searchedPosts = postService.searchFunction(cursorId, pageable, titleKeyword, cityKeyword, bodyKeyword);
 
-        List<Post> studies = searchedPosts.getContent();
-        Long lastIdx = studies.get(studies.size() - 1).getPostId();
-        return new ResponseEntity<>(new MultiResponseDto<>(mapper.postsToPostResponse(studies),searchedPosts, lastIdx), HttpStatus.OK);
+        List<Post> posts = searchedPosts.getContent();
+
+        Long lastIdx;
+        if (posts.size() >= 1) {
+            lastIdx = posts.get(posts.size() - 1).getPostId();
+        } else {
+            lastIdx = 0L;
+        }
+
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.postsToPostResponse(posts),searchedPosts, lastIdx), HttpStatus.OK);
     }
 
     @Operation(summary = "게시글에 대한 댓글 작성")
@@ -166,4 +169,17 @@ public class PostController {
 
         return new ResponseEntity<>(ans,HttpStatus.OK);
     }
+
+    @Operation(summary = "내 게시글 조회")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
+    @GetMapping("/myposts")
+    public ResponseEntity getMyPosts(@AuthenticationPrincipal UserPrincipal userPrincipal ) {
+
+        log.debug("GET ALL POSTS");
+
+        return postService.getMyPosts(userPrincipal.getMember());
+
+        }
+
+
 }

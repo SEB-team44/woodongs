@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.webjars.bower:bootstrap:4.3.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bower/bootstrap/4.3.1/28a4b2629c129bff9dbda25f3065154edb0f83fb/bootstrap-4.3.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bower/bootstrap/4.3.1/b04f3ee8f5e43fa3b162981b50bb72fe1acabb33/bootstrap-4.3.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

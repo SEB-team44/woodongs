@@ -1,6 +1,8 @@
 package main_project.udongs.stomp;
 
 import lombok.RequiredArgsConstructor;
+import main_project.udongs.exception.BusinessLogicException;
+import main_project.udongs.exception.ExceptionCode;
 import main_project.udongs.oauth2.oauth.token.AuthToken;
 import main_project.udongs.oauth2.oauth.token.AuthTokenProvider;
 import org.springframework.messaging.Message;
@@ -21,8 +23,8 @@ public class StompHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         if (accessor.getCommand() == StompCommand.CONNECT) {
             AuthToken token = tokenProvider.convertAuthToken(accessor.getFirstNativeHeader("token"));
-            if (token.validate()) {
-                token.getTokenClaims();
+            if (!token.validate()) {
+                throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
             }
 //            if( tokenProvider.convertAuthToken(accessor.getFirstNativeHeader("token"));)
 //                throw new AccessDeniedException("");
