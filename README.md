@@ -36,6 +36,7 @@
 <br>
 
 ## 개발 일정 
+
 2022.09.07 ~ 2022.10.12 <br><br>
 [프로젝트 진행상황 & 개발 명세서 정보](https://docs.google.com/spreadsheets/d/1woYZOvxBLOQJQsSVTUpBkC5F0iwVI_i3ls-ASMX2Y_M/edit#gid=1115838130)
 

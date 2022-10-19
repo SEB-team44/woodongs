@@ -102,7 +102,6 @@ public class PostController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MultiResponseDto.class))))})
     @GetMapping
     public ResponseEntity getPosts(Long cursorId, Integer size, String titleKeyword, String bodyKeyword, String cityKeyword ) {
-
         log.debug("GET ALL POSTS");
 
         Pageable pageable = PageRequest.of(0,size, Sort.by("postId").descending());
