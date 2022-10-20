@@ -96,17 +96,17 @@ public class Member {
 
     //스터디 신청 목록
     @Builder.Default
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member")
     private Set<StudyApply> studyApplies = new HashSet<>();
 
     //내가 속한 스터디(그룹장)
     @Builder.Default
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member")
     private Set<Study> studies = new HashSet<>();
 
     //내가 속한 스터디(멤버)
     @Builder.Default
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member")
     private Set<Acceptance> acceptances = new HashSet<>();
 
     //스터디 모집글 질문(comment)
