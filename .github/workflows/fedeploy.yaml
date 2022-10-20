@@ -1,0 +1,50 @@
+name: woodongs fe build
+
+on: 
+  push:
+    branches:
+      - fe-production 
+
+jobs:
+  react: 
+    name: react deploy
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./client 
+    steps: 
+      - name: checkout Github Action
+        uses: actions/checkout@v3 
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      
+      - name: install npm dependencies
+        run: npm install
+
+      - name: React build
+        run: npm run build
+
+      
+      - name: Configure AWS credentials 
+        uses: aws-actions/configure-aws-credentials@v1 
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }} 
+          aws-region: ap-northeast-2
+
+     
+      - name: Upload to S3
+        env:
+          BUCKET_NAME: mainproject-deploy
+        run: |
+          aws s3 sync \
+            ./build s3://$BUCKET_NAME
+      
+      
+      - name: CloudFront Invalidation
+        env:
+          CLOUD_FRONT_ID: ${{ secrets.AWS_CLOUDFRONT_ID}}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id $CLOUD_FRONT_ID --paths /*
