@@ -1,0 +1,11 @@
+{
+  "mymessages": [
+    {
+      "id": 1,
+      "title": "[서울] 기획 스터디",
+      "body": "프론트엔드 공부할 사람~<",
+      "category": "기획 & PO",
+      "headCount": 2
+    }
+  ]
+}
