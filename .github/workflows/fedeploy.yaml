@@ -1,17 +1,17 @@
-name: woodongs fe build
+name: Woodongs React Build
 
 on: 
   push:
     branches:
-      - fe-production 
+      - fe-production #fe-production으로 푸쉬가 일어나면 github actions 실행 트리거 
 
 jobs:
   react: 
-    name: react deploy
+    name: Woodongs React Build
     runs-on: ubuntu-20.04
     defaults:
       run:
-        working-directory: ./client 
+        working-directory: ./client #빌드할 폴더 
     steps: 
       - name: checkout Github Action
         uses: actions/checkout@v3 
@@ -19,35 +19,40 @@ jobs:
         with:
           node-version: 14
       
-      - name: install npm dependencies
+      - name: install npm dependencies #npm 의존성 설치
         run: npm install
 
-      - name: install react-redux
+      - name: install react-redux #react-redux 설치
         run: npm install react-redux
 
       - name: React build
         run: npm run build
 
+#빌드시
+#Treating warnings as errors because process.env.CI = true.
+#Most CI servers set it automatically.
+#라는 에러가 나서 package.json - scripts - "build": "CI=false && react-scripts build" 여기에 CI=false 추가 
       
       - name: Configure AWS credentials 
         uses: aws-actions/configure-aws-credentials@v1 
         with: 
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} #aws IAM user의 accessID, Key를 넣습니다. 
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} #보안상 github의 secret에 정보를 넣고 거기서 가져옴
           aws-region: ap-northeast-2
 
      
       - name: Upload to S3
         env:
-          BUCKET_NAME: mainproject-deploy
+          BUCKET_NAME: mainproject-deploy #버킷 이름 
         run: |
           aws s3 sync \
             ./build s3://$BUCKET_NAME
       
-      
+#CloudFront 배포하면 Invalidation을 해야 갱신이 됩니다. 
+#24시간 동안 이전 캐시가 남아있어 저걸 안하면 아무 변화가 안보입니다.     
       - name: CloudFront Invalidation
         env:
-          CLOUD_FRONT_ID: ${{ secrets.AWS_CLOUDFRONT_ID }}
+          CLOUD_FRONT_ID: ${{ secrets.AWS_CLOUDFRONT_ID }} #cloudfront ID 
         run: |
           aws cloudfront create-invalidation \
             --distribution-id $CLOUD_FRONT_ID --paths /*
