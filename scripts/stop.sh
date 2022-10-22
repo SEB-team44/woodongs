@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PROJECT_ROOT="/home/ubuntu/deploy"
+PROJECT_ROOT="/home/ec2-user/deploy"
 JAR_FILE="$PROJECT_ROOT/woodongs.jar"
 
 DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
