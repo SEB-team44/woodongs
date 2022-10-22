@@ -29,13 +29,13 @@ public class AwsS3Upload {
     private String bucket;
 
     private final AmazonS3 amazonS3;
-    private final MemberRepository memberRepository;
+    //private final MemberRepository memberRepository;
 
 
     public String upload(MultipartFile multipartFile, Member member) throws IOException {
 
         //이미 이미지가 등록되있으면 그거 삭제후 등록
-        //카카오는 처음에는 그냥 진행
+        //카카오는 처음에는 그냥 진행하고 url 덮어쓰기 (s3에는 처음에 안들어가있음)
         if (member.getProfileImageUrl() != null) {
             if (!member.getProfileImageUrl().contains("kakaocdn")) {
                 delete(member);
@@ -58,12 +58,14 @@ public class AwsS3Upload {
         return amazonS3.getUrl(bucket, s3FileName).toString();
     }
 
-
+    //교체전 이미지 삭제
     private void delete(Member member) {
 
+        //멤버Entity의 이미지 url을 사용해서 S3상에서 해당 이미지 찾기
         String s = member.getProfileImageUrl();
         AmazonS3URI s3URI = new AmazonS3URI(s);
 
+        /*업로드 파일이 한글 이름일 경우 %%2%%4%%이런식으로 깨지게 되어 key값을 뽑는 시점에 UTF-8로 디코딩을 한 뒤에 적용*/
         String key = URLDecoder.decode((s3URI.getKey().toString()), StandardCharsets.UTF_8);
 
         try {
