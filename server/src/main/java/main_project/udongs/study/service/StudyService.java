@@ -82,9 +82,11 @@ public class StudyService {
 
     //스터디 삭제
     @Transactional
-    public void deleteStudy(Long studyId) {
+    public void deleteStudy(Long studyId, Long memberId) {
         Study findStudy = findVerifiedStudy(studyId);
-        studyRepository.delete(findStudy);
+        if(findStudy.getMember().getMemberId() == memberId) {
+            studyRepository.delete(findStudy);
+        } else throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED_ACTION);
     }
 
 

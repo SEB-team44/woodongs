@@ -134,7 +134,7 @@ public class StudyController {
         log.debug("DELETE STUDY");
         Study verifiedStudy = studyService.findVerifiedStudy(studyId);
         studyService.isWriterOrAdmin(userPrincipal.getMember(), verifiedStudy.getMember());
-        studyService.deleteStudy(studyId);
+        studyService.deleteStudy(studyId, userPrincipal.getMember().getMemberId());
 
         return new ResponseEntity<>("스터디가 삭제 되었습니다.",HttpStatus.OK);
     }
