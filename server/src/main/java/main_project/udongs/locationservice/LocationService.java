@@ -46,9 +46,12 @@ public class LocationService {
         //URL 설정
         URL url = new URL(apiUrl);
 
+        
+        
         conn = (HttpURLConnection) url.openConnection();
 
         //Request 형식 설정
+        //Header를 읽을때 암묵적인 connection이루어짐 
         conn.setRequestMethod("GET");
         conn.setRequestProperty("X-Requested-With", "curl");
         conn.setRequestProperty("Authorization", auth);
