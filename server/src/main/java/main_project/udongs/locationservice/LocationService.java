@@ -41,6 +41,7 @@ public class LocationService {
         StringBuffer response = new StringBuffer();
 
         //인증키
+        //카카오 앱키는 KakaoAK ~~~~~~식으로 헤더에 넣어서 보내야함
         String auth = "KakaoAK " + "4b3f0bd16d0a149b391de0b8eff3d190";
 
         //URL 설정
@@ -58,6 +59,10 @@ public class LocationService {
 
         //request에 JSON data 준비
         conn.setDoOutput(true);
+
+        // connect메서드로 실제 요청, 하지만 위의 헤더 부분에서 커넥션이 일어나니
+        // 없어도 요청이 가능한 것 같다
+        // conn.connect()
 
         //보내고 결과값 받기
         int responseCode = conn.getResponseCode();
