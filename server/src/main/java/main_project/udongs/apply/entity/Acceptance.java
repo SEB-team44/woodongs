@@ -21,11 +21,11 @@ public class Acceptance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long acceptanceId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "studyId")
     private Study study;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private Member member;
 

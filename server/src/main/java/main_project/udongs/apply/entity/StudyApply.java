@@ -20,11 +20,11 @@ public class StudyApply {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long studyApplyId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "studyId")
     private Study study;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private Member member;
 

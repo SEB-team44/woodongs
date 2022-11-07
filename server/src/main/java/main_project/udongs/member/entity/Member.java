@@ -101,7 +101,7 @@ public class Member {
 
     //내가 속한 스터디(그룹장)
     @Builder.Default
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private Set<Study> studies = new HashSet<>();
 
     //내가 속한 스터디(멤버)

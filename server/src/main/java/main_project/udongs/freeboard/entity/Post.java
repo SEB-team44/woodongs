@@ -37,12 +37,12 @@ public class Post {
     @Column
     private LocalDateTime modifiedAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private Member member;
 
     @Builder.Default
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post")
     List<PostComment> comments = new ArrayList<>();
 
     public void delete() {
