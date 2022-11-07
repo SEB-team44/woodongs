@@ -29,7 +29,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="7699e61b-6c5b-4c97-afc7-3e8b43f98ac8">
-      <console name="asd" type="STANDARD" schema="woodongs" session="Main" />
+      <console name="asd" type="STANDARD" schema="woodongs" session="Main"><![CDATA[select * from post;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
@@ -37,6 +37,9 @@
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="7699e61b-6c5b-4c97-afc7-3e8b43f98ac8" />
+  </component>
+  <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="7699e61b-6c5b-4c97-afc7-3e8b43f98ac8" dataset="woodongs.post" active-filter-id="" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
