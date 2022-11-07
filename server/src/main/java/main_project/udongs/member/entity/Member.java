@@ -27,6 +27,7 @@ import java.util.Set;
 @Builder
 public class Member {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
@@ -100,12 +101,12 @@ public class Member {
 
     //내가 속한 스터디(그룹장)
     @Builder.Default
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private Set<Study> studies = new HashSet<>();
 
     //내가 속한 스터디(멤버)
     @Builder.Default
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member")
     private Set<Acceptance> acceptances = new HashSet<>();
 
     //스터디 모집글 질문(comment)
@@ -120,6 +121,7 @@ public class Member {
     @Builder.Default
     @OneToMany(mappedBy = "post")
     List<PostComment> postComments = new ArrayList<>();
+
 
     //시큐리티 상에서 필요한 로직(member를 새로 만들어야 하는 경우가 있음)
     public Member(

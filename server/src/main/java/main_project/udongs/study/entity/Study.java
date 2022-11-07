@@ -51,24 +51,24 @@ public class Study {
 
     //스터디 장 정보
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private Member member;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "study",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "study")
     @Builder.Default
     List<StudyApply> studyApplies = new ArrayList<>();
 
     //수락한 스터디 신청 리스트
     @JsonIgnore
-    @OneToMany(mappedBy = "study",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "study")
     @Builder.Default
     List<Acceptance> acceptances = new ArrayList<>();
 
     //스터디 모집글 댓글
     @JsonIgnore
-    @OneToMany(mappedBy = "study",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "study")
     @Builder.Default
     List<StudyComment> comments = new ArrayList<>();
 
@@ -82,16 +82,19 @@ public class Study {
     private State state = State.Open;
 
     @Getter
-    public enum State{
+    public enum State {
         Open,
         Closed
     }
 
+//    public void setMember(Member member) {
+//        this.member = member;
+//        member.getStudies().add(this);
+//    }
+
 //    public List<StudyApply> getAcceptances() {
 //        return this.studyApplies.stream().filter(studyApplies -> studyApplies.getState() == StudyApply.State.ACCEPT).collect(Collectors.toList());
 //    }
-
-
 
 
 }
