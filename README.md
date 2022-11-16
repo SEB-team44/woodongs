@@ -77,12 +77,12 @@
 <br>
 
 ## 인프라
-<img width="615" alt="스크린샷 2022-09-14 오후 6 20 07" src="https://github.com/codestates-seb/seb39_main_044/blob/be-production/server/infrafin.jpg">
+<img width="615" alt="스크린샷 2022-09-14 오후 6 20 07" src="server/infrafin.jpg">
 
 
 
 ## 테이블 관계도 
-<img width="615" alt="스크린샷 2022-09-14 오후 6 20 07" src="https://github.com/codestates-seb/seb39_main_044/blob/BE/server/ERDv2.jpg">
+<img width="615" alt="스크린샷 2022-09-14 오후 6 20 07" src="server/ERDv2.jpg">
 
 
 ## 사용자 흐름
