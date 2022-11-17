@@ -11,8 +11,8 @@ name: Woodongs-cdci-test
 ## setupdone
 ## test1
 on:
-  push:
-    branches: [ "be-production" ]
+#  push:
+#    branches: [ "be-production" ]
   pull_request:
     branches: [ "be-production" ]
 
