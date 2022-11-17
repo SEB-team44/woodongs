@@ -73,14 +73,6 @@ public class MemberService {
         memberProfile.setCareer(profile.getCareer());
         memberProfile.setIntroduction(profile.getIntroduction());
 
-        // 이름, 폰번호, 비번 만 변경
-//        Optional.ofNullable(profile.getJob())
-//                .ifPresent(memberProfile::setJob);
-//        Optional.ofNullable(profile.getCareer())
-//                .ifPresent(memberProfile::setCareer);
-//        Optional.ofNullable(profile.getIntroduction())
-//                .ifPresent(memberProfile::setIntroduction);
-
         return memberRepository.save(member);
     }
 
@@ -92,10 +84,6 @@ public class MemberService {
             member.setProfileImageUrl(profileImageUrl);
             return memberRepository.save(member);
 
-    }
-
-    public Member getMembers() {
-        return null;
     }
 
     @Transactional

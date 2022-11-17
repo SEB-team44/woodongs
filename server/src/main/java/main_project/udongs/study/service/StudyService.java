@@ -161,7 +161,7 @@ public class StudyService {
             searchedStudies = studyRepository.findByTitleContaining(titleKeyword, pageable);
         } else if (titleKeyword == null && cityKeyword != null && categoryKeyword == null) { //도시이름으로만 검색
             searchedStudies = studyRepository.findByCityContaining(cityKeyword, pageable);
-        } else if (titleKeyword == null && cityKeyword == null && categoryKeyword != null) { //카테고리로만 검색
+        } else if (titleKeyword == null && cityKeyword == null) { //카테고리로만 검색
             searchedStudies = studyRepository.findByCategoryContaining(categoryKeyword, pageable);
         }
 
@@ -177,7 +177,7 @@ public class StudyService {
             searchedPosts = studyRepository.findByStudyIdLessThanAndTitleContaining(id, titleKeyword, pageable);
         } else if (titleKeyword == null && cityKeyword != null && categoryKeyword == null) { //도시이름으로만 검색
             searchedPosts = studyRepository.findByStudyIdLessThanAndCityContaining(id, cityKeyword, pageable);
-        } else if (titleKeyword == null && cityKeyword == null && categoryKeyword != null) { //카테고리로만 검색
+        } else if (titleKeyword == null && cityKeyword == null) { //카테고리로만 검색
             searchedPosts = studyRepository.findByStudyIdLessThanAndCategoryContaining(id, categoryKeyword, pageable);
         }
 
@@ -190,7 +190,7 @@ public class StudyService {
     // 일단 주석처리
     public ResponseEntity getAroundStudy(Long id, Pageable pageable, String titleKeyword, String cityKeyword, String categoryKeyword,
                                          Double nowLat, Double nowLon) {
-        List<Study> searchedStudies;
+        List<Study> searchedStudies = null;
 
         if (id == null) {
             if (titleKeyword == null && cityKeyword == null && categoryKeyword == null) {
@@ -199,7 +199,7 @@ public class StudyService {
                 searchedStudies = studyRepository.findByTitleContainingOrderByStudyIdDesc(titleKeyword);
             } else if (titleKeyword == null && cityKeyword != null && categoryKeyword == null) { //도시이름으로만 검색
                 searchedStudies = studyRepository.findByCityContainingOrderByStudyIdDesc(cityKeyword);
-            } else { //카테고리로만 검색
+            } else if (titleKeyword == null && cityKeyword == null) { //카테고리로만 검색
                 searchedStudies = studyRepository.findByCategoryContainingOrderByStudyIdDesc(categoryKeyword);
             }
         }
@@ -211,14 +211,14 @@ public class StudyService {
                 searchedStudies = studyRepository.findByStudyIdLessThanAndTitleContainingOrderByStudyIdDesc(id, titleKeyword);
             } else if (titleKeyword == null && cityKeyword != null && categoryKeyword == null) { //도시이름으로만 검색
                 searchedStudies = studyRepository.findByStudyIdLessThanAndCityContainingOrderByStudyIdDesc(id, cityKeyword);
-            } else { //카테고리로만 검색
+            } else if (titleKeyword == null && cityKeyword == null) { //카테고리로만 검색
                 searchedStudies = studyRepository.findByStudyIdLessThanAndCategoryContainingOrderByStudyIdDesc(id, categoryKeyword);
             }
         }
 
         Long lastIdx;
 
-        List<Study> aroundStudies = searchedStudies.stream()
+        List<Study> aroundStudies = Objects.requireNonNull(searchedStudies).stream()
                 .filter(study -> {
                     Double lat = study.getLatitude();
                     Double lon = study.getLongitude();
@@ -236,7 +236,7 @@ public class StudyService {
         if (!aroundStudies.isEmpty()) {
             lastIdx = aroundStudies.get(aroundStudies.size() - 1).getStudyId();
         } else {
-            lastIdx = 1L;
+            lastIdx = 0L;
         }
 
 
