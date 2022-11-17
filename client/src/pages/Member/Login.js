@@ -1,6 +1,7 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -13,7 +14,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import KakaoButton from "react-kakao-button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as Links } from "react-router-dom";
 import { UserLogin } from "../../UserContext";
@@ -26,15 +26,15 @@ const StyledLogin = styled.div`
     justify-content: center;
     align-items: center;
   }
+  .circularProgress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 function Copyright(props) {
   return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
+    <Typography variant="body2" color="text.primary" align="center" {...props}>
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
         Woodongs
@@ -52,7 +52,24 @@ function Copyright(props) {
 const KAKAOPATH =
   "https://api.woodongs.site/oauth2/authorization/kakao?redirect_uri=https://www.woodongs.site/Redirect";
 
-const theme = createTheme();
+const theme = createTheme({
+  status: {
+    danger: "#e53e3e",
+  },
+  palette: {
+    primary: {
+      main: "#0971f1",
+      darker: "#053e85",
+    },
+    secondary: {
+      main: "#fee501",
+    },
+    neutral: {
+      main: "#64748B",
+      contrastText: "#fff",
+    },
+  },
+});
 
 export default function Login() {
   let navigate = useNavigate();
@@ -207,7 +224,7 @@ export default function Login() {
               alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -249,20 +266,6 @@ export default function Login() {
                   control={<Checkbox value="remember" color="primary" />}
                   label="Remember me"
                 />
-                {/* <Links to="/main"> */}
-                {isLoading ? (
-                  <div className="login-loading">Loading.......</div>
-                ) : (
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                  >
-                    Login
-                  </Button>
-                )}
-                {/* </Links> */}
                 <Grid container>
                   <Grid item xs>
                     <Link href="#" variant="body2">
@@ -275,20 +278,45 @@ export default function Login() {
                     </Links>
                   </Grid>
                 </Grid>
+                {/* <Links to="/main"> */}
                 {isLoading ? (
-                  <div className="login-loading">Loading......</div>
-                ) : (
-                  <div className="social_login">
-                    {/* <GoogleButton/> */}
-                    {/* onClick={() => handleKakao()} */}
-                    <a
-                      className="btn_btn_block_social_btn_kakao"
-                      href={KAKAOPATH}
-                    >
-                      <KakaoButton sx={{ mt: 8, mb: 4 }} />
-                    </a>
+                  <div className="circularProgress">
+                    <CircularProgress size={50} sx={{ mt: 5, mb: 1 }} />
                   </div>
+                ) : (
+                  <>
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2, height: 48 }}
+                    >
+                      Login
+                    </Button>
+                    <div className="social_login">
+                      <a
+                        className="btn_btn_block_social_btn_kakao"
+                        href={KAKAOPATH}
+                      >
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          fullWidth
+                          startIcon={
+                            <Avatar
+                              src={"https://it-mbti.com/img/kakao_icon.png"}
+                            />
+                          }
+                        >
+                          Login with Kakao
+                        </Button>
+                        {/* <img src = "https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" width={400} ></img> */}
+                      </a>
+                    </div>
+                  </>
                 )}
+
+                {/* </Links> */}
               </Box>
             )}
           </Box>
