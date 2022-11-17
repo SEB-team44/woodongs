@@ -23,12 +23,14 @@ public class StompHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         if (accessor.getCommand() == StompCommand.CONNECT) {
             AuthToken token = tokenProvider.convertAuthToken(accessor.getFirstNativeHeader("token"));
+            System.out.println("token.getToken() : "+ token.getToken());
             if (!token.validate()) {
                 throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
             }
 //            if( tokenProvider.convertAuthToken(accessor.getFirstNativeHeader("token"));)
 //                throw new AccessDeniedException("");
         }
+        System.out.println("message : " + message);
         return message;
     }
 }
