@@ -38,7 +38,7 @@ function App() {
                 <Route path="/SignUp" element={<SignUp />} />
                 <Route path="/study/:id" element={<Recruit />} />
                 <Route path="/study/recruit" element={<AddStudy />} />
-                <Route path="/EditRecruit" element={<EditRecruit />} />
+                <Route path="/EditRecruit/:id" element={<EditRecruit />} />
                 <Route path="/MyPage" element={<MyPage />} />
                 <Route path="/MyGroup" element={<MyGroup />} />
                 <Route path="/FreeBoard" element={<FreeBoard />} />

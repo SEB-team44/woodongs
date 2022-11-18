@@ -1,14 +1,50 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useCallback, useEffect, useState } from "react";
-import axios from "axios";
-import { React, useContext } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { React } from "react";
 import { Button } from "@mui/material";
+import styled from "styled-components";
+import Navbar from "../Main/Navbar";
 
+const AddStudyStyled = styled.div`
+  .add_container {
+    align-items: center;
+    justify-content: center;
+    margin: 50px auto;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 30px;
+    width: 800px;
+  }
+  .submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .submit-button {
+    /* background-color: #6787f6; */
+  }
+  .form-group {
+    display: inline-block;
+    width: 500px;
+    line-height: 50px;
+  }
+  textarea {
+    resize: none;
+  }
+  .innerBox {
+    display: flex;
+    margin-right: 10px;
+  }
+  .checkbox {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+  }
+`;
 
 const EditRecruit = () => {
   //작성한 사람이 수정할 수 있게?? 토큰있는 사람만??
-  const access_token = useSelector((state) => state.accessToken);
+  const access_token = localStorage.getItem("access_token");
   const navigate = useNavigate();
   //URI 파라미터 가져오기
   const { id } = useParams(); //card.id
@@ -18,10 +54,23 @@ const EditRecruit = () => {
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("");
   const [headCount, setHeadCount] = useState("");
+  const [content, setContent] = useState({});
+  const [checkedItems, setCheckedItems] = useState(new Set()); //체크된 요소들
+  const [bodyValue, setBodyValue] = useState("");
 
   //사용자가 직전에 등록한 게시물의 상태를 그대로 보여주기위해
   //컴포넌트가 마운트 되고 uri 파라미터에 해당하는 data를 가져와
   //title,body,category,headcount의 상태를 바꿔줌
+
+  useEffect(()=> {
+    setContent(() => {
+      return {
+        ...content,
+        body: bodyValue,
+      };
+    });
+  },[bodyValue, headCount])
+
   useEffect(() => {
     const getData = () => {
       let reqOption = {
@@ -39,66 +88,151 @@ const EditRecruit = () => {
         .then((data) => {
           console.log("content", data);
           return data;
+        })
+        .then((result) => {
+          setTitle(() => result.title);
+          setBody(() => result.body);
+          setCategory(() => result.category);
+          setHeadCount(() => result.headCount);
         });
     };
-    getData().then((result) => {
-      setTitle(result.title);
-      setBody(result.body);
-      setCategory(result.category);
-      setHeadCount(result.headCount);
-    });
+    getData();
   }, []);
 
-  const canSubmit = useCallback(() => {
-    return body !== "" && title !== "" && category !== "" && headCount !== "";
-  }, [title, body, category, headCount]);
+  const getValue = (e) => {
+    // e.preventDefault();
+    const { value } = e.target;
+    setContent(() => {
+      return {
+        ...content,
+        title: value,
+      };
+    });
+  };
 
-  const handleSubmit = useCallback(async () => {
-    try {
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("body", body);
-      formData.append("category", category);
-      formData.append("headCount", headCount);
-      //수정할 땐 card.id 보내자
-      formData.append("id", id);
-      await card.put("/study/card", formData);
-      window.alert("수정이 완료되었습니다. :-D");
-      //이전 페이지로 돌아가기
-      window.location.href = `/card/edite`;
-    } catch (err) {
-      //서버에서 받은 에러 메시지 출력
-      console.log("오류발생!");
-    }
-  }, [canSubmit]);
+  const checkHandler = (e) => {
+    const { value } = e.target;
+    setContent({
+      ...content,
+      category: value,
+    });
+  };
+
+  const getHeadValue = (e) => {
+    const { value } = e.target;
+    setContent(() => {
+      return {
+        ...content,
+        headCount: value,
+      };
+    });
+  };
+
+  const handleBody = (event) => {
+    const {value} = event.target
+    setBodyValue(() => value);
+  };
+
+  const submitButton = () => {
+    const access_token = localStorage.getItem("access_token");
+    let reqPost = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        withCredentials: true,
+        "Access-Control-Allow-Origin": "*",
+        Authorization: access_token,
+      },
+      body: JSON.stringify({
+        title: content.title,
+        body: content.body,
+        category: content.category,
+        headCount: content.headCount,
+      }),
+    };
+
+    fetch(`https://api.woodongs.site/study/${id}`, reqPost)
+      .then((res) => {
+        if (res.ok) {
+          alert("스터디가 성공적으로 수정되었습니다 :D");
+          navigate(`/study/${id}`);
+          return res.json();
+        }
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
+
+  const CATEGORY_LIST = [
+    { id: 0, name: "기획 & PO" },
+    { id: 1, name: "디자인 & UX" },
+    { id: 2, name: "프론트엔드" },
+    { id: 3, name: "백엔드" },
+    { id: 4, name: "취업" },
+    { id: 5, name: "어학" },
+    { id: 6, name: "시험 & 고시" },
+    { id: 7, name: "기타" },
+  ];
 
   return (
-    <div className="addRecruit-wrapper">
-      <div className="addRecruit-header">게시물 수정하기</div>
-      <div className="submitButton">
-        {/* {canSubmit() ? ( */}
-        <Button
-          // onClick={handleSubmit}
-          className="success-button"
-          // variant="outlined"
-        >
-          수정하기
-        </Button>
-        {/* ) : ( */}
-        <Button className="disable-button" variant="outlined" size="large">
-          제목과 내용을 모두 입력하세요
-        </Button>
-        {/* )} */}
-      </div>
-      <div className="addRecruit-body">
-        <textarea
-          setTitle={setTitle}
-          setBody={setBody}
-          title={title}
-          body={body}
-        />
-      </div>
-    </div>
+    <>
+      <AddStudyStyled>
+        <Navbar />
+        <div className="add_container">
+          <h2>*스터디명</h2>
+          <input
+            type="text"
+            placeholder={title}
+            size="100"
+            onChange={(e) => getValue(e)}
+          />
+          <h2>*스터디 분야</h2>
+          <h4>❗️아래 분야 중 한가지를 선택해주세요.</h4>
+          <div className="checkbox">
+            {CATEGORY_LIST.map((item) => (
+              <label key={item.id} className="innerBox">
+                <input
+                  type="checkbox"
+                  value={item.name}
+                  onChange={(e) => checkHandler(e)}
+                />
+                <div>{item.name}</div>
+              </label>
+            ))}      
+          </div>
+
+          <h2>*모집인원</h2>
+          <h4>❗️3~4명을 추천합니다. (최대 9명, 추후변경가능)</h4>
+          <input
+            type="text"
+            placeholder={headCount}
+            size="20"
+            onChange={(e) => getHeadValue(e)}
+          />
+          <h2>*스터디 설명</h2>
+          <h4>❗️스터디 참여조건에 대해서 기재해주세요</h4>
+          <textarea
+            rows="15"
+            cols="97"
+            placeholder={body}
+            value={bodyValue}
+            maxLength={2000}
+            onChange={(e) => {
+              handleBody(e)
+            }}
+          ></textarea>
+          <div className="submit">
+            <Button
+              className="submit-button"
+              variant="contained"
+              onClick={(e) => submitButton(e)}
+            >
+              수정완료
+            </Button>
+          </div>
+        </div>
+      </AddStudyStyled>
+    </>
   );
 };
 
