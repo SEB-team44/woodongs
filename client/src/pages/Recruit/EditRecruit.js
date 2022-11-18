@@ -69,7 +69,7 @@ const EditRecruit = () => {
         body: bodyValue,
       };
     });
-  },[bodyValue, headCount])
+  },[handleBody(), headCount])
 
   useEffect(() => {
     const getData = () => {
