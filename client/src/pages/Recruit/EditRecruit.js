@@ -86,7 +86,6 @@ const EditRecruit = () => {
       fetch(`https://api.woodongs.site/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
-          console.log("content", data);
           return data;
         })
         .then((result) => {
