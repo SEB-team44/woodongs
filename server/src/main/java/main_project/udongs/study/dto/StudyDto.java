@@ -6,12 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import main_project.udongs.member.dto.MemberDto;
-import main_project.udongs.member.entity.Member;
 import main_project.udongs.study.entity.Study;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -59,6 +56,7 @@ public class StudyDto {
 
         private String category;
 
+        private Long headCount;
 
         public void setStudyId(long id){
             this.studyId = studyId;
