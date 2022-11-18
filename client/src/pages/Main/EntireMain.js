@@ -8,6 +8,11 @@ import Footer from "./Footer";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
+import study1 from "../../img/study1.jpg";
+import study2 from "../../img/study2.jpg";
+import study3 from "../../img/study3.jpg";
+import study4 from "../../img/study4.jpg";
+import study5 from "../../img/study5.jpg";
 import { UserInfo } from "../../UserContext";
 import { useContext } from "react";
 
@@ -174,6 +179,9 @@ const EntireMain = () => {
     };
   });
 
+    //랜덤이미지?
+    const images = [study1, study2, study3, study4, study5];
+
   return (
     <>
       <StyledEntireMain>
@@ -204,7 +212,7 @@ const EntireMain = () => {
                       <CardMedia className="cardimg-box">
                         <img
                           className="cardimg"
-                          src={require("../../../src/img/businessplan.png")}
+                          src={images[Math.floor(Math.random() * 5)]}
                         ></img>
                       </CardMedia>
                       <CardContent className="study-info-box">

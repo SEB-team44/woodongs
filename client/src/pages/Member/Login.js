@@ -25,6 +25,7 @@ const StyledLogin = styled.div`
   .social_login .btn_btn_block_social_btn_kakao {
     justify-content: center;
     align-items: center;
+    text-decoration-line: none;
   }
   .circularProgress {
     display: flex;

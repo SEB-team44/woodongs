@@ -165,7 +165,6 @@ const Main = () => {
         //   })
         //   .catch((error) => console.log("error",error))
       } else {
-
         fetch(`https://api.woodongs.site/study?size=10`, reqOption)
           .then((res) => res.json())
           .then((data) => {
@@ -235,11 +234,7 @@ const Main = () => {
     };
   });
   //랜덤이미지?
-  const images = ["study1", "study2", "study3", "study4", "study5"];
-  const chosenImage = images[Math.floor(Math.random() * 4)];
-  const bgImage = document.createElement("img");
-  bgImage.src = `${chosenImage}`;
-  console.log(bgImage);
+  const images = [study1, study2, study3, study4, study5];
 
   return (
     <>
@@ -261,7 +256,7 @@ const Main = () => {
           </section>
           <section className="main-cardlist-container">
             <main className="cardlists-box">
-              {cardList.length !== 0 ? 
+              {cardList.length !== 0 ? (
                 cardList.map((el, idx) => {
                   return (
                     <Card
@@ -274,7 +269,7 @@ const Main = () => {
                           <img
                             className="cardimg"
                             // src={bgImage}
-                            src={study2}
+                            src={images[Math.floor(Math.random() * 5)]}
                             // src={require("../../../src/img/businessplan.png")}
                           ></img>
                         </CardMedia>
@@ -296,8 +291,11 @@ const Main = () => {
                         </div>
                       </article>
                     </Card>
-                  )
-                }) : <div> 주변에 스터디가 없습니다.</div>}
+                  );
+                })
+              ) : (
+                <div> 주변에 스터디가 없습니다.</div>
+              )}
             </main>
           </section>
           <section className="main-footer-container">
