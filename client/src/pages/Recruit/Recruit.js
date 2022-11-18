@@ -361,7 +361,7 @@ const Recruit = () => {
                         >
                           <TiTrash />
                         </button>
-                        <Link to="/EditRecruit">
+                        <Link to= {"/EditRecruit/"+`${id}`}>
                           <button
                             className="update-btn"
                             // onClick={() => handleEditRecruit()}
