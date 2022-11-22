@@ -301,7 +301,7 @@ const Recruit = () => {
       receiverId: Number(memberid),
       message: `${userInfo.nickName} 님께서 스터디 가입을 신청하였습니다.`,
     };
-
+    let isError = true ;
     fetch(`https://api.woodongs.site/study/${id}/apply`, {
       method: "POST",
       headers: header,
@@ -309,15 +309,21 @@ const Recruit = () => {
       .then((res) => {
         if (res.ok) {
           alert("신청을 성공하였습니다.");
-        }
+        } 
+        if (res.status === 500) {
+          alert("스터디 허용 인원을 초과하였습니다.")
+          isError(false)
+        } 
       })
       .then(() => {
-        stomp.send(
-          //알람 전송
-          `/app/alarm`,
-          {},
-          JSON.stringify(msg)
-        );
+        if(isError){
+          stomp.send(
+            //알람 전송
+            `/app/alarm`,
+            {},
+            JSON.stringify(msg)
+          );
+        }
       })
       .then(() => {
         stomp.disconnect();
