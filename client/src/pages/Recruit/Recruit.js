@@ -373,7 +373,6 @@ const Recruit = () => {
                         <Link to={"/EditRecruit/" + `${id}`}>
                           <button
                             className="update-btn"
-                            // onClick={() => handleEditRecruit()}
                           >
                             <TiPencil />
                           </button>

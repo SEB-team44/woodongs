@@ -108,7 +108,6 @@ const MyPage = () => {
       })
         .then((res) => res.json())
         .then((res) => {
-          // console.log("me", res);
           setChangeInfo((changeInfo) => {
             return {
               ...changeInfo,
@@ -122,7 +121,6 @@ const MyPage = () => {
           })
             .then((res) => res.json())
             .then((res) => {
-              // console.log("profile", res);
               setChangeInfo({ ...changeInfo, ...res });
               setUserInfo((userInfo) => {
                 return { ...userInfo };
@@ -254,7 +252,6 @@ const MyPage = () => {
     formData.append("images", e.target.files[0]);
     // 서버의 upload API 호출
     axios({
-      // baseURL: "https://59.16.126.210:8080/member/imageupload",
       url: "https://api.woodongs.site/member/imageupload",
       method: "POST",
       data: formData,

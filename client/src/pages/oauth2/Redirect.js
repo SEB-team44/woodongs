@@ -67,7 +67,6 @@ const Redirect = () => {
           })
             .then((res) => res.json())
             .then((res) => {
-              console.log("사용자", res);
               setUserInfo({ ...res });
             })
             .then((res) => {

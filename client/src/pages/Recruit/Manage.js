@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { ThemeConsumer } from "styled-components";
+import styled  from "styled-components";
 import { useEffect, useState } from "react";
 
 const StyledManage = styled.div`
@@ -37,10 +37,9 @@ const Manage = ({ id }) => {
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log("applyInfo", res);
           setApplyInfo([...res]);
         })
-        .catch((error) => console.log(error));
+        .catch((error) => alert(error));
     };
     getApplied();
   }, []);
@@ -51,7 +50,6 @@ const Manage = ({ id }) => {
         headers: header,
       }).then((res) => {
         if (res.ok) {
-          console.log(res.json())
           alert("신청이 수락되었습니다.");
           const filtered = applyInfo.filter((el) => {
             return el.studyApplyId !== id;
@@ -90,7 +88,6 @@ const Manage = ({ id }) => {
                   />{" "}
                   {el.memberResponseDto.nickName}
                 </div>
-                {console.log(el)}
                 <div className="chart-element">
                   직업 <p>{el.memberResponseDto.profile.job}</p>
                 </div>
