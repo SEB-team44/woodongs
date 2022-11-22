@@ -176,6 +176,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
         .then(() => {
           setIslogin(true)
         });
+        
     };
     getMember();
   }, [alarm]);
