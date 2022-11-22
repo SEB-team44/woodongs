@@ -32,6 +32,7 @@ const MyPageStyled = styled.div`
     align-items: center;
     justify-content: center;
     text-align: center;
+    margin-top: 10px;
   }
   .mypage_downcontent {
     display: flex;
@@ -59,18 +60,15 @@ const MyPageStyled = styled.div`
     text-decoration: none;
     list-style: none;
   }
+  .user_info_child{
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .info-introduction{
+    margin-bottom: 40px;
+  }
 `;
 
-//이미지 업로드 의사코드
-//1. 회원정보를 가져와서 이미지의 기본값을 그 이미지로 받아온다.
-//2  이미지를 업로드하면, 바뀐 이미지를 post해주고, 바뀐이미지를 기본이미지로 대체한다.
-//3  다음번에 리로드할 때에는 회원정보의 이미지를 출력한다.
-
-//마이페이지 의사코드
-// 1. 버튼을 누르면 textArea와 그것을 전송하는 버튼이 보이게 한다.
-// 2. textArea필드에 값을 입력하고 전송하면
-// 3. 회원정보를 수정하는 post요청을 보내고
-// 4. post가 성공하면 get요청을 통해 회원정보를 받아와 출력한다.
 
 const MyPage = () => {
   const access_token = localStorage.getItem("access_token");
@@ -209,10 +207,9 @@ const MyPage = () => {
               introduction: changeInfo.introduction,
             }),
           })
-            // .then((res) => res.json())
             .then((res) => {
               if (res.ok) {
-                console.log("소개 수정 성공", res.status);
+                alert("수정되었습니다 :)", res.status);
                 setUserInfo((userInfo) => {
                   return {
                     ...userInfo,
@@ -231,10 +228,10 @@ const MyPage = () => {
               setRerender(!reRender);
             })
             .catch((error) =>
-              console.log(`${error}, 정보를 수정할 수 없습니다.`)
+              alert(`${error}, 정보를 수정할 수 없습니다.`)
             );
         })
-        .catch((error) => console.log(`${error}, 정보를 수정할 수 없습니다.`));
+        .catch((error) => alert(`${error}, 정보를 수정할 수 없습니다.`));
     };
 
     PatchNickName();
@@ -382,9 +379,9 @@ const MyPage = () => {
                 </div>
               ) : (
                 <div className="user_info">
-                  <div className="info job">{changeInfo.job}</div>
-                  <div className="info career">{changeInfo.career}</div>
-                  <div className="info introduction">
+                  <div className="user_info_child info-job">{changeInfo.job}</div>
+                  <div className="user_info_child info-career">{changeInfo.career}</div>
+                  <div className="user_info_child info-introduction">
                     {changeInfo.introduction}
                   </div>
                 </div>
