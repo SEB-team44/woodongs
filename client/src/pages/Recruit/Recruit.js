@@ -1,8 +1,6 @@
 import { React, useContext } from "react";
-import axios from "axios";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import Navbar from "../Main/Navbar";
-import EditRecruit from "../Recruit/EditRecruit";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import Footer from "../Main/Footer";
@@ -66,6 +64,17 @@ const StyledRecruit = styled.section`
   .tab-element {
     padding-left: 15px;
     padding-right: 15px;
+   
+  }
+  .tab-element:hover{
+    background-color:#E5EDFC;
+    font-weight: 600;
+  }
+  #tab-checked{
+    background-color:#E5EDFC;
+    font-weight: 600;
+    border-top: solid black 1px;
+    border-right : solid black 1px;
     border-left: 1px black solid;
   }
   .my-info {
@@ -118,6 +127,7 @@ const StyledRecruit = styled.section`
   .input-button {
     height: 40px;
   }
+
 `;
 
 const Recruit = () => {
@@ -130,18 +140,17 @@ const Recruit = () => {
   const [card, setCard] = useState([]);
   const [inputComment, setInputComment] = useState("");
   const [getcondition, setgetcondition] = useState(true);
-  const [getconditions, setgetconditions] = useState(true);
   const [changeTab, setChangeTab] = useState(true);
 
   //질문목록에 맞는 데이터 받아오기
   //URL 파라미터 받기 card의 id
   const { id } = useParams();
-  const { studyId } = useParams(); //studyId입니다.
-  const [data, setData] = useState({});
   const [content, setContent] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  // const access_token =
+  const [tabIndex , setTabindex] = useState(0);
+
+
+  
   const header = {
     "content-type": "application/json",
     Accept: "application/json",
@@ -164,7 +173,6 @@ const Recruit = () => {
       fetch("https://api.woodongs.site/study/" + `${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
-          console.log("content", data);
           return data;
         })
         .then((data) => setContent({ ...content, ...data }));
@@ -189,7 +197,7 @@ const Recruit = () => {
         }
         return res;
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => alert(err.message));
   };
 
   //카드 리스트와 댓글 리스트를 첫 랜더링 때 받아오자
@@ -202,7 +210,6 @@ const Recruit = () => {
       fetch(`https://api.woodongs.site/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data); //댓글배열로나옴
           return data;
         })
         .then((data) => setComment(data.commentResponseDtos));
@@ -216,7 +223,6 @@ const Recruit = () => {
       fetch(`https://api.woodongs.site/study/${id}`, reqOption)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data); //나옴
           return data;
         })
         .then((data) => setCard(data));
@@ -246,7 +252,7 @@ const Recruit = () => {
     //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
   };
 
-  const handleChangeTab = (e) => {
+  const handleChangeTab = (e , index) => {
     e.preventDefault();
     if (e.target.className === "tab-element tab-info") {
       setChangeTab(true);
@@ -254,6 +260,7 @@ const Recruit = () => {
     if (e.target.className === "tab-element tab-manage") {
       setChangeTab(false);
     }
+    setTabindex(index)
   };
 
   //댓글 구현 메소드
@@ -315,7 +322,7 @@ const Recruit = () => {
       .then(() => {
         stomp.disconnect();
       })
-      .catch((error) => console.log(error));
+      .catch((error) => alert(error));
   };
 
   return (
@@ -339,14 +346,16 @@ const Recruit = () => {
               <section className="recruit-main-section">
                 <div className="tab">
                   <div
+                    id={tabIndex === 0 ? "tab-checked" : null }
                     className="tab-element tab-info"
-                    onClick={(e) => handleChangeTab(e)}
+                    onClick={(e) => handleChangeTab(e, 0)}
                   >
                     정보
                   </div>
                   <div
+                  id={tabIndex === 1 ? "tab-checked" : null }
                     className="tab-element tab-manage"
-                    onClick={(e) => handleChangeTab(e)}
+                    onClick={(e) => handleChangeTab(e, 1)}
                   >
                     관리
                   </div>
@@ -361,7 +370,7 @@ const Recruit = () => {
                         >
                           <TiTrash />
                         </button>
-                        <Link to= {"/EditRecruit/"+`${id}`}>
+                        <Link to={"/EditRecruit/" + `${id}`}>
                           <button
                             className="update-btn"
                             // onClick={() => handleEditRecruit()}
@@ -369,7 +378,6 @@ const Recruit = () => {
                             <TiPencil />
                           </button>
                         </Link>
-                        {/* {console.log("card", card)} */}
                       </div>
                       <h2>✔️ 모집현황</h2>
                       <p>
