@@ -72,11 +72,8 @@ const AddStudy = () => {
     //지훈님 14.6.86.98:8080
     // fetch(`http://59.16.126.210:8080/study/${content.memberId}/recruit`, reqPost)
     fetch(`https://api.woodongs.site/study/recruit`, reqPost)
-      // fetch(`http://localhost:3001/card`, reqPost)
       .then((res) => {
         if (res.ok) {
-          // console.log(content.title, content.body);
-          // console.log(res.json());
           alert("새로운 스터디가 성공적으로 등록되었습니다 :D");
           navigate(`/main`);
           return res.json();
@@ -86,7 +83,6 @@ const AddStudy = () => {
       .catch((err) => console.log(err));
   };
   const getValue = (e) => {
-    // e.preventDefault();
     const { value } = e.target;
     console.log(e.target.name);
     console.log("value", value);
