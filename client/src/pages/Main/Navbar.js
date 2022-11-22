@@ -126,7 +126,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const [anchorEl1, setAnchorEl1] = React.useState(null);
   const [anchorEl2, setAnchorEl2] = React.useState(null);
   const [searchInput, setSearchInput] = useState("");
-  const { isLogin } = useContext(UserLogin);
+  const { isLogin, setIslogin } = useContext(UserLogin);
   const [searchOption, setSearchOption] = useState("제목");
   const token = localStorage.getItem("access_token");
   const [alarm, setAlarm] = useState([]);
@@ -172,6 +172,9 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
           console.log("로컬로그인정보 ", res);
           setUserInfo({ ...res });
           return res;
+        })
+        .then(() => {
+          setIslogin(true)
         });
     };
     getMember();
