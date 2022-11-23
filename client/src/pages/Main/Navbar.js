@@ -174,9 +174,17 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
           return res;
         })
         .then(() => {
-          setIslogin(true)
+          setIslogin(true);
+        })
+        .catch(() => {
+          if (!token) {
+            localStorage.clear();
+            setIslogin(false);
+            setUserInfo({});
+            alert("세션이 만료 되었습니다. 로그인을 다시 해주세요");
+            window.location.replace("/login");
+          }
         });
-        
     };
     getMember();
   }, [alarm]);

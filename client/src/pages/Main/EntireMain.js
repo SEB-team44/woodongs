@@ -13,6 +13,8 @@ import study2 from "../../img/study2.jpg";
 import study3 from "../../img/study3.jpg";
 import study4 from "../../img/study4.jpg";
 import study5 from "../../img/study5.jpg";
+import CircularProgress from "@mui/material/CircularProgress";
+
 import { UserInfo } from "../../UserContext";
 import { useContext } from "react";
 
@@ -39,6 +41,10 @@ const StyledEntireMain = styled.div`
     margin-right: 30px;
     /* height: 100%; */
   }
+  .cardlists-container--loading{
+    margin-left: 30px;
+    margin-right: 30px;
+  }
   .cardlists-box {
     display: flex;
     flex-direction: row;
@@ -47,6 +53,7 @@ const StyledEntireMain = styled.div`
     justify-content: space-around;
     align-items: center;
   }
+
   .cardlist {
     height: 450px;
     width: 400px;
@@ -100,10 +107,15 @@ const StyledEntireMain = styled.div`
   .study-info-header {
     font-size: 1.5rem;
   }
-  .loading{
+  .loading {
     text-align: center;
     background-color: white;
-    font-size: large
+    font-size: large;
+  }
+  .circularProgress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
@@ -114,7 +126,7 @@ const EntireMain = () => {
   const [size, setSize] = useState(10);
   const [cursor, setCursor] = useState(0);
   const [isAvailable, setIsAvailable] = useState(true);
-  const [isLoading, setIsLoading] = useState(false) ;
+  const [isLoading, setIsLoading] = useState(false);
 
   function getCardList() {
     let reqOption = {
@@ -143,7 +155,7 @@ const EntireMain = () => {
         return data;
       })
       .then((data) => {
-        setIsLoading(true)
+        setIsLoading(true);
         setTimeout(() => {
           setCardList([...cardList, ...data.data]);
           console.log(data.sliceInfo);
@@ -154,9 +166,8 @@ const EntireMain = () => {
           } else {
             setIsAvailable(false);
           }
-          setIsLoading(false)
+          setIsLoading(false);
         }, 1000);
-
       });
   }
   useEffect(() => {
@@ -179,8 +190,8 @@ const EntireMain = () => {
     };
   });
 
-    //랜덤이미지?
-    const images = [study1, study2, study3, study4, study5];
+  //랜덤이미지?
+  const images = [study1, study2, study3, study4, study5];
 
   return (
     <>
@@ -198,7 +209,7 @@ const EntireMain = () => {
           <section className="main-notice-container">
             <Notice title="전국" />
           </section>
-          <section className="main-cardlist-container">
+          <section className={`${isLoading ? "cardlists-container--loading": "main-cardlist-container"}`}>
             <main className="cardlists-box">
               {cardList &&
                 cardList.map((el) => {
@@ -229,17 +240,22 @@ const EntireMain = () => {
                         </ol>
                       </CardContent>
                       <div className="count">
-                        <a>모집완료 {el.nowHeadCount}/{el.headCount}</a>
+                        <a>
+                          모집완료 {el.nowHeadCount}/{el.headCount}
+                        </a>
                       </div>
                       {/* </article> */}
                     </Card>
                   );
                 })}
             </main>
-            {isLoading ? <div className="loading"> loading.... </div> : null}
+            {isLoading ? (
+              <div className="circularProgress">
+                <CircularProgress size={50} sx={{ mt: 5, mb: 1 }} />
+              </div>
+            ) : null}
           </section>
           <section className="main-footer-container">
-           
             <Footer />
           </section>
         </section>
