@@ -148,7 +148,6 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
 
     return () => {
       //연결되기 전에 닫히는 문제 해결
-
       if (stomp.ws.readyState === 1) {
         console.log(stomp.ws.readyState);
         stomp.disconnect(() => {});
@@ -169,7 +168,10 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log("로컬로그인정보 ", res);
+          if(res.status === 401) {
+            alert("세션이 만료 되었습니다. 로그인을 다시 해주세요");
+            window.location.replace("/login");
+          }
           setUserInfo({ ...res });
           return res;
         })
