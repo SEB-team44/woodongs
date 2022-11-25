@@ -162,10 +162,7 @@ const MyGroup = () => {
   const [sendcontent, setSendConetent] = useState("");
   const [subIdArr, setSubIdArr] = useState([]);
   const [validation, setValidation] = useState(false);
- 
-
-  let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
-  const stomp = StompJs.over(socketJs);
+  const [stomp , setStomp] = useState({})
   const messagesEndRef = useRef(null);
   var subscribeId = null;
 
@@ -188,17 +185,19 @@ const MyGroup = () => {
 
 
   // 모든 구독 취소하기
-  const subscribeCancle = function () {
-    const length = subIdArr.length;
-    for (let i = 0; i < length; i++) {
-      const sid = subIdArr.pop();
-      stomp.unsubscribe(sid.id);
-      console.log("============unsubscribeed==========");
-    }
-    stomp.disconnect(() => {});
-  };
+  // const subscribeCancle = function () {
+  //   const length = subIdArr.length;
+  //   for (let i = 0; i < length; i++) {
+  //     const sid = subIdArr.pop();
+  //     stomp.unsubscribe(sid.id);
+  //     console.log("============unsubscribeed==========");
+  //   }
+  //   stomp.disconnect(() => {});
+  // };
 
   // 채팅방 클릭시 핸들링
+  const stom = {}
+
   const handleWebsocket = (studyId) => {
     fetch("https://api.woodongs.site/study/" + `${studyId}`, {
       method: "GET",
@@ -206,11 +205,6 @@ const MyGroup = () => {
     })
       .then((res) => res.json())
       .then((res) => setmemberInfo([...res.memberResponseDtos]))
-      // .then(() => {
-      //   // if (stomp) {
-      //   //   // subscribeCancle();
-      //   // }
-      // })
       .then(() => {
         setValidation(false);
         // 같은 버튼을 클릭하지 않았을 때만 구독해줌.
@@ -218,26 +212,27 @@ const MyGroup = () => {
           setGetstudyId(studyId);
           setGetchat([]);
           let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
-          const stomp = StompJs.over(socketJs);
-
+          stom[studyId] =  StompJs.over(socketJs);
+          setStomp(() => stom[studyId])
+          console.log("stom" ,stom)
           // stomp.subscriptions = {};
-          stomp.connect({ token: token }, (frame) => {
+          stom[studyId].connect({ token: token }, (frame) => {
             console.log("connecteed" + frame);
             console.log("subArr", subIdArr);
-            console.log(stomp);
+            console.log(stom[studyId]);
 
-            if (stomp.ws.readyState === 1) {
+            if (stom[studyId].ws.readyState === 1) {
               setTimeout(() => {
                 setValidation(true);
               }, 1000);
 
               if (subscribeId !== null) {
                 subscribeId.disconnect();
-                subscribeCancle();
+                // subscribeCancle();
                 console.log("구독취소");
               }
 
-              subscribeId = stomp.subscribe(
+              subscribeId = stom[studyId].subscribe(
                 `/topic/chat/` + studyId,
                 function (respoonse) {
                   let res = JSON.parse(respoonse.body);

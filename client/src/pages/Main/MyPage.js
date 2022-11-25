@@ -78,17 +78,18 @@ const MyPage = () => {
   const { userInfo, setUserInfo } = useContext(UserInfo);
   const [reRender, setRerender] = useState(false);
   const [changeInfo, setChangeInfo] = useState(
+    userInfo ?? 
     {
       nickName: userInfo.nickName,
       job: userInfo.profile.job,
       career: userInfo.profile.career,
       introduction: userInfo.profile.introduction,
-    } | {}
+    } 
   );
 
   // 이미지 관련 state
   const [file, setFile] = useState();
-  const [Image, setImage] = useState(userInfo.profileImageUrl);
+  const [Image, setImage] = useState( userInfo.profileImageUrl);
   const fileInput = useRef(null);
 
   const header = {
@@ -265,11 +266,11 @@ const MyPage = () => {
     })
       .then((response) => {
         if (response.ok) {
-          console.log(response.status, "업로드 성공");
+          alert(response.status, "업로드 성공");
         }
       })
       .catch((error) => {
-        console.error(error);
+        alert(error);
       });
 
     //화면에 프로필 사진 표시
