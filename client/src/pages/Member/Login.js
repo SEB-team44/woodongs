@@ -80,7 +80,7 @@ export default function Login() {
 
   //처음 랜더링 되면 위도, 경도를 받아옴//
   useEffect(() => {
-    const setget = () => {
+    const setgetLocation = () => {
       //위도 경도를 담을 변수
       let latitude = null;
       let longitude = null;
@@ -104,14 +104,20 @@ export default function Login() {
           },
           function (error) {
             alert(
-              `현재 위치를 받아올 수 없습니다. 내 주변 스터디를 열람하려면 위치 엑세스를 허용해주세요.`
+              error, `현재 위치를 받아올 수 없습니다. 내 주변 스터디를 열람하려면 위치 엑세스를 허용해주세요.`
             );
-            localStorage.removeItem("latitude");
-            localStorage.removeItem("longitude");
+            if(latitude || longitude){
+              localStorage.removeItem("latitude");
+              localStorage.removeItem("longitude");
+            }
 
             setIsLoading(false);
           }
         );
+      } else {
+        {
+          elt.innerHTML = "이 브라우저에서는 Geolocation이 지원되지 않습니다.";
+          }
       }
     }
 
@@ -122,7 +128,7 @@ export default function Login() {
       }
     }
 
-    setget();
+    setgetLocation();
   }, []);
 
   const handleSubmit = (event) => {
@@ -167,7 +173,6 @@ export default function Login() {
               longitude: localStorage.getItem("longitude"),
             });
             fetch("https://api.woodongs.site/member/locate", reqOAuthPost)
-              .then((res) => console.log(res.json()))
               .then((res) => {
                 fetch("https://api.woodongs.site/member/me", {
                   headers: {

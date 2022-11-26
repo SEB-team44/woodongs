@@ -18,7 +18,6 @@ const Redirect = () => {
       // access access에서 accessStr을 뺀것을 refreshStr에 할당
       let accessStr = "";
       let refreshStr = "";
-
       let i = 0;
       while (access[i] !== "&") {
         accessStr = accessStr + access[i];
