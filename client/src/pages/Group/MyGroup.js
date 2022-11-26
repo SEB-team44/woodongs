@@ -226,13 +226,13 @@ const MyGroup = () => {
                 setValidation(true);
               }, 1000);
 
-              if (subscribeId !== null) {
-                subscribeId.disconnect();
-                // subscribeCancle();
-                console.log("구독취소");
-              }
+              // if (subscribeId !== null) {
+              //   subscribeId.disconnect();
+              //   // subscribeCancle();
+              //   console.log("구독취소");
+              // }
 
-              subscribeId = stom[studyId].subscribe(
+              stom[studyId].subscribe(
                 `/topic/chat/` + studyId,
                 function (respoonse) {
                   let res = JSON.parse(respoonse.body);
