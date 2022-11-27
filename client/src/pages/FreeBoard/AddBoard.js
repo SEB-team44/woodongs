@@ -70,9 +70,9 @@ const AddBoard = () => {
     const reqPost = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
+        "Content-type": "application/json",
+        Accept: "application/json",
+        credentials: "include",
         Authorization: access_token,
       },
       body: JSON.stringify({

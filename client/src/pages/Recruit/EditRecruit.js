@@ -138,8 +138,8 @@ const EditRecruit = () => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
+        Accept: "application/json",
+        credential: "include",
         Authorization: access_token,
       },
       body: JSON.stringify({

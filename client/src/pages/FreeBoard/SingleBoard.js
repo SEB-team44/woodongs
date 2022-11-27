@@ -90,19 +90,19 @@ const SingleBoard = () => {
   const { id } = useParams();
   const { postId } = useParams();
   const access_token = localStorage.getItem("access_token");
+  const header = {
+    "Content-type": "application/json",
+    Accept: "application/json",
+    credentials: "include",
+    Authorization: access_token,
+  }
 
   //boardlist 내용 상세페이지로 가져오기
   useEffect(() => {
     function getBoardList() {
       let reqOption = {
         method: "GET",
-        headers: {
-          "Content-type": "application/json",
-          Accept: "application/json",
-          withCredentials: true,
-          "Access-Control-Allow-Origin": "*",
-          Authorization: access_token,
-        },
+        headers: header,
       };
       fetch(`https://api.woodongs.site/post/${id}`, reqOption)
         .then((res) => res.json())
@@ -115,13 +115,7 @@ const SingleBoard = () => {
     function getCommentList() {
       let reqOption = {
         method: "GET",
-        headers: {
-          "Content-type": "application/json",
-          Accept: "application/json",
-          withCredentials: true,
-          "Access-Control-Allow-Origin": "*",
-          Authorization: access_token,
-        },
+        headers: header,
       };
       fetch(`https://api.woodongs.site/post/${id}`, reqOption)
         .then((res) => res.json())
@@ -139,13 +133,7 @@ const SingleBoard = () => {
   const handleDeleteSB = () => {
     let reqDelete = {
       method: "DELETE",
-      headers: {
-        "Content-type": "application/json",
-        Accept: "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
-        Authorization: access_token,
-      },
+      headers: header
     };
     fetch(`https://api.woodongs.site/post/${id}`, reqDelete)
       .then((res) => {
@@ -165,13 +153,7 @@ const SingleBoard = () => {
     function getContent() {
       let reqOption = {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          withCredentials: true,
-          "Access-Control-Allow-Origin": "*",
-          Authorization: access_token,
-        },
+        headers: header,
       };
       fetch("https://api.woodongs.site/post/" + `${id}`, reqOption)
         .then((res) => res.json())
@@ -189,12 +171,7 @@ const SingleBoard = () => {
   const postCommentDatas = () => {
     let reqPost = {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
-        Authorization: access_token,
-      },
+      headers: header,
       body: JSON.stringify({
         body: inputComments,
       }),
@@ -213,12 +190,7 @@ const SingleBoard = () => {
   const handleDeleteSBComment = (elID) => {
     fetch(`https://api.woodongs.site/post/${id}/${elID}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
-        Authorization: access_token,
-      },
+      headers: header,
     }).then(() => {
       setgetCondition(!getcondition);
     });

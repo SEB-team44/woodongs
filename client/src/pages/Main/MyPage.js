@@ -95,8 +95,7 @@ const MyPage = () => {
   const header = {
     "Content-Type": "application/json",
     Accept: "application/json",
-    withCredentials: true,
-    "Access-Control-Allow-Origin": "*",
+    credentials: "include",
     Authorization: access_token,
   };
 

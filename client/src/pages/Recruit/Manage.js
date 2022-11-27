@@ -24,8 +24,7 @@ const Manage = ({ id }) => {
   const header = {
     "content-type": "application/json",
     Accept: "application/json",
-    withCredentials: true,
-    "Access-Control-Allow-Origin": "*",
+    credential: "include",
     Authorization: localStorage.getItem("access_token"),
   };
 
