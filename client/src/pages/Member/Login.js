@@ -104,7 +104,7 @@ export default function Login() {
           },
           function (error) {
             alert(
-              error, `현재 위치를 받아올 수 없습니다. 내 주변 스터디를 열람하려면 위치 엑세스를 허용해주세요.`
+              error, `현재 위치를 받아올 수 없습니다. 내 주변 스터디를 열람하려면 위치 엑세스를 허용 후, 새로고침 해주세요.`
             );
             if(latitude || longitude){
               localStorage.removeItem("latitude");
@@ -114,11 +114,7 @@ export default function Login() {
             setIsLoading(false);
           }
         );
-      } else {
-        {
-          elt.innerHTML = "이 브라우저에서는 Geolocation이 지원되지 않습니다.";
-          }
-      }
+      } 
     }
 
     function setLocation(latitude, longitude) {
@@ -139,8 +135,6 @@ export default function Login() {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify({
         email: data.get("email"),
@@ -178,8 +172,7 @@ export default function Login() {
                   headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
-                    withCredentials: true,
-                    "Access-Control-Allow-Origin": "*",
+                    credentials: "include",
                     Authorization: tokens[0],
                   },
                 })

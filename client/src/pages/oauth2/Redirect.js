@@ -35,9 +35,6 @@ const Redirect = () => {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
-        // Authorization: localStorage.getItem("access_token"),
       },
       body: JSON.stringify({
         latitude: getlat,
@@ -59,8 +56,7 @@ const Redirect = () => {
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
-              withCredentials: true,
-              "Access-Control-Allow-Origin": "*",
+              credentials: "include",
               Authorization: check_a_token,
             },
           })

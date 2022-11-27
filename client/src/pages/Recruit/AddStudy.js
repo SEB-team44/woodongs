@@ -57,8 +57,7 @@ const AddStudy = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
+        credentials: "include",
         Authorization: access_token,
       },
       body: JSON.stringify({

@@ -57,8 +57,6 @@ export default function SignUp() {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify({
         nickName: data.get("nickname"),

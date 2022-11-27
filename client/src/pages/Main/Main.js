@@ -5,7 +5,6 @@ import Notice from "./Notice";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Footer from "./Footer";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
@@ -121,8 +120,7 @@ const Main = () => {
   const header = {
     "Content-Type": "application/json",
     Accept: "application/json",
-    withCredentials: true,
-    "Access-Control-Allow-Origin": "*",
+    credentials: "include",
     Authorization: access_token,
   };
 
@@ -133,8 +131,7 @@ const Main = () => {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          withCredentials: true,
-          "Access-Control-Allow-Origin": "*",
+          credentials: "include",
           Authorization: access_token,
         },
       };
@@ -183,8 +180,7 @@ const Main = () => {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
+        credentials: "include",
         Authorization: access_token,
       },
     };

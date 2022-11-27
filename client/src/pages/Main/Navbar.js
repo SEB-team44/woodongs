@@ -161,8 +161,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          withCredentials: true,
-          "Access-Control-Allow-Origin": "*",
+          credentials: "include",
           Authorization: token,
         },
       })
