@@ -131,10 +131,9 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const token = localStorage.getItem("access_token");
   const [alarm, setAlarm] = useState([]);
 
-  let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
-  const stomp = StompJs.over(socketJs);
-
   useEffect(() => {
+    let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
+    const stomp = StompJs.over(socketJs);
     stomp.connect({ token: token }, (frame) => {
       console.log("connecteed" + frame);
       stomp.subscribe(
@@ -167,7 +166,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
       })
         .then((res) => res.json())
         .then((res) => {
-          if(res.status === 401) {
+          if (res.status === 401) {
             alert("세션이 만료 되었습니다. 로그인을 다시 해주세요");
             window.location.replace("/login");
           }
@@ -187,7 +186,9 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
           }
         });
     };
-    getMember();
+    if (token) {
+      getMember();
+    }
   }, [alarm]);
 
   const handleClick1 = (event) => {

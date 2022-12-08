@@ -110,7 +110,6 @@ export default function Login() {
               localStorage.removeItem("latitude");
               localStorage.removeItem("longitude");
             }
-
             setIsLoading(false);
           }
         );
@@ -268,7 +267,6 @@ export default function Login() {
                     </Links>
                   </Grid>
                 </Grid>
-                {/* <Links to="/main"> */}
                 {isLoading ? (
                   <div className="circularProgress">
                     <CircularProgress size={50} sx={{ mt: 5, mb: 1 }} />
@@ -300,13 +298,10 @@ export default function Login() {
                         >
                           Login with Kakao
                         </Button>
-                        {/* <img src = "https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" width={400} ></img> */}
                       </a>
                     </div>
                   </>
                 )}
-
-                {/* </Links> */}
               </Box>
             )}
           </Box>

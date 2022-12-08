@@ -7,15 +7,15 @@ import { UserInfo } from "../../UserContext";
 const Redirect = () => {
   const navigate = useNavigate();
   const { setIslogin } = useContext(UserLogin);
-  const { userInfo, setUserInfo } = useContext(UserInfo);
+  const { setUserInfo } = useContext(UserInfo);
   const UrlParams = window.location.search;
   const getlat = localStorage.getItem("latitude");
   const getlong = localStorage.getItem("longitude");
 
   useEffect(() => {
     const cutToken = (access) => {
-      // "&" 만날 때 까지 accessStr에 넣다고
-      // access access에서 accessStr을 뺀것을 refreshStr에 할당
+      // "&" 만날 때 까지 accessStr에 할당한다음
+      // access에서 accessStr을 뺀것을 refreshStr에 할당
       let accessStr = "";
       let refreshStr = "";
       let i = 0;
@@ -74,7 +74,6 @@ const Redirect = () => {
               }
             })
             .catch((error) => {
-              console.log(error);
               alert("로그인 실패");
             });
         }
