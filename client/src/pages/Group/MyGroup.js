@@ -47,19 +47,19 @@ const MyGroupStyled = styled.div`
     text-align: center;
     font-size: 30px;
     font-weight: 500;
-    background-color:  rgb(241,244,247);
+    background-color: rgb(241, 244, 247);
   }
   .chat-message-box {
     overflow: scroll;
 
     width: 100%;
     height: 100%;
-    background-color: rgb(241,244,247);
+    background-color: rgb(241, 244, 247);
     &::-webkit-scrollbar {
       border: solid black 1px;
       border-right: 0px;
       border-radius: 2px;
-      background-color: rgb(241,244,247);
+      background-color: rgb(241, 244, 247);
     }
   }
   .chat-message {
@@ -68,7 +68,6 @@ const MyGroupStyled = styled.div`
   .sidebar_container {
     flex-direction: column;
     align-items: left;
- 
   }
 
   .avatar {
@@ -76,13 +75,13 @@ const MyGroupStyled = styled.div`
     padding: 20px;
   }
   .chat-groups {
-    background-color: rgb(153,183,223);
+    background-color: rgb(153, 183, 223);
     /* border: 1px solid black; */
     border-radius: 5%;
     text-align: center;
     margin-bottom: 20px;
     padding: 10%;
-    color: rgb(255,255,255);
+    color: rgb(255, 255, 255);
   }
   .chat-groups:hover {
     border: 3px solid black;
@@ -108,7 +107,7 @@ const MyGroupStyled = styled.div`
     flex-direction: row;
     width: 100%;
     height: 20%;
-    background-color:rgb(241,244,247);
+    background-color: rgb(241, 244, 247);
   }
   .message-nickname {
     font-size: 20px;
@@ -144,7 +143,7 @@ const MyGroupStyled = styled.div`
 
 const MyGroup = () => {
   const { userInfo } = useContext(UserInfo);
-  const {isChat, setIsChat} = useContext(IsChat);
+  const { isChat, setIsChat } = useContext(IsChat);
   const token = localStorage.getItem("access_token");
   const header = {
     "Content-Type": "application/json",
@@ -161,7 +160,7 @@ const MyGroup = () => {
   const [sendcontent, setSendConetent] = useState("");
   const [subIdArr, setSubIdArr] = useState([]);
   const [validation, setValidation] = useState(false);
-  const [stomp , setStomp] = useState({})
+  const [stomp, setStomp] = useState({});
   const messagesEndRef = useRef(null);
   var subscribeId = null;
 
@@ -173,15 +172,21 @@ const MyGroup = () => {
       })
         .then((res) => res.json())
         .then((res) => {
-          setGetchat([...res, ...getChat])
+          setGetchat([...res, ...getChat]);
         })
         .catch((error) => alert("채팅방을 클릭해주세요"));
     };
     getPreviousChat();
+
+    return () => {
+      if (stom[subIdArr]) {
+        stom[subIdArr].disconnect(() => {
+          stom[subIdArr].unsubscribe();
+          console.log("unsubscribe");
+        });
+      }
+    };
   }, [getStudyId]);
-
-
-
 
   // 모든 구독 취소하기
   // const subscribeCancle = function () {
@@ -195,7 +200,7 @@ const MyGroup = () => {
   // };
 
   // 채팅방 클릭시 핸들링
-  const stom = {}
+  const stom = {};
 
   const handleWebsocket = (studyId) => {
     fetch("https://api.woodongs.site/study/" + `${studyId}`, {
@@ -211,9 +216,9 @@ const MyGroup = () => {
           setGetstudyId(studyId);
           setGetchat([]);
           let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
-          stom[studyId] =  StompJs.over(socketJs);
-          setStomp(() => stom[studyId])
-          console.log("stom" ,stom)
+          stom[studyId] = StompJs.over(socketJs);
+          setStomp(() => stom[studyId]);
+          console.log("stom", stom);
           // stomp.subscriptions = {};
           stom[studyId].connect({ token: token }, (frame) => {
             console.log("connecteed" + frame);
@@ -230,21 +235,23 @@ const MyGroup = () => {
               //   // subscribeCancle();
               //   console.log("구독취소");
               // }
-
-              stom[studyId].subscribe(
-                `/topic/chat/` + studyId,
-                function (respoonse) {
-                  let res = JSON.parse(respoonse.body);
-                  // 내가아닌 다른 사람에게 온 채팅은 알림 
-                  if(userInfo.memberId !== res.senderId){
-                    setIsChat(true);
+              if(!subIdArr.includes(studyId)){
+                stom[studyId].subscribe(
+                  `/topic/chat/` + studyId,
+                  function (respoonse) {
+                    let res = JSON.parse(respoonse.body);
+                    // 내가아닌 다른 사람에게 온 채팅은 알림
+                    if (userInfo.memberId !== res.senderId) {
+                      setIsChat(true);
+                    }
+                    setGetchat((_chat_list) => [..._chat_list, res]);
                   }
-                  setGetchat((_chat_list) => [..._chat_list, res]);
-                }
-              );
+                );
+              }
+              
 
-              setSubIdArr((subIdArr) => {
-                return [...subIdArr, { ...subscribeId }];
+              setSubIdArr(() => {
+                return [...subIdArr, studyId];
               });
             }
           });
@@ -293,7 +300,7 @@ const MyGroup = () => {
     <>
       <MyGroupStyled>
         <section className="main-nav-container">
-          <Navbar/>
+          <Navbar />
         </section>
 
         <div className="my-group-container">
@@ -349,7 +356,7 @@ const MyGroup = () => {
                                     )}
                                   </>
                                 );
-                              } 
+                              }
                             })}
                           </div>
                           <div>
