@@ -157,7 +157,7 @@ export default function Login() {
       })
       .then((tokens) => {
         if (!tokens[0] || !tokens[1]) {
-          throw Error("로그인 실패");
+          throw Error("로그인 실패 : 토큰이 존재하지 않습니다.");
         } else {
           if (tokens[0] !== null && tokens[1] !== null) {
             reqOAuthPost.headers["Authorization"] = tokens[0];
@@ -190,9 +190,6 @@ export default function Login() {
               });
           }
         }
-      })
-      .then((res) => {
-        alert("토큰을 가져왔습니다");
       })
       .catch((error) => {
         alert(error);

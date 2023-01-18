@@ -23,12 +23,6 @@ const StyledAddBoard = styled.div`
     border-radius: 50px;
     padding: 30px;
     width: 800px;
-    /* flex-direction: column; */
-
-    /* margin-left: 10%;
-    margin-right: 10%; */
-    /* padding-left: 5%;
-    margin: 50px 500px;  */
   }
   textarea {
     resize: none;
@@ -82,8 +76,6 @@ const AddBoard = () => {
     };
 
     fetch("https://api.woodongs.site/post", reqPost)
-      //fetch("https://api.woodongs.site/post?size=10&cursorId=10", reqPost)
-
       .then((res) => {
         if (res.ok) {
           alert("새로운 게시물이 성공적으로 등록되었습니다 :-D");
@@ -91,14 +83,11 @@ const AddBoard = () => {
           return res.json();
         }
       })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .catch((err) => alert(err));
   };
 
   const getValue = (e) => {
     const { value } = e.target;
-    console.log(e.target.name);
-    console.log("value", value);
     setContent({
       ...content,
       title: value,
@@ -138,7 +127,6 @@ const AddBoard = () => {
                   ...content,
                   body: bodyValue,
                 });
-                console.log(bodyValue);
               }}
             />
           </section>

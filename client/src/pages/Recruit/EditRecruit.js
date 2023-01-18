@@ -20,9 +20,6 @@ const AddStudyStyled = styled.div`
     align-items: center;
     justify-content: center;
   }
-  .submit-button {
-    /* background-color: #6787f6; */
-  }
   .form-group {
     display: inline-block;
     width: 500px;
@@ -99,7 +96,6 @@ const EditRecruit = () => {
   }, []);
 
   const getValue = (e) => {
-    // e.preventDefault();
     const { value } = e.target;
     setContent(() => {
       return {
@@ -158,8 +154,7 @@ const EditRecruit = () => {
           return res.json();
         }
       })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .catch((err) => alert(err));
   };
 
   const CATEGORY_LIST = [
