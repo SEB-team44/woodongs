@@ -225,7 +225,6 @@ const SingleBoard = () => {
                 </button>
                 <button
                   className="update-btn"
-                  // onClick={handleUpdateSBComment(content.postId)}
                 >
                   <TiPencil />
                 </button>

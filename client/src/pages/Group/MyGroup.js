@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import Navbar from "../Main/Navbar";
-// import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import SockJS from "sockjs-client";
@@ -10,7 +9,7 @@ import { useContext } from "react";
 import { IsChat } from "../../UserContext";
 import { UserInfo } from "../../UserContext";
 import Button from "@mui/material/Button";
-// background-color: #6A74CF;
+
 
 const MyGroupStyled = styled.div`
   .my-group-container {
@@ -157,12 +156,11 @@ const MyGroup = () => {
 
   //채팅을 받기
   const [getChat, setGetchat] = useState([]);
-  const [sendcontent, setSendConetent] = useState("");
+  const [sendcontent, setSendContent] = useState("");
   const [subIdArr, setSubIdArr] = useState([]);
   const [validation, setValidation] = useState(false);
   const [stomp, setStomp] = useState({});
   const messagesEndRef = useRef(null);
-  var subscribeId = null;
 
   useEffect(() => {
     const getPreviousChat = () => {
@@ -182,24 +180,13 @@ const MyGroup = () => {
       if (stom[subIdArr]) {
         stom[subIdArr].disconnect(() => {
           stom[subIdArr].unsubscribe();
-          console.log("unsubscribe");
+
         });
       }
     };
   }, [getStudyId]);
 
-  // 모든 구독 취소하기
-  // const subscribeCancle = function () {
-  //   const length = subIdArr.length;
-  //   for (let i = 0; i < length; i++) {
-  //     const sid = subIdArr.pop();
-  //     stomp.unsubscribe(sid.id);
-  //     console.log("============unsubscribeed==========");
-  //   }
-  //   stomp.disconnect(() => {});
-  // };
 
-  // 채팅방 클릭시 핸들링
   const stom = {};
 
   const handleWebsocket = (studyId) => {
@@ -210,36 +197,26 @@ const MyGroup = () => {
       .then((res) => res.json())
       .then((res) => setmemberInfo([...res.memberResponseDtos]))
       .then(() => {
-        setValidation(false);
+        // setValidation(false);
         // 같은 버튼을 클릭하지 않았을 때만 구독해줌.
         if (getStudyId !== studyId) {
+          console.log(stom)
           setGetstudyId(studyId);
           setGetchat([]);
           let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
           stom[studyId] = StompJs.over(socketJs);
           setStomp(() => stom[studyId]);
-          console.log("stom", stom);
-          // stomp.subscriptions = {};
           stom[studyId].connect({ token: token }, (frame) => {
-            console.log("connecteed" + frame);
-            console.log("subArr", subIdArr);
-            console.log(stom[studyId]);
-
             if (stom[studyId].ws.readyState === 1) {
               setTimeout(() => {
                 setValidation(true);
               }, 1000);
 
-              // if (subscribeId !== null) {
-              //   subscribeId.disconnect();
-              //   // subscribeCancle();
-              //   console.log("구독취소");
-              // }
-              if(!subIdArr.includes(studyId)){
+              if (!subIdArr.includes(studyId)) {
                 stom[studyId].subscribe(
                   `/topic/chat/` + studyId,
-                  function (respoonse) {
-                    let res = JSON.parse(respoonse.body);
+                  function (response) {
+                    let res = JSON.parse(response.body);
                     // 내가아닌 다른 사람에게 온 채팅은 알림
                     if (userInfo.memberId !== res.senderId) {
                       setIsChat(true);
@@ -248,7 +225,6 @@ const MyGroup = () => {
                   }
                 );
               }
-              
 
               setSubIdArr(() => {
                 return [...subIdArr, studyId];
@@ -279,7 +255,7 @@ const MyGroup = () => {
   };
 
   const handleChangeContent = (e) => {
-    setSendConetent(e.target.value);
+    setSendContent(e.target.value);
   };
 
   const handlePubChat = (e) => {

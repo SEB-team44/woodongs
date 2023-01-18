@@ -1,5 +1,5 @@
 import React from "react";
-import styled  from "styled-components";
+import styled from "styled-components";
 import { useEffect, useState } from "react";
 
 const StyledManage = styled.div`
@@ -42,7 +42,10 @@ const Manage = ({ id }) => {
     };
     getApplied();
   }, []);
+
+
   const handleApplyAccept = (e, id) => {
+    console.log(applyInfo)
     if (applyInfo)
       fetch(`https://api.woodongs.site/study/${id}/accept`, {
         method: "POST",
@@ -55,6 +58,8 @@ const Manage = ({ id }) => {
           });
           setApplyInfo([...filtered]);
         }
+      }).catch((error)=>{
+        alert(error)
       });
   };
 

@@ -135,20 +135,17 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
     let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
     const stomp = StompJs.over(socketJs);
     stomp.connect({ token: token }, (frame) => {
-      console.log("connecteed" + frame);
       stomp.subscribe(
         `/queue/alarm/` + userInfo.memberId,
-        function (respoonse) {
-          let resmessage = JSON.parse(respoonse.body);
+        function (response) {
+          const resmessage = JSON.parse(response.body);
           setAlarm((alarm) => [...alarm, resmessage.senderNickname]);
         }
       );
     });
 
     return () => {
-      //연결되기 전에 닫히는 문제 해결
       if (stomp.ws.readyState === 1) {
-        console.log(stomp.ws.readyState);
         stomp.disconnect(() => {});
       }
     };
@@ -212,7 +209,6 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   };
 
   const handleInputSubmit = (e) => {
-    // console.log(searchOption);
     let filtered;
     if (searchOption === "제목") {
       filtered = cardList.filter((el) => {
@@ -241,6 +237,11 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
     setIsChat(false);
     setAlarm([]);
   };
+
+
+
+
+
 
   return (
     <>
@@ -338,17 +339,6 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                             src={require("../../../src/img/bellring.png")}
                           />
                         )}
-                        {/* {alarm.length === 0 || !isChat ? (
-                          <img
-                            className="myinfo-img myinfo-ball-img"
-                            src={require("../../../src/img/ball.png")}
-                          />
-                        ) : (
-                          <img
-                            className="myinfo-img myinfo-ball-img"
-                            src={require("../../../src/img/bellring.png")}
-                          />
-                        )} */}
                       </button>
                       <Popover
                         id={id1}
@@ -389,21 +379,11 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                         </Typography>
                       </Popover>
                     </div>
-                    {/* 내그룹버튼 */}
+               
 
                     <div className="group-img">
                       {userInfo.studyResponseDtos.length !== 0 ? (
                         <Link to="/MyGroup">
-                          {/* <Popover
-                            id={id2}
-                            open={open2}
-                            anchorEl={anchorEl2}
-                            onClose={handleClose2}
-                            anchorOrigin={{
-                              vertical: "bottom",
-                              horizontal: "left",
-                            }}
-                          > */}
                           <button
                             className="group-btn"
                             aria-describedby={id2}
@@ -415,17 +395,6 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                               src={require("../../../src/img/group.png")}
                             />
                           </button>{" "}
-                          {/* <Typography
-                              sx={{
-                                borderRadius: 7,
-                                p: 1,
-                                bgcolor: "background.paper",
-                                textDecoration: "none",
-                              }}
-                            >
-                              {" "}
-                            </Typography>
-                          </Popover> */}
                         </Link>
                       ) : (
                         <>

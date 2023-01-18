@@ -157,11 +157,8 @@ const EntireMain = () => {
         setIsLoading(true);
         setTimeout(() => {
           setCardList([...cardList, ...data.data]);
-          console.log(data.sliceInfo);
-
           if (data.sliceInfo.nextAvailable) {
             setCursor(data.sliceInfo.lastIdx);
-            console.log(data.sliceInfo.lastIdx, cursor, cardList);
           } else {
             setIsAvailable(false);
           }
@@ -174,7 +171,6 @@ const EntireMain = () => {
   }, [reRender]);
 
   useEffect(() => {
-    // getCardList();
     const handleScroll = () => {
       const scrollHeight = document.documentElement.scrollHeight;
       const scrollTop = document.documentElement.scrollTop;

@@ -186,7 +186,7 @@ const Recruit = () => {
       headers: header,
     };
 
-    // fetch("http://localhost:3001/card/" + `${id}`, reqDelete)
+  
     fetch("https://api.woodongs.site/study/" + `${id}`, reqDelete)
       .then((res) => {
         if (res.ok) {
@@ -337,10 +337,7 @@ const Recruit = () => {
           <section className="header-box">
             <Navbar />
           </section>
-          {/* {card.map((el,idx)=>{
-            return(
-            )
-          })} */}
+
           <section className="recruit-main-container">
             <section className="recruit-title-box">
               <div className="recruit-title">
