@@ -123,49 +123,28 @@ const Main = () => {
     credentials: "include",
     Authorization: access_token,
   };
+  
 
   useEffect(() => {
     function getCardList() {
       let reqOption = {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          credentials: "include",
-          Authorization: access_token,
-        },
+        headers: header,
       };
       if (getlat) {
         fetch(`https://api.woodongs.site/study/around?size=10`, reqOption)
           .then((res) => {
-            console.log("res", res);
             return res.json();
           })
           .then((data) => {
-            console.log(data);
             return data;
           })
           .then((data) => setCardList(data.data))
-          .catch((error) => console.log(error));
-
-        // fetch("https://api.woodongs.site/study/recruit/dummy", {
-        //   method : "POST",
-        //   headers : header,
-        //   body: JSON.stringify({
-        //     latitute: Number(getlat),
-        //     longitute: Number(getlong)
-        //   })
-        // })
-        //   .then((res) => res.json())
-        //   .then((data) => {
-        //     return console.log(data);
-        //   })
-        //   .catch((error) => console.log("error",error))
+          .catch((error) => alert(error));
       } else {
         fetch(`https://api.woodongs.site/study?size=10`, reqOption)
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
             return data;
           })
           .then((data) => setCardList(data.data));
@@ -177,12 +156,7 @@ const Main = () => {
   function getCardList() {
     let reqOption = {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        credentials: "include",
-        Authorization: access_token,
-      },
+      headers: header,
     };
 
     let url;
@@ -201,10 +175,8 @@ const Main = () => {
       })
       .then((data) => {
         setCardList([...cardList, ...data.data]);
-        console.log(data.sliceInfo);
         if (data.sliceInfo.nextAvailable) {
           setCursor(data.sliceInfo.lastIdx);
-          console.log(data.sliceInfo.lastIdx, cursor, cardList);
         } else {
           setIsAvailable(false);
         }
@@ -215,7 +187,6 @@ const Main = () => {
   }, [reRender]);
 
   useEffect(() => {
-    // getCardList();
     const handleScroll = () => {
       const scrollHeight = document.documentElement.scrollHeight;
       const scrollTop = document.documentElement.scrollTop;
@@ -264,9 +235,7 @@ const Main = () => {
                         <CardMedia className="cardimg-box">
                           <img
                             className="cardimg"
-                            // src={bgImage}
                             src={images[Math.floor(Math.random() * 5)]}
-                            // src={require("../../../src/img/businessplan.png")}
                           ></img>
                         </CardMedia>
                         <CardContent className="study-info-box">

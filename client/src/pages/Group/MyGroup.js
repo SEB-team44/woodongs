@@ -10,7 +10,6 @@ import { IsChat } from "../../UserContext";
 import { UserInfo } from "../../UserContext";
 import Button from "@mui/material/Button";
 
-
 const MyGroupStyled = styled.div`
   .my-group-container {
     align-items: center;
@@ -137,9 +136,6 @@ const MyGroupStyled = styled.div`
   }
 `;
 
-// 1. 다른 버튼으로 구독할 때, 이미 구독한것이 존재하면 그 구독을 끊고, 버튼 누른 것을 구독한다. ()
-// 2. 동일한 버튼을 2번 이상 연속으로 누르면, 한번만 눌리게 된다. (v)
-
 const MyGroup = () => {
   const { userInfo } = useContext(UserInfo);
   const { isChat, setIsChat } = useContext(IsChat);
@@ -153,6 +149,7 @@ const MyGroup = () => {
   const chatInfo = userInfo.studyResponseDtos;
   const [memberInfo, setmemberInfo] = useState([]);
   const [getStudyId, setGetstudyId] = useState(0);
+  const stompInstances = {};
 
   //채팅을 받기
   const [getChat, setGetchat] = useState([]);
@@ -177,17 +174,15 @@ const MyGroup = () => {
     getPreviousChat();
 
     return () => {
-      if (stom[subIdArr]) {
-        stom[subIdArr].disconnect(() => {
-          stom[subIdArr].unsubscribe();
-
+      console.log("hellow")
+      if (stompInstances[subIdArr]) {
+      console.log("stompInstances is : ". stompInstances)
+        stompInstances[subIdArr].disconnect(() => {
+          stompInstances[subIdArr].unsubscribe();
         });
       }
     };
   }, [getStudyId]);
-
-
-  const stom = {};
 
   const handleWebsocket = (studyId) => {
     fetch("https://api.woodongs.site/study/" + `${studyId}`, {
@@ -197,27 +192,31 @@ const MyGroup = () => {
       .then((res) => res.json())
       .then((res) => setmemberInfo([...res.memberResponseDtos]))
       .then(() => {
-        // setValidation(false);
         // 같은 버튼을 클릭하지 않았을 때만 구독해줌.
         if (getStudyId !== studyId) {
-          console.log(stom)
           setGetstudyId(studyId);
+
+          // 빈 배열로 초기화해 주지 않으면, 다른 채팅방 클릭시 이전 채팅방 내용도 출력된다.
           setGetchat([]);
+
           let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
-          stom[studyId] = StompJs.over(socketJs);
-          setStomp(() => stom[studyId]);
-          stom[studyId].connect({ token: token }, (frame) => {
-            if (stom[studyId].ws.readyState === 1) {
+
+          stompInstances[studyId] = StompJs.over(socketJs);
+          const currentStomp = stompInstances[studyId]
+
+          setStomp(() => currentStomp);
+          currentStomp.connect({ token: token }, (frame) => {
+            if (currentStomp.ws.readyState === 1) {
               setTimeout(() => {
                 setValidation(true);
               }, 1000);
 
               if (!subIdArr.includes(studyId)) {
-                stom[studyId].subscribe(
+                currentStomp.subscribe(
                   `/topic/chat/` + studyId,
                   function (response) {
                     let res = JSON.parse(response.body);
-                    // 내가아닌 다른 사람에게 온 채팅은 알림
+                    // 송/수신자가 다르면 알림기능 on
                     if (userInfo.memberId !== res.senderId) {
                       setIsChat(true);
                     }
@@ -233,8 +232,6 @@ const MyGroup = () => {
           });
         }
       })
-
-      .then(() => {})
       .catch((error) => alert(error));
   };
 
