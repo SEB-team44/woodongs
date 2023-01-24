@@ -23,7 +23,7 @@ const MyPageStyled = styled.div`
     margin: 50px auto;
     border: 1px solid black;
     border-radius: 10px;
-    background-color: rgb(241,244,247);
+    background-color: rgb(241, 244, 247);
     padding: 30px;
     width: 800px;
   }
@@ -60,15 +60,14 @@ const MyPageStyled = styled.div`
     text-decoration: none;
     list-style: none;
   }
-  .user_info_child{
+  .user_info_child {
     margin-bottom: 10px;
     font-weight: 500;
   }
-  .info-introduction{
+  .info-introduction {
     margin-bottom: 40px;
   }
 `;
-
 
 const MyPage = () => {
   const access_token = localStorage.getItem("access_token");
@@ -78,18 +77,17 @@ const MyPage = () => {
   const { userInfo, setUserInfo } = useContext(UserInfo);
   const [reRender, setRerender] = useState(false);
   const [changeInfo, setChangeInfo] = useState(
-    userInfo ?? 
-    {
+    userInfo ?? {
       nickName: userInfo.nickName,
       job: userInfo.profile.job,
       career: userInfo.profile.career,
       introduction: userInfo.profile.introduction,
-    } 
+    }
   );
 
   // 이미지 관련 state
   const [file, setFile] = useState();
-  const [Image, setImage] = useState( userInfo.profileImageUrl);
+  const [Image, setImage] = useState(userInfo.profileImageUrl);
   const fileInput = useRef(null);
 
   const header = {
@@ -102,7 +100,6 @@ const MyPage = () => {
   //사용자 정보가 바뀌면 get 받아오기
   useEffect(() => {
     const getMemberInfo = async () => {
-      // {이름 , 인덱스, 소속된 스터디, 프로필{job, career, introduction}, 등급 }
       fetch("https://api.woodongs.site/member/me", {
         headers: header,
       })
@@ -121,7 +118,9 @@ const MyPage = () => {
           })
             .then((res) => res.json())
             .then((res) => {
-              setChangeInfo({ ...changeInfo, ...res });
+              setChangeInfo((changeInfo) => {
+                return { ...changeInfo, ...res };
+              });
               setUserInfo((userInfo) => {
                 return { ...userInfo };
               });
@@ -178,7 +177,7 @@ const MyPage = () => {
   };
 
   const handleDoneEdit = () => {
-    const PatchNickName = async () => {
+    const PatchNickName = () => {
       fetch("https://api.woodongs.site/member", {
         method: "PATCH",
         headers: header,
@@ -188,12 +187,9 @@ const MyPage = () => {
       })
         .then((res) => {
           if (res.ok) {
-            console.log("이름 수정 성공");
+            alert("이름 수정 성공");
           }
           return res.json();
-        })
-        .then((res) => {
-          console.log(res);
         })
         .then(() => {
           fetch("https://api.woodongs.site/member/profile", {
@@ -221,13 +217,10 @@ const MyPage = () => {
                   };
                 });
               }
-              // 여기서 setmemeber의 인포를 업데이트를 해준다.
-
+              // update changes
               setRerender(!reRender);
             })
-            .catch((error) =>
-              alert(`${error}, 정보를 수정할 수 없습니다.`)
-            );
+            .catch((error) => alert(`${error}, 정보를 수정할 수 없습니다.`));
         })
         .catch((error) => alert(`${error}, 정보를 수정할 수 없습니다.`));
     };
@@ -237,6 +230,7 @@ const MyPage = () => {
   };
 
   const onImgChange = async (e) => {
+    console.log(e.target.files[0]);
     if (e.target.files[0]) {
       setFile({ ...e.target.files[0] });
     } else {
@@ -259,7 +253,6 @@ const MyPage = () => {
         "Content-Type": "multipart/form-data",
         Accept: "application/json",
         withCredentials: true,
-        "Access-Control-Allow-Origin": "*",
         Authorization: access_token,
       },
     })
@@ -276,7 +269,7 @@ const MyPage = () => {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
-        setImage(reader.result);
+        setImage(()=>reader.result);
       }
     };
     reader.readAsDataURL(e.target.files[0]);
@@ -290,12 +283,6 @@ const MyPage = () => {
           <div className="mypage_content">
             <div className="mypage_upcontent">
               <div className="mypage_photo">
-                {/* <Avatar
-                  className="avatarimg"
-                  src={Image}
-                  style={{ margin: "20px" }}
-                  size="small"
-                /> */}
                 <img
                   className="avatarimg"
                   src={
@@ -376,8 +363,12 @@ const MyPage = () => {
                 </div>
               ) : (
                 <div className="user_info">
-                  <div className="user_info_child info-job">{changeInfo.job}</div>
-                  <div className="user_info_child info-career">{changeInfo.career}</div>
+                  <div className="user_info_child info-job">
+                    {changeInfo.job}
+                  </div>
+                  <div className="user_info_child info-career">
+                    {changeInfo.career}
+                  </div>
                   <div className="user_info_child info-introduction">
                     {changeInfo.introduction}
                   </div>

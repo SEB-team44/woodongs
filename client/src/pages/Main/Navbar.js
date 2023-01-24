@@ -132,16 +132,15 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const [alarm, setAlarm] = useState([]);
 
   useEffect(() => {
+    // http => ws 프로토콜 변환
     let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
+    //
     const stomp = StompJs.over(socketJs);
-    stomp.connect({ token: token }, (frame) => {
-      stomp.subscribe(
-        `/queue/alarm/` + userInfo.memberId,
-        function (response) {
-          const resmessage = JSON.parse(response.body);
-          setAlarm((alarm) => [...alarm, resmessage.senderNickname]);
-        }
-      );
+    stomp.connect({ token: token }, () => {
+      stomp.subscribe(`/queue/alarm/` + userInfo.memberId, function (response) {
+        const resMessage = JSON.parse(response.body);
+        setAlarm((alarm) => [...alarm, resMessage.senderNickname]);
+      });
     });
 
     return () => {
@@ -173,18 +172,18 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
         .then(() => {
           setIslogin(true);
         })
-        .catch(() => {
-          if (!token) {
-            localStorage.clear();
-            setIslogin(false);
-            setUserInfo({});
-            alert("세션이 만료 되었습니다. 로그인을 다시 해주세요");
-            window.location.replace("/login");
-          }
+        .catch((error) => {
+          alert(error);
         });
     };
     if (token) {
       getMember();
+    } else {
+      localStorage.clear();
+      setIslogin(false);
+      setUserInfo({});
+      alert("세션이 만료 되었습니다. 로그인을 다시 해주세요");
+      window.location.replace("/login");
     }
   }, [alarm]);
 
@@ -237,11 +236,6 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
     setIsChat(false);
     setAlarm([]);
   };
-
-
-
-
-
 
   return (
     <>
@@ -379,7 +373,6 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                         </Typography>
                       </Popover>
                     </div>
-               
 
                     <div className="group-img">
                       {userInfo.studyResponseDtos.length !== 0 ? (

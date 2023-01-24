@@ -223,8 +223,6 @@ const EntireMain = () => {
                       </CardMedia>
                       <CardContent className="study-info-box">
                         <header className="study-info study-info-header">
-                          {/* <Link to="/recruit">{el.title}</Link> */}
-                          {/* <Link to={"/study/" + `${el.id}`}>{el.title}</Link> */}
                           <Link to={"/study/" + `${el.studyId}`}>{`[${
                             el.city === "" ? "전국" : el.city
                           }]  ${el.title}`}</Link>
