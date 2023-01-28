@@ -138,7 +138,7 @@ const MyGroupStyled = styled.div`
 
 const MyGroup = () => {
   const { userInfo } = useContext(UserInfo);
-  const { isChat, setIsChat } = useContext(IsChat);
+  const { setIsChat } = useContext(IsChat);
   const token = localStorage.getItem("access_token");
   const header = {
     "Content-Type": "application/json",
@@ -147,14 +147,11 @@ const MyGroup = () => {
     Authorization: token,
   };
   const chatInfo = userInfo.studyResponseDtos;
-  const [memberInfo, setmemberInfo] = useState([]);
+  const [memberInfo, setMemberInfo] = useState([]);
   const [getStudyId, setGetstudyId] = useState(0);
-  const stompInstances = {};
-
-  //채팅을 받기
   const [getChat, setGetchat] = useState([]);
-  const [sendcontent, setSendContent] = useState("");
-  const [subIdArr, setSubIdArr] = useState([]);
+  const [sendContent, setSendContent] = useState("");
+  const [stompSet, setStompSet] = useState(new Set());
   const [validation, setValidation] = useState(false);
   const [stomp, setStomp] = useState({});
   const messagesEndRef = useRef(null);
@@ -174,13 +171,7 @@ const MyGroup = () => {
     getPreviousChat();
 
     return () => {
-      console.log("hellow")
-      if (stompInstances[subIdArr]) {
-      console.log("stompInstances is : ". stompInstances)
-        stompInstances[subIdArr].disconnect(() => {
-          stompInstances[subIdArr].unsubscribe();
-        });
-      }
+      console.log(stomp);
     };
   }, [getStudyId]);
 
@@ -190,57 +181,52 @@ const MyGroup = () => {
       headers: header,
     })
       .then((res) => res.json())
-      .then((res) => setmemberInfo([...res.memberResponseDtos]))
+      .then((res) => setMemberInfo([...res.memberResponseDtos]))
       .then(() => {
-        // 같은 버튼을 클릭하지 않았을 때만 구독해줌.
-        if (getStudyId !== studyId) {
-          setGetstudyId(studyId);
+        setGetstudyId(studyId);
+        setGetchat([]);
+        let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
+        const currentStomp = StompJs.over(socketJs);
 
-          // 빈 배열로 초기화해 주지 않으면, 다른 채팅방 클릭시 이전 채팅방 내용도 출력된다.
-          setGetchat([]);
+        setStomp(() => currentStomp);
 
-          let socketJs = new SockJS("https://api.woodongs.site/ws-stomp");
+        currentStomp.connect({ token: token }, (frame) => {
+          if (currentStomp.ws.readyState === 1) {
 
-          stompInstances[studyId] = StompJs.over(socketJs);
-          const currentStomp = stompInstances[studyId]
+            if (!stompSet.has(studyId)) {
+              setStompSet(() => stompSet.add(studyId));
+              currentStomp.subscribe(
+                `/topic/chat/` + studyId,
+                function (response) {
+                  let res = JSON.parse(response.body);
 
-          setStomp(() => currentStomp);
-          currentStomp.connect({ token: token }, (frame) => {
-            if (currentStomp.ws.readyState === 1) {
-              setTimeout(() => {
-                setValidation(true);
-              }, 1000);
-
-              if (!subIdArr.includes(studyId)) {
-                currentStomp.subscribe(
-                  `/topic/chat/` + studyId,
-                  function (response) {
-                    let res = JSON.parse(response.body);
-                    // 송/수신자가 다르면 알림기능 on
-                    if (userInfo.memberId !== res.senderId) {
-                      setIsChat(true);
-                    }
-                    setGetchat((_chat_list) => [..._chat_list, res]);
+                  if (userInfo.memberId !== res.senderId) {
+                    setIsChat(true);
                   }
-                );
-              }
 
-              setSubIdArr(() => {
-                return [...subIdArr, studyId];
-              });
+                  setGetchat((chatting_list) => [...chatting_list, res]);
+                }
+              );
             }
-          });
-        }
+          }
+        });
       })
-      .catch((error) => alert(error));
+      .then(() => {
+        setValidation(true);
+      })
+      .catch((error) => {
+        if(error instanceof SyntaxError){
+          window.location.replace("/login")
+        }
+      });
   };
 
   const pubChatData = () => {
-    let msg = {
+    const msg = {
       senderId: Number(userInfo.memberId),
       senderNickname: userInfo.nickName,
       receiverId: Number(getStudyId),
-      message: `${sendcontent}`,
+      message: `${sendContent}`,
     };
 
     stomp.send(
@@ -258,7 +244,8 @@ const MyGroup = () => {
   const handlePubChat = (e) => {
     e.preventDefault();
     pubChatData();
-    e.target.value = null;
+    setSendContent(() => "")
+    // e.target.value = null;
   };
 
   useEffect(() => {
@@ -268,7 +255,6 @@ const MyGroup = () => {
       inline: "nearest",
     });
   }, [getChat]);
-
   return (
     <>
       <MyGroupStyled>
@@ -286,7 +272,11 @@ const MyGroup = () => {
                     <div
                       className="chat-groups"
                       key={el.studyId}
-                      onClick={(e) => handleWebsocket(el.studyId)}
+                      onClick={(e) =>
+                        el.studyId !== getStudyId
+                          ? handleWebsocket(el.studyId)
+                          : null
+                      }
                     >
                       <div className="avatar">
                         <FontAwesomeIcon icon={faUser} size="2x" />
@@ -315,7 +305,6 @@ const MyGroup = () => {
                               if (element.memberId === el.senderId) {
                                 return (
                                   <>
-                                    {" "}
                                     {element.profileImageUrl ? (
                                       <img
                                         className="memberImg"
@@ -360,15 +349,13 @@ const MyGroup = () => {
                     className="input"
                     placeholder="내용을 입력하세요."
                     onChange={(e) => handleChangeContent(e)}
-                    // onKeyPress={handleKeyPress}
-                    value={sendcontent}
+                    value={sendContent}
                   />
                   <Button
                     className="submit-btn"
-                    onClick={(e) => handlePubChat(e)}
-                    // variant="outlined"
+                    onClick={(e) => sendContent !== "" ? handlePubChat(e) : null}
                   >
-                    입력
+                    전송
                   </Button>
                 </>
               ) : null}
