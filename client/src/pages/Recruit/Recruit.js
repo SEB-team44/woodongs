@@ -233,7 +233,6 @@ const Recruit = () => {
 
   // 댓글 입력을 누르면, 그 내용을 post요청
   const postCommentData = () => {
-    // const access_token = localStorage.getItem("access_token");
     let reqPost = {
       method: "POST",
       headers: header,
@@ -264,13 +263,11 @@ const Recruit = () => {
 
   //댓글 구현 메소드
   const handleSumit = (e) => {
-    // e.preventDefault();
     postCommentData();
     e.target.value = null;
   };
 
   const handleChangeInput = (e) => {
-    // e.preventDefault();
     setInputComment(e.target.value);
   };
 
@@ -293,7 +290,6 @@ const Recruit = () => {
 
   //신청하기 클릭시 동작하는 메서드
   const handleApplyStudy = (memberid, id) => {
-    // chatDto
     let msg = {
       senderId: Number(userInfo.memberId),
       senderNickname: userInfo.nickName,
