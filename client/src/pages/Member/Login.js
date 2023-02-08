@@ -237,6 +237,7 @@ export default function Login() {
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  defaultValue="mock@naver.com"
                 />
                 <TextField
                   margin="normal"
@@ -247,6 +248,7 @@ export default function Login() {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  defaultValue="mock"
                 />
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
