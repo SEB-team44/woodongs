@@ -14,110 +14,8 @@ import study3 from "../../img/study3.jpg";
 import study4 from "../../img/study4.jpg";
 import study5 from "../../img/study5.jpg";
 import CircularProgress from "@mui/material/CircularProgress";
-
-import { UserInfo } from "../../UserContext";
-import { useContext } from "react";
-
-const StyledEntireMain = styled.div`
-  .main-container {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    background-color: #dedede;
-  }
-
-  .main-nav-container {
-    margin-bottom: 50px;
-    height: 63.5px;
-  }
-  .main-notice-container {
-    margin-bottom: 30px;
-    border-radius: 10px;
-  }
-  .main-cardlist-container {
-    border: solid black 1px;
-    margin-left: 30px;
-    margin-right: 30px;
-    /* height: 100%; */
-  }
-  .cardlists-container--loading{
-    margin-left: 30px;
-    margin-right: 30px;
-  }
-  .cardlists-box {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    background-color: #f1f4f7;
-    justify-content: space-around;
-    align-items: center;
-  }
-
-  .cardlist {
-    height: 450px;
-    width: 400px;
-    border: black solid 1px;
-    margin-bottom: 80px;
-    border-radius: 3%;
-    margin: 20px 5px;
-    background-color: white;
-    justify-content: center;
-  }
-  .cardlists-box :nth-child(1) {
-    margin-bottom: 10px;
-  }
-  .cardimg {
-    width: 100%;
-    /* border-top-left-radius: 5%;
-    border-top-right-radius: 5%; */
-  }
-  .study-info-box {
-    display: flex;
-    flex-direction: column;
-  }
-  .study-info-header {
-    color: black !important;
-    text-decoration: none;
-  }
-  .study-info {
-    margin-bottom: 10px;
-    color: gray;
-  }
-
-  .tags {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin-top: 0px;
-  }
-  ol {
-    padding-left: 0px;
-  }
-  li,
-  a {
-    text-decoration: none;
-    list-style: none;
-    color: black;
-  }
-  .count {
-    padding: 16px;
-  }
-
-  .study-info-header {
-    font-size: 1.5rem;
-  }
-  .loading {
-    text-align: center;
-    background-color: white;
-    font-size: large;
-  }
-  .circularProgress {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-`;
+import axios from "axios";
+import { axiosInstance } from "../utiles/axiosInstance";
 
 const EntireMain = () => {
   const access_token = localStorage.getItem("access_token");
@@ -138,7 +36,6 @@ const EntireMain = () => {
         Authorization: access_token,
       },
     };
-
     let url;
     if (cursor) {
       url = `https://api.woodongs.site/study?size=5&cursorId=${cursor}`;
@@ -148,6 +45,7 @@ const EntireMain = () => {
     if (!isAvailable) {
       return;
     }
+
     fetch(url, reqOption)
       .then((res) => res.json())
       .then((data) => {
@@ -166,8 +64,40 @@ const EntireMain = () => {
         }, 1000);
       });
   }
+
+  const getCardList2 = async () => {
+    let reqOption = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: access_token,
+      },
+    };
+
+    let url;
+
+    if (cursor) {
+      url = `?size=5&cursorId=${cursor}`;
+    } else {
+      url = `?size=10`;
+    }
+    if (!isAvailable) {
+      return;
+    }
+
+    try {
+      setIsLoading(true)
+      const response = await axiosInstance.get(`/study${url}`, reqOption);
+      setCardList([...cardList, ...response.data.data]);
+      response.data.sliceInfo.nextAvailable ? setCursor(response.data.sliceInfo.lastIdx) :setIsAvailable(false)
+      console.log(response);
+      setIsLoading(false)
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   useEffect(() => {
-    getCardList();
+    getCardList2();
   }, [reRender]);
 
   useEffect(() => {
@@ -176,18 +106,17 @@ const EntireMain = () => {
       const scrollTop = document.documentElement.scrollTop;
       const clientHeight = document.documentElement.clientHeight;
       if (scrollTop + clientHeight >= scrollHeight) {
-        getCardList();
+        getCardList2();
       }
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   });
-
   //랜덤이미지?
   const images = [study1, study2, study3, study4, study5];
-
   return (
     <>
       <StyledEntireMain>
@@ -204,7 +133,13 @@ const EntireMain = () => {
           <section className="main-notice-container">
             <Notice title="전국" />
           </section>
-          <section className={`${isLoading ? "cardlists-container--loading": "main-cardlist-container"}`}>
+          <section
+            className={`${
+              isLoading
+                ? "cardlists-container--loading"
+                : "main-cardlist-container"
+            }`}
+          >
             <main className="cardlists-box">
               {cardList &&
                 cardList.map((el) => {
@@ -256,4 +191,100 @@ const EntireMain = () => {
     </>
   );
 };
+const StyledEntireMain = styled.div`
+  .main-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    background-color: #dedede;
+  }
+  .main-nav-container {
+    margin-bottom: 50px;
+    height: 63.5px;
+  }
+  .main-notice-container {
+    margin-bottom: 30px;
+    border-radius: 10px;
+  }
+  .main-cardlist-container {
+    border: solid black 1px;
+    margin-left: 30px;
+    margin-right: 30px;
+    /* height: 100%; */
+  }
+  .cardlists-container--loading {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+  .cardlists-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: #f1f4f7;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .cardlist {
+    height: 450px;
+    width: 400px;
+    border: black solid 1px;
+    margin-bottom: 80px;
+    border-radius: 3%;
+    margin: 20px 5px;
+    background-color: white;
+    justify-content: center;
+  }
+  .cardlists-box :nth-child(1) {
+    margin-bottom: 10px;
+  }
+  .cardimg {
+    width: 100%;
+    /* border-top-left-radius: 5%;
+    border-top-right-radius: 5%; */
+  }
+  .study-info-box {
+    display: flex;
+    flex-direction: column;
+  }
+  .study-info-header {
+    color: black !important;
+    text-decoration: none;
+  }
+  .study-info {
+    margin-bottom: 10px;
+    color: gray;
+  }
+  .tags {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 0px;
+  }
+  ol {
+    padding-left: 0px;
+  }
+  li,
+  a {
+    text-decoration: none;
+    list-style: none;
+    color: black;
+  }
+  .count {
+    padding: 16px;
+  }
+  .study-info-header {
+    font-size: 1.5rem;
+  }
+  .loading {
+    text-align: center;
+    background-color: white;
+    font-size: large;
+  }
+  .circularProgress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
 export default EntireMain;

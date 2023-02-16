@@ -182,7 +182,12 @@ export default function Login() {
                   .then((res) => {
                     alert("로그인 성공");
                     setIslogin(true);
-                    return navigate("/main");
+                    if(localStorage.getItem("latitude")){
+                      return navigate("/main");
+                    } else {
+                      return navigate("/EntireMain")
+                    }
+                    
                   })
                   .catch((error) => {
                     alert("로그인 실패");

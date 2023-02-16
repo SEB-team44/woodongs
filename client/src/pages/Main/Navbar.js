@@ -59,6 +59,10 @@ const StyledNav = styled.div`
     color: black;
     text-decoration: none;
   }
+  #isValid-location{
+    color: lightgray;
+    pointer-events: none;
+  }
   .other-box {
     display: flex;
     flex-direction: row;
@@ -130,6 +134,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const [searchOption, setSearchOption] = useState("제목");
   const token = localStorage.getItem("access_token");
   const [alarm, setAlarm] = useState([]);
+  const getlat = localStorage.getItem("latitude");
 
   useEffect(() => {
     // http => ws 프로토콜 변환
@@ -255,11 +260,13 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                 <li>전체 스터디</li>
               </Link>
 
-              {isLogin ? (
+              {isLogin ? 
+               getlat ?    (
                 <Link to="/main">
                   <li>내 주변 스터디</li>
                 </Link>
-              ) : (
+              ): <li id="isValid-location">내 주변 스터디</li>
+              : (
                 <Link to="/main">
                   <li>스터디 목록</li>
                 </Link>

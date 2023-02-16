@@ -52,12 +52,6 @@ const AddBoard = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  // const changeTitle = (event) => {
-  //   setTitle(event.target.value);
-  // };
-  // const changeContent = (event) => {
-  //   setContent(event.target.value);
-  // };
   //[post]게시글작성
   const submitButton = () => {
     const access_token = localStorage.getItem("access_token");
