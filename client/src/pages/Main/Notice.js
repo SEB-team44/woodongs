@@ -1,15 +1,16 @@
-import { React, useContext } from "react";
+import { React, useContext, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { UserLogin } from "../../UserContext";
 import Alert from "@mui/material/Alert";
 import { UserInfo } from "../../UserContext";
-import currentLocation from "../Member/useCurrentLocation";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Notice = (props) => {
   const { userInfo, setUserInfo } = useContext(UserInfo);
   const { isLogin } = useContext(UserLogin);
-  const getlat = localStorage.getItem("latitude");
+  const [location, setLocation] = useState("");
+  const [isloading, setIsLoading] = useState(false);
 
   //현재시간
   const todayTime = () => {
@@ -23,24 +24,32 @@ const Notice = (props) => {
   };
 
   const HandleMyloaction = () => {
-    let latitude1;
-    let longitude1;
+    setIsLoading(() => true);
     const handleSuccess = (pos) => {
       const { latitude, longitude } = pos.coords;
-      console.log(latitude, longitude);
-      latitude1 = latitude;
-      longitude1 = longitude;
-      // setLocation({
-      //   latitude,
-      //   longitude,
-      // });
+      setLocation({
+        latitude,
+        longitude,
+      });
+      // setTimeout(() => {
+      console.log(userInfo);
+      setUserInfo({
+        ...userInfo,
+        latitude: latitude,
+        longitude: longitude,
+      });
+
+      setIsLoading(() => false);
+      // }, );
     };
     const handleError = (error) => {
       alert(error.message);
+      setIsLoading(() => false);
     };
 
     const { geolocation } = navigator;
-    console.log(geolocation.getCurrentPosition(handleSuccess, handleError));
+
+    geolocation.getCurrentPosition(handleSuccess, handleError);
   };
 
   return (
@@ -65,6 +74,7 @@ const Notice = (props) => {
                   <li>
                     <Link to="/MyPage">
                       <img
+                        alt="avatorImg"
                         className="avatarimg"
                         src={
                           userInfo.profileImageUrl
@@ -96,14 +106,22 @@ const Notice = (props) => {
               <div className="saved-location">
                 <h3>{props.title}</h3>
               </div>
-              <button
-                onClick={() => HandleMyloaction()}
-                className="my-location-btn"
-              >
-                위치 정보 받기{" "}
-              </button>
+
+              {isloading ? (
+                <CircularProgress size={20} sx={{ mt: 5, mb: 1 }} />
+              ) : (
+                <button
+                  onClick={() => HandleMyloaction()}
+                  className="my-location-btn"
+                >
+                  위치 정보 받기
+                </button>
+              )}
             </div>
+            <div></div>
           </section>
+
+          {/* <CircularProgress size={30} sx={{ mt: 5, mb: 1 }} /> */}
         </nav>
       </StyledNav>
     </>

@@ -18,91 +18,7 @@ import study3 from "../../img/study3.jpg";
 import study4 from "../../img/study4.jpg";
 import study5 from "../../img/study5.jpg";
 
-const StyledMain = styled.div`
-  .main-container {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    background-color: #dedede;
-  }
 
-  .main-nav-container {
-    margin-bottom: 50px;
-    height: 63.5px;
-  }
-  .main-notice-container {
-    margin-bottom: 30px;
-    border-radius: 10px;
-  }
-  .main-cardlist-container {
-    border: solid black 1px;
-    margin-left: 30px;
-    margin-right: 30px;
-    /* height: 100%; */
-  }
-  .cardlists-box {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    background-color: #f1f4f7;
-    justify-content: space-around;
-    align-items: center;
-  }
-  .cardlist {
-    height: 450px;
-    width: 400px;
-    border: black solid 1px;
-    margin-bottom: 80px;
-    border-radius: 3%;
-    margin: 20px 5px;
-    background-color: white;
-    justify-content: center;
-  }
-  .cardlists-box :nth-child(1) {
-    margin-bottom: 10px;
-  }
-  .cardimg {
-    width: 100%;
-    /* border-top-left-radius: 5%;
-    border-top-right-radius: 5%; */
-  }
-  .study-info-box {
-    display: flex;
-    flex-direction: column;
-  }
-  .study-info-header {
-    color: black !important;
-    text-decoration: none;
-  }
-  .study-info {
-    margin-bottom: 10px;
-    color: gray;
-  }
-
-  .tags {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin-top: 0px;
-  }
-  ol {
-    padding-left: 0px;
-  }
-  li,
-  a {
-    text-decoration: none;
-    list-style: none;
-    color: black;
-  }
-  .count {
-    padding: 16px;
-  }
-
-  .study-info-header {
-    font-size: 1.5rem;
-  }
-`;
 
 const Main = () => {
   const access_token = localStorage.getItem("access_token");
@@ -124,34 +40,6 @@ const Main = () => {
     Authorization: access_token,
   };
   
-
-  useEffect(() => {
-    function getCardList() {
-      let reqOption = {
-        method: "GET",
-        headers: header,
-      };
-      if (getlat) {
-        fetch(`https://api.woodongs.site/study/around?size=10`, reqOption)
-          .then((res) => {
-            return res.json();
-          })
-          .then((data) => {
-            return data;
-          })
-          .then((data) => setCardList(data.data))
-          .catch((error) => alert(error));
-      } else {
-        fetch(`https://api.woodongs.site/study?size=10`, reqOption)
-          .then((res) => res.json())
-          .then((data) => {
-            return data;
-          })
-          .then((data) => setCardList(data.data));
-      }
-    }
-    getCardList();
-  }, [reRender]);
 
   function getCardList() {
     let reqOption = {
@@ -241,7 +129,7 @@ const Main = () => {
                         <CardContent className="study-info-box">
                           <header className="study-info study-info-header">
                             <Link to={"/study/" + `${el.studyId}`}>{`[${
-                              el.city === "" ? "전국" : el.city
+                              el.city === "" ? "내 그룹" : el.city
                             }]  ${el.title}`}</Link>
                           </header>
                           <a className="study-info">{el.content}</a>
@@ -271,5 +159,89 @@ const Main = () => {
     </>
   );
 };
+const StyledMain = styled.div`
+  .main-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    background-color: #dedede;
+  }
 
+  .main-nav-container {
+    margin-bottom: 50px;
+    height: 63.5px;
+  }
+  .main-notice-container {
+    margin-bottom: 30px;
+    border-radius: 10px;
+  }
+  .main-cardlist-container {
+    border: solid black 1px;
+    margin-left: 30px;
+    margin-right: 30px;
+    /* height: 100%; */
+  }
+  .cardlists-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: #f1f4f7;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .cardlist {
+    height: 450px;
+    width: 400px;
+    border: black solid 1px;
+    margin-bottom: 80px;
+    border-radius: 3%;
+    margin: 20px 5px;
+    background-color: white;
+    justify-content: center;
+  }
+  .cardlists-box :nth-child(1) {
+    margin-bottom: 10px;
+  }
+  .cardimg {
+    width: 100%;
+    /* border-top-left-radius: 5%;
+    border-top-right-radius: 5%; */
+  }
+  .study-info-box {
+    display: flex;
+    flex-direction: column;
+  }
+  .study-info-header {
+    color: black !important;
+    text-decoration: none;
+  }
+  .study-info {
+    margin-bottom: 10px;
+    color: gray;
+  }
+
+  .tags {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 0px;
+  }
+  ol {
+    padding-left: 0px;
+  }
+  li,
+  a {
+    text-decoration: none;
+    list-style: none;
+    color: black;
+  }
+  .count {
+    padding: 16px;
+  }
+
+  .study-info-header {
+    font-size: 1.5rem;
+  }
+`;
 export default Main;

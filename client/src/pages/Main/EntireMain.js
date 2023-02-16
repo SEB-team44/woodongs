@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Navbar from "./Navbar";
 import Notice from "./Notice";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, } from "react";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import Card from "@mui/material/Card";
@@ -14,7 +14,6 @@ import study3 from "../../img/study3.jpg";
 import study4 from "../../img/study4.jpg";
 import study5 from "../../img/study5.jpg";
 import CircularProgress from "@mui/material/CircularProgress";
-import axios from "axios";
 import { axiosInstance } from "../utiles/axiosInstance";
 
 const EntireMain = () => {
@@ -25,96 +24,73 @@ const EntireMain = () => {
   const [cursor, setCursor] = useState(0);
   const [isAvailable, setIsAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const getlat = localStorage.getItem("latitude");
 
-  function getCardList() {
+
+  const getCardList = async () => {
     let reqOption = {
-      method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json",
-        credentials: "include",
         Authorization: access_token,
       },
     };
+
     let url;
+
     if (cursor) {
-      url = `https://api.woodongs.site/study?size=5&cursorId=${cursor}`;
+      url = `5&cursorId=${cursor}`;
     } else {
-      url = `https://api.woodongs.site/study?size=10`;
+      url = `10`;
     }
     if (!isAvailable) {
       return;
-    }
-
-    fetch(url, reqOption)
-      .then((res) => res.json())
-      .then((data) => {
-        return data;
-      })
-      .then((data) => {
+    } else {
+      try {
         setIsLoading(true);
+        const response = await axiosInstance.get(
+          `/study?size=${url}`,
+          reqOption
+        );
+        // infinate scroll info
+        const { nextAvailable, lastIdx } = response.data.sliceInfo;
+
         setTimeout(() => {
-          setCardList([...cardList, ...data.data]);
-          if (data.sliceInfo.nextAvailable) {
-            setCursor(data.sliceInfo.lastIdx);
-          } else {
-            setIsAvailable(false);
-          }
+          setCardList([...cardList, ...response.data.data]);
+          nextAvailable ? setCursor(lastIdx) : setIsAvailable(false);
           setIsLoading(false);
         }, 1000);
-      });
-  }
-
-  const getCardList2 = async () => {
-    let reqOption = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: access_token,
-      },
-    };
-
-    let url;
-
-    if (cursor) {
-      url = `?size=5&cursorId=${cursor}`;
-    } else {
-      url = `?size=10`;
-    }
-    if (!isAvailable) {
-      return;
-    }
-
-    try {
-      setIsLoading(true)
-      const response = await axiosInstance.get(`/study${url}`, reqOption);
-      setCardList([...cardList, ...response.data.data]);
-      response.data.sliceInfo.nextAvailable ? setCursor(response.data.sliceInfo.lastIdx) :setIsAvailable(false)
-      console.log(response);
-      setIsLoading(false)
-    } catch (error) {
-      alert(error);
+      } catch (error) {
+        setIsLoading(false)
+        alert(error);
+      }
     }
   };
 
+// const { getCardList } = useCardList()
+
+
+  const handleScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight) {
+      getCardList();
+    }
+  };
+
+
   useEffect(() => {
-    getCardList2();
+    getCardList();
   }, [reRender]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      const scrollTop = document.documentElement.scrollTop;
-      const clientHeight = document.documentElement.clientHeight;
-      if (scrollTop + clientHeight >= scrollHeight) {
-        getCardList2();
-      }
-    };
-
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   });
+
+
   //랜덤이미지?
   const images = [study1, study2, study3, study4, study5];
   return (
@@ -131,7 +107,7 @@ const EntireMain = () => {
             />
           </section>
           <section className="main-notice-container">
-            <Notice title="전국" />
+            <Notice title ="전국"/>
           </section>
           <section
             className={`${
