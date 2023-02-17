@@ -10,8 +10,6 @@ import { IsChat } from "../../UserContext";
 import { UserInfo } from "../../UserContext";
 import Button from "@mui/material/Button";
 
-
-
 const MyGroup = () => {
   const { userInfo } = useContext(UserInfo);
   const { setIsChat } = useContext(IsChat);
@@ -68,7 +66,6 @@ const MyGroup = () => {
 
         currentStomp.connect({ token: token }, (frame) => {
           if (currentStomp.ws.readyState === 1) {
-
             if (!stompSet.has(studyId)) {
               setStompSet(() => stompSet.add(studyId));
               currentStomp.subscribe(
@@ -91,8 +88,8 @@ const MyGroup = () => {
         setValidation(true);
       })
       .catch((error) => {
-        if(error instanceof SyntaxError){
-          window.location.replace("/login")
+        if (error instanceof SyntaxError) {
+          window.location.replace("/login");
         }
       });
   };
@@ -120,7 +117,7 @@ const MyGroup = () => {
   const handlePubChat = (e) => {
     e.preventDefault();
     pubChatData();
-    setSendContent(() => "")
+    setSendContent(() => "");
     // e.target.value = null;
   };
 
@@ -166,6 +163,7 @@ const MyGroup = () => {
                 );
               })}
           </div>
+
           <div className="my-group__inner">
             <div className="my-group__title">{getStudyId}번 채팅방 </div>
             <div className="chat-message-box">
@@ -229,7 +227,9 @@ const MyGroup = () => {
                   />
                   <Button
                     className="submit-btn"
-                    onClick={(e) => sendContent !== "" ? handlePubChat(e) : null}
+                    onClick={(e) =>
+                      sendContent !== "" ? handlePubChat(e) : null
+                    }
                   >
                     전송
                   </Button>
@@ -238,11 +238,12 @@ const MyGroup = () => {
             </div>
           </div>
 
-          <div>
+          <div className="members">
             {memberInfo &&
               memberInfo.map((el) => {
                 return (
                   <>
+                  <div className="member">
                     {" "}
                     {!el.profileImageUrl ? (
                       <img
@@ -255,6 +256,7 @@ const MyGroup = () => {
                       </div>
                     )}
                     <div>{el.nickName}</div>
+                    </div>
                   </>
                 );
               })}
@@ -267,9 +269,9 @@ const MyGroup = () => {
 const MyGroupStyled = styled.div`
   .my-group-container {
     align-items: center;
-    margin-top : 50px;
+    margin-top: 50px;
     margin-left: 50px;
-    box-shadow : 1px 1px 5px 1px black;
+    box-shadow: 1px 1px 5px 1px black;
     border-radius: 5px;
     padding-left: 20px;
     padding-right: 20px;
@@ -277,7 +279,6 @@ const MyGroupStyled = styled.div`
     height: 100%;
     display: flex;
     background-color: #dedede;
-
     overflow: hidden;
   }
   .my-group__inner {
@@ -292,7 +293,7 @@ const MyGroupStyled = styled.div`
     margin-bottom: 10px;
     width: 90%;
     height: 90vh;
-    box-shadow : 1px 1px 5px 1px gray;
+    box-shadow: 1px 1px 5px 1px gray;
   }
   .my-group__title {
     padding-top: 20px;
@@ -319,6 +320,7 @@ const MyGroupStyled = styled.div`
     border: 1px solid black;
   }
   .sidebar_container {
+    display: flex;
     flex-direction: column;
     align-items: left;
   }
@@ -390,9 +392,43 @@ const MyGroupStyled = styled.div`
     /* color: white; */
   }
   @media (max-width: 920px) {
-    .my-group-container{
+    .my-group-container {
       margin-left: 0px;
       width: 95%;
+    }
+  }
+  @media (max-width: 813px) {
+    .my-group-container {
+      flex-direction: column;
+    }
+    .chat-groups {
+      /* position: absolute; */
+      height: 100px;
+      width: 100px;
+      padding: 0px;
+      border-radius: 100%;
+      margin-right:30px;
+      overflow: hidden;
+    }
+    .sidebar_container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      overflow: scroll;
+      width: 100%;
+      margin-top: 30px;
+      /* border: 1px solid */
+    }
+    .members {
+      display: flex;
+      flex-direction: row;
+      margin-top: 30px;
+      overflow: scroll;
+    }
+    .member{
+      margin-right: 30px;
+      display: flex;
+      flex-direction: column;
     }
   }
 `;
