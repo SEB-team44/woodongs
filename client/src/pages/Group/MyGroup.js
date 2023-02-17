@@ -430,6 +430,7 @@ const MyGroupStyled = styled.div`
       display: flex;
       flex-direction: column;
     }
-  }
+  }  
+  
 `;
 export default MyGroup;
