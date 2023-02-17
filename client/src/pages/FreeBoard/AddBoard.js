@@ -8,43 +8,7 @@ import Footer from "../Main/Footer";
 import Button from "@mui/material/Button";
 import { Navigate } from "react-router-dom";
 
-const StyledAddBoard = styled.div`
-  .addboard-navbar {
-    margin-bottom: 30px;
-  }
-  .addboard-notice-container {
-    margin-bottom: 30px;
-  }
-  .addboard-container {
-    align-items: center;
-    justify-content: center;
-    margin: 50px auto;
-    border: 1px solid black;
-    border-radius: 50px;
-    padding: 30px;
-    width: 800px;
-  }
-  textarea {
-    resize: none;
-  }
-  .addboard-textarea {
-    width: 90%;
-    margin-bottom: 50px;
-    height: 25px;
-  }
 
-  .body-textarea {
-    height: 300px;
-  }
-  .addboard-submit-box {
-    text-align: center;
-    margin: 50px;
-  }
-  .addboard-body-box {
-    justify-content: center;
-    align-items: center;
-  }
-`;
 
 const AddBoard = () => {
   const navigate = useNavigate();
@@ -116,7 +80,7 @@ const AddBoard = () => {
               value={bodyValue}
               onChange={(event) => {
                 let data = event.target.value;
-                setBodyValue(data);
+                setBodyValue(() => data);
                 setContent({
                   ...content,
                   body: bodyValue,
@@ -141,6 +105,47 @@ const AddBoard = () => {
     </>
   );
 };
-// };
+const StyledAddBoard = styled.div`
+  .addboard-navbar {
+    margin-bottom: 30px;
+  }
+  .addboard-notice-container {
+    margin-bottom: 30px;
+  }
+  .addboard-container {
+    align-items: center;
+    justify-content: center;
+    margin: 50px auto;
+    border: 1px solid black;
+    border-radius: 30px;
+    padding: 30px;
+    width: 800px;
+  }
+  textarea {
+    resize: none;
+  }
+  .addboard-textarea {
+    width: 90%;
+    margin-bottom: 50px;
+    height: 25px;
+  }
+
+  .body-textarea {
+    height: 300px;
+  }
+  .addboard-submit-box {
+    text-align: center;
+    margin: 50px;
+  }
+  .addboard-body-box {
+    justify-content: center;
+    align-items: center;
+  }
+  @media (max-width : 868px) {
+    .addboard-container{
+      width:90vw;
+    }
+  }
+`;
 
 export default AddBoard;

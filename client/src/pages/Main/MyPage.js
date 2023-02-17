@@ -15,60 +15,6 @@ import LogOut from "../Member/Logout";
 
 import axios from "axios";
 
-const MyPageStyled = styled.div`
-  .mypage_content {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin: 50px auto;
-    border: 1px solid black;
-    border-radius: 10px;
-    background-color: rgb(241, 244, 247);
-    padding: 30px;
-    width: 800px;
-  }
-  .mypage_button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin-top: 10px;
-  }
-  .mypage_downcontent {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
-  }
-  .avatarimg {
-    height: 150px;
-    width: 150px;
-    border-radius: 50%;
-  }
-  .user_info {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    width: 200px;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
-  }
-  li,
-  a {
-    text-decoration: none;
-    list-style: none;
-  }
-  .user_info_child {
-    margin-bottom: 10px;
-    font-weight: 500;
-  }
-  .info-introduction {
-    margin-bottom: 40px;
-  }
-`;
-
 const MyPage = () => {
   const access_token = localStorage.getItem("access_token");
   const [isEdit, setIsEdit] = useState(false);
@@ -269,7 +215,7 @@ const MyPage = () => {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
-        setImage(()=>reader.result);
+        setImage(() => reader.result);
       }
     };
     reader.readAsDataURL(e.target.files[0]);
@@ -384,5 +330,62 @@ const MyPage = () => {
     </>
   );
 };
-
+const MyPageStyled = styled.div`
+  .mypage_content {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 50px auto;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: rgb(241, 244, 247);
+    padding: 30px;
+    width: 800px;
+  }
+  .mypage_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 10px;
+  }
+  .mypage_downcontent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+  }
+  .avatarimg {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+  }
+  .user_info {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+  }
+  li,
+  a {
+    text-decoration: none;
+    list-style: none;
+  }
+  .user_info_child {
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .info-introduction {
+    margin-bottom: 40px;
+  }
+  @media (max-width: 859px) {
+    .mypage_content{
+      width: 90vw;
+    }
+  }
+`;
 export default MyPage;

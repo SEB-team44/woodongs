@@ -7,42 +7,7 @@ import Navbar from "../Main/Navbar";
 // import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
 
-const AddStudyStyled = styled.div`
-  .add_container {
-    align-items: center;
-    justify-content: center;
-    margin: 50px auto;
-    border: 1px solid black;
-    border-radius: 20px;
-    padding: 30px;
-    width: 800px;
-  }
-  .submit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .submit-button {
-    /* background-color: #6787f6; */
-  }
-  .form-group {
-    display: inline-block;
-    width: 500px;
-    line-height: 50px;
-  }
-  textarea {
-    resize: none;
-  }
-  .innerBox {
-    display: flex;
-    margin-right: 10px;
-  }
-  .checkbox {
-    display: flex;
-    align-items: center;
-    margin: 10px;
-  }
-`;
+
 
 const AddStudy = () => {
   const navigate = useNavigate();
@@ -83,8 +48,6 @@ const AddStudy = () => {
   };
   const getValue = (e) => {
     const { value } = e.target;
-    console.log(e.target.name);
-    console.log("value", value);
     setContent({
       ...content,
       title: value,
@@ -92,8 +55,6 @@ const AddStudy = () => {
   };
   const getHeadValue = (e) => {
     const { value } = e.target;
-    console.log(e.target.headCount);
-    console.log("headcount", value);
     setContent({
       ...content,
       headCount: value,
@@ -113,11 +74,9 @@ const AddStudy = () => {
   const [checkedItems, setCheckedItems] = useState(new Set()); //체크된 요소들
 
   const checkHandler = (e) => {
-    // setIsChecked(!isChecked);
-    // checkedItemHandler(target.parentNode, target.value, target.checked);
+
     const { value } = e.target;
-    console.log(e.target.category);
-    console.log("category", value);
+
     setContent({
       ...content,
       category: value,
@@ -143,6 +102,7 @@ const AddStudy = () => {
         <div className="add_container">
           <h2>*스터디명</h2>
           <input
+          className="study-name"
             type="text"
             placeholder="3~20글자로 적어주세요. 예) 주말 공부 스터디"
             size="100"
@@ -154,6 +114,7 @@ const AddStudy = () => {
             {CATEGORY_LIST.map((item) => (
               <label key={item.id} className="innerBox">
                 <input
+                
                   type="checkbox"
                   value={item.name}
                   onChange={
@@ -223,4 +184,54 @@ const AddStudy = () => {
     </>
   );
 };
+
+const AddStudyStyled = styled.div`
+  .add_container {
+    align-items: center;
+    justify-content: center;
+    margin: 50px auto;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 30px;
+    width: 800px;
+  }
+  .submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .submit-button {
+    /* background-color: #6787f6; */
+  }
+  .form-group {
+    display: inline-block;
+    width: 500px;
+    line-height: 50px;
+  }
+  textarea {
+    resize: none;
+  }
+  .innerBox {
+    display: flex;
+    margin-right: 10px;
+  }
+  .checkbox {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+  }
+  @media (max-width: 869px) {
+    .add_container {
+      width: 90vw;
+    }
+    textarea {
+      width: 100%;
+    }
+  }
+  @media (max-width: 750px) {
+    .study-name{
+      width:100%;
+    }
+  }
+`;
 export default AddStudy;

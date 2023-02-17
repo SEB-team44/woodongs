@@ -269,7 +269,6 @@ const MyGroupStyled = styled.div`
     align-items: center;
     margin-top : 50px;
     margin-left: 50px;
-    margin-right: 50px;
     box-shadow : 1px 1px 5px 1px black;
     border-radius: 5px;
     padding-left: 20px;
@@ -389,6 +388,12 @@ const MyGroupStyled = styled.div`
     width: 19%;
     height: 100%;
     /* color: white; */
+  }
+  @media (max-width: 920px) {
+    .my-group-container{
+      margin-left: 0px;
+      width: 95%;
+    }
   }
 `;
 export default MyGroup;

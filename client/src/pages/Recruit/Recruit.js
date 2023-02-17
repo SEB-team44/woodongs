@@ -517,6 +517,12 @@ const StyledRecruit = styled.section`
   .input-button {
     height: 40px;
   }
+  @media (max-width : 1004px) {
+    .recruit-main-container{
+      width:97vw;
+    }
+
+  }
 `;
 
 
