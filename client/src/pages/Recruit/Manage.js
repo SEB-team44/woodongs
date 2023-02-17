@@ -2,21 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 
-const StyledManage = styled.div`
-  .chart-element {
-    border: solid 1px black;
-    width: 100%;
-  }
-  .chart-container {
-    display: flex;
-    flex-direction: row;
-  }
-  .avatarImg {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-  }
-`;
 
 const Manage = ({ id }) => {
   const [applyInfo, setApplyInfo] = useState([]);
@@ -132,4 +117,21 @@ const Manage = ({ id }) => {
     </>
   );
 };
+const StyledManage = styled.div`
+  .chart-element {
+    border: solid 1px black;
+    width: 100%;
+  }
+  .chart-container {
+    display: flex;
+    flex-direction: row;
+  }
+  .avatarImg {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+  }
+`;
+
+
 export default Manage;

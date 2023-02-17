@@ -15,111 +15,6 @@ import StompJs from "stompjs";
 import { useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 
-const StyledNav = styled.div`
-  .header-container {
-    height: 63.5px;
-    width: 100vw;
-    /* border: solid black 1px; */
-    background-color: white;
-  }
-  .nav-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    height: 63.5px;
-    padding-left: 10px;
-  }
-  .logo-img {
-    height: 60px;
-  }
-  .tap-box {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-left: 0px;
-    height: 63.5px;
-    text-decoration: none;
-  }
-  .tap-box li {
-    text-decoration: none;
-    padding: 8px 12px;
-  }
-  .tap-box li:hover {
-    background-color: #b6c6d4;
-    border-radius: 4px;
-  }
-  ol {
-    margin: 0px;
-  }
-  a,
-  li {
-    list-style: none;
-    padding-right: 20px;
-    text-decoration-line: none;
-    color: black;
-    text-decoration: none;
-  }
-  .other-box {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-right: 10px;
-  }
-  .search-box {
-    padding-right: 20px;
-  }
-  .info-box {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    text-align: center;
-    padding-left: 20px;
-  }
-  .info-box > * {
-    margin-left: 20px;
-  }
-  .myinfo-img {
-    height: 25px;
-    width: 25px;
-  }
-  textarea {
-    resize: none;
-  }
-  .avatarimg {
-    width: 30px !important;
-    height: 30px !important;
-    border-radius: 50%;
-  }
-  .group-btn {
-    border: 0;
-    outline: 0;
-    cursor: pointer;
-    background-color: white;
-  }
-  .alert-btn {
-    border: 0;
-    outline: 0;
-    cursor: pointer;
-    background-color: white;
-  }
-  .alert {
-    height: 200px;
-  }
-  .jb-text {
-    padding: 15px 20px;
-    background-color: white;
-    border: 0.05px solid black;
-    border-radius: 5px;
-    color: black;
-    position: absolute;
-    opacity: 0;
-    transition: all ease 0.5s;
-  }
-  .jb-title:hover + .jb-text {
-    opacity: 1;
-  }
-`;
-
 const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const { userInfo, setUserInfo } = useContext(UserInfo); //로그인 한 사용자 정보
   const { isChat, setIsChat } = useContext(IsChat);
@@ -130,6 +25,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const [searchOption, setSearchOption] = useState("제목");
   const token = localStorage.getItem("access_token");
   const [alarm, setAlarm] = useState([]);
+  const getlat = localStorage.getItem("latitude");
 
   useEffect(() => {
     // http => ws 프로토콜 변환
@@ -236,7 +132,6 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
     setIsChat(false);
     setAlarm([]);
   };
-
   return (
     <>
       <StyledNav>
@@ -256,9 +151,13 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
               </Link>
 
               {isLogin ? (
-                <Link to="/main">
-                  <li>내 주변 스터디</li>
-                </Link>
+                userInfo.city ? (
+                  <Link to="/main">
+                    <li>내 주변 스터디</li>
+                  </Link>
+                ) : (
+                  <li id="isValid-location">내 주변 스터디</li>
+                )
               ) : (
                 <Link to="/main">
                   <li>스터디 목록</li>
@@ -428,5 +327,113 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
     </>
   );
 };
-
+const StyledNav = styled.div`
+  .header-container {
+    height: 63.5px;
+    width: 100vw;
+    /* border: solid black 1px; */
+    background-color: white;
+  }
+  .nav-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 63.5px;
+    padding-left: 10px;
+    box-shadow: 1px 1px 3px 1px gray;
+  }
+  .logo-img {
+    height: 60px;
+  }
+  .tap-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 0px;
+    height: 63.5px;
+    text-decoration: none;
+  }
+  .tap-box li {
+    text-decoration: none;
+    padding: 8px 12px;
+  }
+  .tap-box li:hover {
+    background-color: #b6c6d4;
+    border-radius: 4px;
+  }
+  ol {
+    margin: 0px;
+  }
+  a,
+  li {
+    list-style: none;
+    padding-right: 20px;
+    text-decoration-line: none;
+    color: black;
+    text-decoration: none;
+  }
+  #isValid-location {
+    color: lightgray;
+    pointer-events: none;
+  }
+  .other-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-right: 10px;
+  }
+  .search-box {
+    padding-right: 20px;
+  }
+  .info-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: center;
+    padding-left: 20px;
+  }
+  .info-box > * {
+    margin-left: 20px;
+  }
+  .myinfo-img {
+    height: 25px;
+    width: 25px;
+  }
+  textarea {
+    resize: none;
+  }
+  .avatarimg {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50%;
+  }
+  .group-btn {
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    background-color: white;
+  }
+  .alert-btn {
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    background-color: white;
+  }
+  .alert {
+    height: 200px;
+  }
+  .jb-text {
+    padding: 15px 20px;
+    background-color: white;
+    border: 0.05px solid black;
+    border-radius: 5px;
+    color: black;
+    position: absolute;
+    opacity: 0;
+    transition: all ease 0.5s;
+  }
+  .jb-title:hover + .jb-text {
+    opacity: 1;
+  }
+`;
 export default Navbar;

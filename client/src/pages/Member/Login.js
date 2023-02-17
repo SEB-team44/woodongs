@@ -46,10 +46,6 @@ function Copyright(props) {
   );
 }
 
-// 카카오 인증 url
-// woodongs.site:3000
-// localhost:3000
-// 3.35.188.110:8080
 const KAKAOPATH =
   "https://api.woodongs.site/oauth2/authorization/kakao?redirect_uri=https://www.woodongs.site/Redirect";
 
@@ -182,7 +178,12 @@ export default function Login() {
                   .then((res) => {
                     alert("로그인 성공");
                     setIslogin(true);
-                    return navigate("/main");
+                    if(localStorage.getItem("latitude")){
+                      return navigate("/main");
+                    } else {
+                      return navigate("/EntireMain")
+                    }
+                    
                   })
                   .catch((error) => {
                     alert("로그인 실패");

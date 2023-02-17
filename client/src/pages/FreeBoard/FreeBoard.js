@@ -8,127 +8,7 @@ import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { UserLogin } from "../../UserContext";
-const StyledFreeBoard = styled.section`
-  .freeborad-container {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    border: solid black 1px;
-  }
-  .freeboard-nav-container {
-    margin-bottom: 50px;
-  }
-  .freeboard-notice-container {
-    margin-bottom: 30px;
-  }
-  .freeboard-main-container {
-    /* border: solid black 1px; */
-    margin: 30px;
-  }
-  .main-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: 0px auto;
-    width: 1000px;
-  }
-  .handle-box {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    text-align: center;
-    margin: 20px;
-  }
-  .post {
-    text-align: center;
-    margin: 30px;
-  }
-  textarea {
-    resize: none;
-  }
-  .handle-search-box {
-    display: flex;
-    flex-direction: row;
-  }
-  .handle-search-bar {
-    height: 60%;
-  }
-  .submit-button {
-    color: white;
-  }
-  .search-button {
-    color: white;
-  }
-  .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px;
-  }
 
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  ul.pagination li {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    border: 1px solid #e2e2e2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1rem;
-  }
-
-  ul.pagination li:first-child {
-    border-radius: 5px 0 0 5px;
-  }
-
-  ul.pagination li:last-child {
-    border-radius: 0 5px 5px 0;
-  }
-
-  ul.pagination li a {
-    text-decoration: none;
-    color: #337ab7;
-    font-size: 1rem;
-  }
-
-  ul.pagination li.active a {
-    color: white;
-  }
-
-  ul.pagination li.active {
-    background-color: #337ab7;
-  }
-
-  ul.pagination li a:hover,
-  ul.pagination li a.active {
-    color: blue;
-  }
-
-  .page-selection {
-    width: 48px;
-    height: 30px;
-    color: #337ab7;
-  }
-  .post-list {
-    /* border: #337ab7 solid 1px; */
-  }
-  .thead {
-    background-color: #dedede;
-  }
-  a {
-    text-decoration: none;
-    list-style: none;
-    color: black;
-  }
-  tr {
-    height: 40px;
-  }
-`;
 
 const FreeBoard = () => {
   const access_token = localStorage.getItem("access_token");
@@ -245,11 +125,7 @@ const FreeBoard = () => {
       <StyledFreeBoard>
         <section className="freeboard-container">
           <section className="freeboard-nav-container">
-            <Navbar />
-          </section>
-
-          <section className="freeboard-notice-container">
-            <Notice />
+            <Navbar  />
           </section>
           <section className="freeboard-main-container">
             <main className="main-box">
@@ -331,5 +207,127 @@ const FreeBoard = () => {
     </>
   );
 };
+const StyledFreeBoard = styled.section`
+  .freeborad-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    border: solid black 1px;
+  }
+  .freeboard-nav-container {
+    margin-bottom: 50px;
+  }
 
+  .freeboard-main-container {
+    margin: 30px;
+  }
+  .main-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0px auto;
+    width: 1000px;
+  }
+  .handle-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    text-align: center;
+    margin: 20px;
+  }
+  .post {
+    text-align: center;
+    margin: 30px;
+  }
+  textarea {
+    resize: none;
+  }
+  .handle-search-box {
+    display: flex;
+    flex-direction: row;
+  }
+  .handle-search-bar {
+    height: 60%;
+  }
+  .submit-button {
+    color: white;
+  }
+  .search-button {
+    color: white;
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.pagination li {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+  }
+
+  ul.pagination li:first-child {
+    border-radius: 5px 0 0 5px;
+  }
+
+  ul.pagination li:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+
+  ul.pagination li a {
+    text-decoration: none;
+    color: #337ab7;
+    font-size: 1rem;
+  }
+
+  ul.pagination li.active a {
+    color: white;
+  }
+
+  ul.pagination li.active {
+    background-color: #337ab7;
+  }
+
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: blue;
+  }
+
+  .page-selection {
+    width: 48px;
+    height: 30px;
+    color: #337ab7;
+  }
+  .post-list {
+    /* border: #337ab7 solid 1px; */
+  }
+  .thead {
+    background-color: #dedede;
+  }
+  a {
+    text-decoration: none;
+    list-style: none;
+    color: black;
+  }
+  tr {
+    height: 40px;
+  }
+  @media (max-width: 930px) {
+    .main-box {
+      width : 90vw;
+    }
+  }
+`;
 export default FreeBoard;

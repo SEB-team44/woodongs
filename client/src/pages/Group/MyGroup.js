@@ -10,131 +10,7 @@ import { IsChat } from "../../UserContext";
 import { UserInfo } from "../../UserContext";
 import Button from "@mui/material/Button";
 
-const MyGroupStyled = styled.div`
-  .my-group-container {
-    align-items: center;
-    margin-left: 50px;
-    margin-right: 50px;
-    border: 1px solid black;
-    border-radius: 5px;
-    padding-left: 20px;
-    padding-right: 20px;
-    width: 90%;
-    height: 100%;
-    display: flex;
-    background-color: #dedede;
 
-    overflow: hidden;
-  }
-  .my-group__inner {
-    border: black solid 1px;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: 90%;
-    height: 90vh;
-  }
-  .my-group__title {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    text-align: center;
-    font-size: 30px;
-    font-weight: 500;
-    background-color: rgb(241, 244, 247);
-  }
-  .chat-message-box {
-    overflow: scroll;
-
-    width: 100%;
-    height: 100%;
-    background-color: rgb(241, 244, 247);
-    &::-webkit-scrollbar {
-      border: solid black 1px;
-      border-right: 0px;
-      border-radius: 2px;
-      background-color: rgb(241, 244, 247);
-    }
-  }
-  .chat-message {
-    border: 1px solid black;
-  }
-  .sidebar_container {
-    flex-direction: column;
-    align-items: left;
-  }
-
-  .avatar {
-    text-align: center;
-    padding: 20px;
-  }
-  .chat-groups {
-    background-color: rgb(153, 183, 223);
-    /* border: 1px solid black; */
-    border-radius: 5%;
-    text-align: center;
-    margin-bottom: 20px;
-    padding: 10%;
-    color: rgb(255, 255, 255);
-  }
-  .chat-groups:hover {
-    border: 3px solid black;
-    transition: 0.3s;
-    font-weight: 700;
-    color: black;
-  }
-  .chat-group-name {
-    text-align: center;
-  }
-
-  .message-others {
-    /* border: solid red 1px; */
-    padding-left: 30px !important;
-    display: flex;
-    flex-direction: row;
-    text-align: left;
-    color: black;
-    padding: 10px;
-  }
-  .chatInput {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 20%;
-    background-color: rgb(241, 244, 247);
-  }
-  .message-nickname {
-    font-size: 20px;
-    margin-bottom: 7px;
-  }
-  .memberIng-box {
-    margin-right: 10px;
-  }
-  .memberImg {
-    height: 50px;
-    width: 50px;
-    border-radius: 50%;
-    margin-top: 0;
-  }
-  .init-input {
-    height: 600px;
-    font-size: 40px;
-    color: white;
-  }
-  .input {
-    width: 80%;
-    height: 100%;
-  }
-  .submit-btn {
-    width: 19%;
-    height: 100%;
-    /* color: white; */
-  }
-`;
 
 const MyGroup = () => {
   const { userInfo } = useContext(UserInfo);
@@ -388,5 +264,131 @@ const MyGroup = () => {
     </>
   );
 };
+const MyGroupStyled = styled.div`
+  .my-group-container {
+    align-items: center;
+    margin-top : 50px;
+    margin-left: 50px;
+    margin-right: 50px;
+    box-shadow : 1px 1px 5px 1px black;
+    border-radius: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 90%;
+    height: 100%;
+    display: flex;
+    background-color: #dedede;
 
+    overflow: hidden;
+  }
+  .my-group__inner {
+    /* border: black solid 1px; */
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 90%;
+    height: 90vh;
+    box-shadow : 1px 1px 5px 1px gray;
+  }
+  .my-group__title {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    background-color: rgb(241, 244, 247);
+  }
+  .chat-message-box {
+    overflow: scroll;
+
+    width: 100%;
+    height: 100%;
+    background-color: rgb(241, 244, 247);
+    &::-webkit-scrollbar {
+      border: solid black 1px;
+      border-right: 0px;
+      border-radius: 2px;
+      background-color: rgb(241, 244, 247);
+    }
+  }
+  .chat-message {
+    border: 1px solid black;
+  }
+  .sidebar_container {
+    flex-direction: column;
+    align-items: left;
+  }
+
+  .avatar {
+    text-align: center;
+    padding: 20px;
+  }
+  .chat-groups {
+    background-color: rgb(153, 183, 223);
+    /* border: 1px solid black; */
+    border-radius: 5%;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10%;
+    color: rgb(255, 255, 255);
+  }
+  .chat-groups:hover {
+    border: 3px solid black;
+    transition: 0.3s;
+    font-weight: 700;
+    color: black;
+  }
+  .chat-group-name {
+    text-align: center;
+  }
+
+  .message-others {
+    /* border: solid red 1px; */
+    padding-left: 30px !important;
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    color: black;
+    padding: 10px;
+  }
+  .chatInput {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 20%;
+    background-color: rgb(241, 244, 247);
+  }
+  .message-nickname {
+    font-size: 20px;
+    margin-bottom: 7px;
+  }
+  .memberIng-box {
+    margin-right: 10px;
+  }
+  .memberImg {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-top: 0;
+  }
+  .init-input {
+    height: 600px;
+    font-size: 40px;
+    color: white;
+  }
+  .input {
+    width: 80%;
+    height: 100%;
+  }
+  .submit-btn {
+    width: 19%;
+    height: 100%;
+    /* color: white; */
+  }
+`;
 export default MyGroup;
