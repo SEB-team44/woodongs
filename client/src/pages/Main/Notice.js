@@ -31,16 +31,16 @@ const Notice = (props) => {
         latitude,
         longitude,
       });
-      // setTimeout(() => {
+
       console.log(userInfo);
       setUserInfo({
         ...userInfo,
         latitude: latitude,
         longitude: longitude,
       });
-
-      setIsLoading(() => false);
-      // }, );
+      setTimeout(() => {
+        setIsLoading(() => false);
+      }, 300);
     };
     const handleError = (error) => {
       alert(error.message);
@@ -56,20 +56,10 @@ const Notice = (props) => {
     <>
       <StyledNav>
         <nav className="nav-container">
-          <section className="notice-box-1">
-            <div className="notice-text">
-              <Alert severity="info">
-                공지사항 입니다!!공지사항입니다! 공지사항 봐주세요!
-              </Alert>
-              {/* <div className="notice-btn">
-              <button>Notice</button>
-            </div> */}
-            </div>
-          </section>
           <section className="profile-box">
             <div className="avatar-text">
               {isLogin ? (
-                <ol className="profile-box">
+                <ol className="profile-box pofile-lists">
                   <li>{todayTime().slice(0, 13)}</li>
                   <li>
                     <Link to="/MyPage">
@@ -87,7 +77,7 @@ const Notice = (props) => {
                   <li>{userInfo.nickName}</li>
                 </ol>
               ) : (
-                <ol className="profile-box">
+                <ol className="profile-box pofile-lists">
                   <li>{todayTime().slice(0, 13)}</li>
                   <li>
                     <Link to="/Login">로그인 후 이용해 주세요</Link>
@@ -96,7 +86,15 @@ const Notice = (props) => {
               )}
             </div>
           </section>
+          <section className="notice-box-1">
+            {/* <div className="notice-text"> */}
+            <Alert id="alert-Info" severity="info">
+              우리 동네 스터디 woodongs! 스터디를 생성하여 팀원들과 자유롭게
+              소통해보세요 !
+            </Alert>
 
+            {/* </div> */}
+          </section>
           <section className="location-container">
             <div className="location-box">
               <div className="now-location">
@@ -118,10 +116,7 @@ const Notice = (props) => {
                 </button>
               )}
             </div>
-            <div></div>
           </section>
-
-          {/* <CircularProgress size={30} sx={{ mt: 5, mb: 1 }} /> */}
         </nav>
       </StyledNav>
     </>
@@ -129,31 +124,34 @@ const Notice = (props) => {
 };
 const StyledNav = styled.div`
   .nav-container {
-    margin-left: 30px;
-    margin-right: 30px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    height: 50.5px;
-    border: black solid 1px;
-    border-radius: 3%;
+    height: 60px;
+    /* border-radius: 3%; */
     background-color: white;
+    box-shadow: 1px 1px 3px 1px gray;
   }
 
   .notice-box1 {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     padding-left: 0px;
-    width: 60%;
   }
   .notice-box2 {
     display: flex;
     flex-direction: row;
     align-items: center;
     padding-left: 0px;
-    width: 20%;
   }
+
+  #alert-Info {
+    height: 78%;
+    align-items: center;
+  }
+
   ol {
     margin: 0px;
   }
@@ -167,25 +165,31 @@ const StyledNav = styled.div`
     flex-direction: row;
     align-items: center;
     padding-left: 0px;
-    height: 63.5px;
+    height: 100%;
+  }
+
+  .pofile-lists{
+    margin-left:30px;
   }
 
   .location-container {
-    width: 25%;
+    width: 30%;
   }
   .location-box {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
-    padding-right: 10px;
+  }
+  .location-box > * {
+    margin-right: 30px;
   }
 
   .info-box {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding-left: 20px;
+    padding-left: 15px;
   }
 
   .avatarimg {
@@ -196,6 +200,12 @@ const StyledNav = styled.div`
   a {
     text-decoration: none;
     list-style: none;
+  }
+
+  @media (max-width: 900px) {
+    #alert-Info {
+      display: none;
+    }
   }
 `;
 export default Notice;

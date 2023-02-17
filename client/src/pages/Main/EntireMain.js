@@ -66,8 +66,6 @@ const EntireMain = () => {
     }
   };
 
-// const { getCardList } = useCardList()
-
 
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
@@ -82,6 +80,7 @@ const EntireMain = () => {
   useEffect(() => {
     getCardList();
   }, [reRender]);
+
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -184,9 +183,9 @@ const StyledEntireMain = styled.div`
     border-radius: 10px;
   }
   .main-cardlist-container {
-    border: solid black 1px;
-    margin-left: 30px;
-    margin-right: 30px;
+    /* border: solid black 1px; */
+    /* margin-left: 30px;
+    margin-right: 30px; */
     /* height: 100%; */
   }
   .cardlists-container--loading {
@@ -204,7 +203,7 @@ const StyledEntireMain = styled.div`
   .cardlist {
     height: 450px;
     width: 400px;
-    border: black solid 1px;
+    /* border: black solid 1px; */
     margin-bottom: 80px;
     border-radius: 3%;
     margin: 20px 5px;

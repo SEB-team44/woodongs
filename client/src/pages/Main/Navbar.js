@@ -15,8 +15,6 @@ import StompJs from "stompjs";
 import { useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 
-
-
 const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const { userInfo, setUserInfo } = useContext(UserInfo); //로그인 한 사용자 정보
   const { isChat, setIsChat } = useContext(IsChat);
@@ -114,7 +112,6 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
     }
     if (searchOption === "지역") {
       filtered = cardList.filter((el) => {
-        
         return el.city.includes(searchInput);
       });
     }
@@ -153,14 +150,15 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                 <li>전체 스터디</li>
               </Link>
 
-              {isLogin ? 
-                
-               userInfo.city ?    (
-                <Link to="/main">
-                  <li>내 주변 스터디</li>
-                </Link>
-              ): <li id="isValid-location">내 주변 스터디</li>
-              : (
+              {isLogin ? (
+                userInfo.city ? (
+                  <Link to="/main">
+                    <li>내 주변 스터디</li>
+                  </Link>
+                ) : (
+                  <li id="isValid-location">내 주변 스터디</li>
+                )
+              ) : (
                 <Link to="/main">
                   <li>스터디 목록</li>
                 </Link>
@@ -342,6 +340,7 @@ const StyledNav = styled.div`
     justify-content: space-around;
     height: 63.5px;
     padding-left: 10px;
+    box-shadow: 1px 1px 3px 1px gray;
   }
   .logo-img {
     height: 60px;
@@ -373,7 +372,7 @@ const StyledNav = styled.div`
     color: black;
     text-decoration: none;
   }
-  #isValid-location{
+  #isValid-location {
     color: lightgray;
     pointer-events: none;
   }

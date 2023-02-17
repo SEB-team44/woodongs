@@ -127,10 +127,6 @@ const FreeBoard = () => {
           <section className="freeboard-nav-container">
             <Navbar  />
           </section>
-
-          <section className="freeboard-notice-container">
-            <Notice />
-          </section>
           <section className="freeboard-main-container">
             <main className="main-box">
               <section className="handle-box">
@@ -222,11 +218,8 @@ const StyledFreeBoard = styled.section`
   .freeboard-nav-container {
     margin-bottom: 50px;
   }
-  .freeboard-notice-container {
-    margin-bottom: 30px;
-  }
+
   .freeboard-main-container {
-    /* border: solid black 1px; */
     margin: 30px;
   }
   .main-box {
@@ -330,6 +323,11 @@ const StyledFreeBoard = styled.section`
   }
   tr {
     height: 40px;
+  }
+  @media (max-width: 930px) {
+    .main-box {
+      width : 90vw;
+    }
   }
 `;
 export default FreeBoard;

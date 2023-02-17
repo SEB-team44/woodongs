@@ -6,96 +6,21 @@ import Footer from "../Main/Footer";
 import Button from "@mui/material/Button";
 import { TiTrash, TiPencil } from "react-icons/ti";
 
-const StyledSingleBoard = styled.section`
-  .container {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100vw;
-  }
-  .singleboard-main-container {
-    width: 800px;
-    height: 100%;
-    margin: 30px 300px;
-    border: solid black 1px;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    border-radius: 20px;
-    padding: 30px;
-  }
-  .singleboard-title {
-    border-bottom: 1px solid black;
-    height: 80px;
-    font-size: 30px;
-  }
-  .singleboard-body {
-    border-bottom: 1px solid black;
-    height: 500px;
-    margin-top: 20px;
-  }
-  .singleboard-comment {
-    margin-bottom: 20px;
-    border-left: black 1px solid;
-    display: flex;
-  }
-  .singleboard-comment-box {
-    margin-top: 15px;
-  }
-  .singleboard-input-box {
-    display: flex;
-  }
-  /* .singleboard-comment-view-box {
-    background-color: #ffdddd;
-    height: 100;
-  } */
-  .update-btn,
-  .delete-btn {
-    float: right;
-    cursor: pointer;
-  }
-  .button-container {
-    height: 20px;
-    margin: 5px;
-  }
-  .singleboard-comment-name {
-    font-weight: bold;
-    margin: 5px;
-  }
-  .singleboard-comment-content {
-    margin: 5px;
-  }
-  .singleboard-comment-delete-btn {
-    border: none;
-    cursor: pointer;
-  }
-  .singleboard-textarea {
-    width: 38vw;
-  }
-  .input-button {
-    height: 40px;
-  }
-`;
-
 const SingleBoard = () => {
   const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [board, setBoard] = useState([]);
   const [inputComments, setInputComments] = useState("");
   const [getcondition, setgetCondition] = useState(true);
-  const [getconditions, setgetconditions] = useState(true);
   const [content, setContent] = useState(null);
   const { id } = useParams();
-  const { postId } = useParams();
   const access_token = localStorage.getItem("access_token");
   const header = {
     "Content-type": "application/json",
     Accept: "application/json",
     credentials: "include",
     Authorization: access_token,
-  }
+  };
 
   //boardlist 내용 상세페이지로 가져오기
   useEffect(() => {
@@ -133,7 +58,7 @@ const SingleBoard = () => {
   const handleDeleteSB = () => {
     let reqDelete = {
       method: "DELETE",
-      headers: header
+      headers: header,
     };
     fetch(`https://api.woodongs.site/post/${id}`, reqDelete)
       .then((res) => {
@@ -223,9 +148,7 @@ const SingleBoard = () => {
                 >
                   <TiTrash />
                 </button>
-                <button
-                  className="update-btn"
-                >
+                <button className="update-btn">
                   <TiPencil />
                 </button>
               </div>
@@ -285,5 +208,82 @@ const SingleBoard = () => {
     </>
   );
 };
+const StyledSingleBoard = styled.section`
+  .container {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100vw;
+  }
+  .singleboard-main-container {
+    width: 800px;
+    height: 100%;
+    margin: 30px 300px;
+    border: solid black 1px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 20px;
+    padding: 30px;
+  }
+  .singleboard-title {
+    border-bottom: 1px solid black;
+    height: 80px;
+    font-size: 30px;
+  }
+  .singleboard-body {
+    border-bottom: 1px solid black;
+    height: 500px;
+    margin-top: 20px;
+  }
+  .singleboard-comment {
+    margin-bottom: 20px;
+    border-left: black 1px solid;
+    display: flex;
+  }
+  .singleboard-comment-box {
+    margin-top: 15px;
+  }
+  .singleboard-input-box {
+    display: flex;
+  }
+  /* .singleboard-comment-view-box {
+    background-color: #ffdddd;
+    height: 100;
+  } */
+  .update-btn,
+  .delete-btn {
+    float: right;
+    cursor: pointer;
+  }
+  .button-container {
+    height: 20px;
+    margin: 5px;
+  }
+  .singleboard-comment-name {
+    font-weight: bold;
+    margin: 5px;
+  }
+  .singleboard-comment-content {
+    margin: 5px;
+  }
+  .singleboard-comment-delete-btn {
+    border: none;
+    cursor: pointer;
+  }
+  .singleboard-textarea {
+    width: 38vw;
+  }
+  .input-button {
+    height: 40px;
+  }
 
+  @media (max-width: 864px) {
+    .singleboard-main-container {
+      width : 90vw;
+    }
+  }
+`;
 export default SingleBoard;

@@ -11,125 +11,6 @@ import Manage from "./Manage";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
 
-const StyledRecruit = styled.section`
-  h1 {
-    font-size: 50px;
-    margin: 10px;
-  }
-  .recruit-container {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100vw;
-  }
-  .recruit-main-container {
-    border: solid black 1px;
-    border-radius: 2%;
-    margin: 30px 300px;
-    height: 100%;
-    width: 1000px;
-    display: flex;
-    flex-direction: column;
-    background-color: #f1f4f7;
-  }
-  .recruit-title-box {
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .recruit-main-box {
-    display: flex;
-    flex-direction: row;
-    border-top: solid 1px black;
-    border-bottom: solid 1px black;
-  }
-  .recruit-main-section {
-    padding: 20px;
-    width: 70%;
-  }
-  .recruit-main-aside {
-    width: 30%;
-    border-left: solid 1px black;
-    padding: 20px;
-    text-align: center;
-  }
-  .tab {
-    display: flex;
-    flex-direction: row;
-    border-bottom: 1px black solid;
-  }
-  .tab-element {
-    padding-left: 15px;
-    padding-right: 15px;
-   
-  }
-  .tab-element:hover{
-    background-color:#E5EDFC;
-    font-weight: 600;
-  }
-  #tab-checked{
-    background-color:#E5EDFC;
-    font-weight: 600;
-    border-top: solid black 1px;
-    border-right : solid black 1px;
-    border-left: 1px black solid;
-  }
-  .my-info {
-    border: solid black 1px;
-    border-radius: 5%;
-    background-color: #e6edfc;
-    padding: 20px;
-    flex-direction: row;
-    justify-content: center;
-  }
-  .recruit-comment-box {
-    padding: 20px;
-  }
-  .inputbox-textarea {
-    width: 900px;
-    margin-bottom: 20px;
-  }
-  .recruit-comment {
-    margin-bottom: 20px;
-    border-left: black 1px solid;
-    display: flex;
-  }
-  textarea {
-    resize: none;
-  }
-  .recruit-inputbox {
-    /* align-items: center;
-    justify-content: center; */
-    display: flex;
-  }
-  .recruit-comment-name {
-    font-weight: bold;
-    margin: 5px;
-  }
-  .recruit-comment-content {
-    margin: 5px;
-  }
-  .recruit-comment-delete-btn {
-    border: none;
-  }
-  .update-btn,
-  .delete-btn {
-    float: right;
-  }
-  .avatarimg {
-    width: 125px;
-    height: 125px;
-    border-radius: 50%;
-  }
-  .input-button {
-    height: 40px;
-  }
-
-`;
-
 const Recruit = () => {
   const navigate = useNavigate();
   const { userInfo } = useContext(UserInfo);
@@ -147,10 +28,8 @@ const Recruit = () => {
   const { id } = useParams();
   const [content, setContent] = useState(null);
 
-  const [tabIndex , setTabindex] = useState(0);
+  const [tabIndex, setTabindex] = useState(0);
 
-
-  
   const header = {
     "content-type": "application/json",
     Accept: "application/json",
@@ -186,7 +65,6 @@ const Recruit = () => {
       headers: header,
     };
 
-  
     fetch("https://api.woodongs.site/study/" + `${id}`, reqDelete)
       .then((res) => {
         if (res.ok) {
@@ -250,7 +128,7 @@ const Recruit = () => {
     //get요청시, 의존성 배열에 post요청시마다 리랜더링 되도록 바꿔줌.
   };
 
-  const handleChangeTab = (e , index) => {
+  const handleChangeTab = (e, index) => {
     e.preventDefault();
     if (e.target.className === "tab-element tab-info") {
       setChangeTab(true);
@@ -258,7 +136,7 @@ const Recruit = () => {
     if (e.target.className === "tab-element tab-manage") {
       setChangeTab(false);
     }
-    setTabindex(index)
+    setTabindex(index);
   };
 
   //댓글 구현 메소드
@@ -296,7 +174,7 @@ const Recruit = () => {
       receiverId: Number(memberid),
       message: `${userInfo.nickName} 님께서 스터디 가입을 신청하였습니다.`,
     };
-    let isError = true ;
+    let isError = true;
     fetch(`https://api.woodongs.site/study/${id}/apply`, {
       method: "POST",
       headers: header,
@@ -304,14 +182,14 @@ const Recruit = () => {
       .then((res) => {
         if (res.ok) {
           alert("신청을 성공하였습니다.");
-        } 
+        }
         if (res.status === 500) {
-          alert("스터디 허용 인원을 초과하였습니다.")
-          isError(false)
-        } 
+          alert("스터디 허용 인원을 초과하였습니다.");
+          isError(false);
+        }
       })
       .then(() => {
-        if(isError){
+        if (isError) {
           stomp.send(
             //알람 전송
             `/app/alarm`,
@@ -344,14 +222,14 @@ const Recruit = () => {
               <section className="recruit-main-section">
                 <div className="tab">
                   <div
-                    id={tabIndex === 0 ? "tab-checked" : null }
+                    id={tabIndex === 0 ? "tab-checked" : null}
                     className="tab-element tab-info"
                     onClick={(e) => handleChangeTab(e, 0)}
                   >
                     정보
                   </div>
                   <div
-                  id={tabIndex === 1 ? "tab-checked" : null }
+                    id={tabIndex === 1 ? "tab-checked" : null}
                     className="tab-element tab-manage"
                     onClick={(e) => handleChangeTab(e, 1)}
                   >
@@ -365,16 +243,36 @@ const Recruit = () => {
                         <button
                           className="delete-btn"
                           onClick={() => handleDeleteRecruit(card.studyId)}
+                          // disabled = {userInfo?.memberId === card?.memberResponseDtos[0]?.memberId ? false : true }
+                          disabled={
+                            card?.memberResponseDtos
+                              ?.slice(0, 1)
+                              .find((el) => el.memberId === userInfo.memberId)
+                              ? false
+                              : true
+                          }
                         >
                           <TiTrash />
                         </button>
-                        <Link to={"/EditRecruit/" + `${id}`}>
+                        
+    
                           <button
+                            onClick={() => navigate("/EditRecruit/" + `${id}`)}
                             className="update-btn"
+                            disabled={
+                              card?.memberResponseDtos
+                                ?.slice(0, 1)
+                                .find((el) => el.memberId === userInfo.memberId)
+                                ? false
+                                : true
+                            }
                           >
+                            {console.log(card?.memberResponseDtos?.slice(0, 1))}
+                            {/* <Link to={"/EditRecruit/" + `${id}`}> */}
                             <TiPencil />
+                            {/* </Link> */}
                           </button>
-                        </Link>
+                     
                       </div>
                       <h2>✔️ 모집현황</h2>
                       <p>
@@ -503,5 +401,123 @@ const Recruit = () => {
     </>
   );
 };
+
+const StyledRecruit = styled.section`
+  h1 {
+    font-size: 50px;
+    margin: 10px;
+  }
+  .recruit-container {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100vw;
+  }
+  .recruit-main-container {
+    border: solid black 1px;
+    border-radius: 2%;
+    margin: 30px 300px;
+    height: 100%;
+    width: 1000px;
+    display: flex;
+    flex-direction: column;
+    background-color: #f1f4f7;
+  }
+  .recruit-title-box {
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .recruit-main-box {
+    display: flex;
+    flex-direction: row;
+    border-top: solid 1px black;
+    border-bottom: solid 1px black;
+  }
+  .recruit-main-section {
+    padding: 20px;
+    width: 70%;
+  }
+  .recruit-main-aside {
+    width: 30%;
+    border-left: solid 1px black;
+    padding: 20px;
+    text-align: center;
+  }
+  .tab {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px black solid;
+  }
+  .tab-element {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .tab-element:hover {
+    background-color: #e5edfc;
+    font-weight: 600;
+  }
+  #tab-checked {
+    background-color: #e5edfc;
+    font-weight: 600;
+    border-top: solid black 1px;
+    border-right: solid black 1px;
+    border-left: 1px black solid;
+  }
+  .my-info {
+    border: solid black 1px;
+    border-radius: 5%;
+    background-color: #e6edfc;
+    padding: 20px;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .recruit-comment-box {
+    padding: 20px;
+  }
+  .inputbox-textarea {
+    width: 900px;
+    margin-bottom: 20px;
+  }
+  .recruit-comment {
+    margin-bottom: 20px;
+    border-left: black 1px solid;
+    display: flex;
+  }
+  textarea {
+    resize: none;
+  }
+  .recruit-inputbox {
+    /* align-items: center;
+    justify-content: center; */
+    display: flex;
+  }
+  .recruit-comment-name {
+    font-weight: bold;
+    margin: 5px;
+  }
+  .recruit-comment-content {
+    margin: 5px;
+  }
+  .recruit-comment-delete-btn {
+    border: none;
+  }
+  .update-btn,
+  .delete-btn {
+    float: right;
+  }
+  .avatarimg {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+  }
+  .input-button {
+    height: 40px;
+  }
+`;
+
 
 export default Recruit;
