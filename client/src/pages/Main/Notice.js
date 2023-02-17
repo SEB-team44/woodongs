@@ -168,18 +168,17 @@ const StyledNav = styled.div`
     height: 100%;
   }
 
-  .pofile-lists{
-    margin-left:30px;
+  .pofile-lists {
+    margin-left: 30px;
   }
 
-  .location-container {
-    width: 30%;
-  }
   .location-box {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
+    height: 100%;
+    width: 300px;
   }
   .location-box > * {
     margin-right: 30px;
@@ -204,7 +203,20 @@ const StyledNav = styled.div`
 
   @media (max-width: 900px) {
     #alert-Info {
+      visibility: collapse;
+    }
+  }
+  @media (max-width: 660px) {
+    .notice-box-1 {
       display: none;
+    }
+  }
+  @media (max-width: 535px) {
+    .now-location {
+      display: none;
+    }
+    .location-box {
+      justify-content: center;
     }
   }
 `;

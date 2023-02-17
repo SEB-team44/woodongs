@@ -137,7 +137,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
       <StyledNav>
         <header className="header-container">
           <nav className="nav-container">
-            <section className="logo-box">
+            <section className="logo-box logo-hidden">
               <Link to="/main">
                 <img
                   className="logo-img"
@@ -145,7 +145,8 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                 />
               </Link>
             </section>
-            <ol className="tap-box">
+            <button className="hidden-button ">-</button>
+            <ol className="tap-box responsive-hidden">
               <Link to="/EntireMain">
                 <li>전체 스터디</li>
               </Link>
@@ -345,6 +346,10 @@ const StyledNav = styled.div`
   .logo-img {
     height: 60px;
   }
+
+  .hidden-button {
+    display: none;
+  }
   .tap-box {
     display: flex;
     flex-direction: row;
@@ -361,6 +366,7 @@ const StyledNav = styled.div`
     background-color: #b6c6d4;
     border-radius: 4px;
   }
+
   ol {
     margin: 0px;
   }
@@ -385,6 +391,10 @@ const StyledNav = styled.div`
   .search-box {
     padding-right: 20px;
   }
+  .submit-button {
+    width: 100px;
+  }
+
   .info-box {
     display: flex;
     flex-direction: row;
@@ -434,6 +444,34 @@ const StyledNav = styled.div`
   }
   .jb-title:hover + .jb-text {
     opacity: 1;
+  }
+  @media (max-width: 1132px) {
+    .search-box {
+      display: none;
+    }
+  }
+  @media (max-width: 857px) {
+    .hidden-button {
+      display: block;
+      width: 76px;
+    }
+    .responsive-hidden {
+      display: none;
+    }
+    .nav-container {
+      justify-content: space-between;
+    }
+  }
+  @media (max-width: 535px) {
+    .logo-hidden {
+      display: none;
+    }
+  }
+
+  @media (max-width: 469px) {
+    .logo-hidden {
+      display: none;
+    }
   }
 `;
 export default Navbar;

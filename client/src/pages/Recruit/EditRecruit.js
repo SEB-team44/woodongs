@@ -5,40 +5,6 @@ import { Button } from "@mui/material";
 import styled from "styled-components";
 import Navbar from "../Main/Navbar";
 
-const AddStudyStyled = styled.div`
-  .add_container {
-    align-items: center;
-    justify-content: center;
-    margin: 50px auto;
-    border: 1px solid black;
-    border-radius: 20px;
-    padding: 30px;
-    width: 800px;
-  }
-  .submit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .form-group {
-    display: inline-block;
-    width: 500px;
-    line-height: 50px;
-  }
-  textarea {
-    resize: none;
-  }
-  .innerBox {
-    display: flex;
-    margin-right: 10px;
-  }
-  .checkbox {
-    display: flex;
-    align-items: center;
-    margin: 10px;
-  }
-`;
-
 const EditRecruit = () => {
   //작성한 사람이 수정할 수 있게?? 토큰있는 사람만??
   const access_token = localStorage.getItem("access_token");
@@ -59,14 +25,14 @@ const EditRecruit = () => {
   //컴포넌트가 마운트 되고 uri 파라미터에 해당하는 data를 가져와
   //title,body,category,headcount의 상태를 바꿔줌
 
-  useEffect(()=> {
+  useEffect(() => {
     setContent(() => {
       return {
         ...content,
         body: bodyValue,
       };
     });
-  },[bodyValue, headCount])
+  }, [bodyValue, headCount]);
 
   useEffect(() => {
     const getData = () => {
@@ -124,7 +90,7 @@ const EditRecruit = () => {
   };
 
   const handleBody = (event) => {
-    const {value} = event.target
+    const { value } = event.target;
     setBodyValue(() => value);
   };
 
@@ -175,6 +141,7 @@ const EditRecruit = () => {
         <div className="add_container">
           <h2>*스터디명</h2>
           <input
+            className="study-name"
             type="text"
             placeholder={title}
             size="100"
@@ -192,7 +159,7 @@ const EditRecruit = () => {
                 />
                 <div>{item.name}</div>
               </label>
-            ))}      
+            ))}
           </div>
 
           <h2>*모집인원</h2>
@@ -212,7 +179,7 @@ const EditRecruit = () => {
             value={bodyValue}
             maxLength={2000}
             onChange={(e) => {
-              handleBody(e)
+              handleBody(e);
             }}
           ></textarea>
           <div className="submit">
@@ -230,4 +197,50 @@ const EditRecruit = () => {
   );
 };
 
+const AddStudyStyled = styled.div`
+  .add_container {
+    align-items: center;
+    justify-content: center;
+    margin: 50px auto;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 30px;
+    width: 800px;
+  }
+  .submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .form-group {
+    display: inline-block;
+    width: 500px;
+    line-height: 50px;
+  }
+  textarea {
+    resize: none;
+  }
+  .innerBox {
+    display: flex;
+    margin-right: 10px;
+  }
+  .checkbox {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+  }
+  @media (max-width: 869px) {
+    .add_container {
+      width: 90vw;
+    }
+    textarea {
+      width: 100%;
+    }
+  }
+  @media (max-width: 750px) {
+    .study-name{
+      width:100%;
+    }
+  }
+`;
 export default EditRecruit;
