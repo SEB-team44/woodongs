@@ -60,7 +60,7 @@ const Notice = (props) => {
             <div className="avatar-text">
               {isLogin ? (
                 <ol className="profile-box pofile-lists">
-                  <li>{todayTime().slice(0, 13)}</li>
+                  <li className="show-today">{todayTime().slice(0, 13)}</li>
                   <li>
                     <Link to="/MyPage">
                       <img
@@ -78,7 +78,7 @@ const Notice = (props) => {
                 </ol>
               ) : (
                 <ol className="profile-box pofile-lists">
-                  <li>{todayTime().slice(0, 13)}</li>
+                  <li className="show-today">{todayTime().slice(0, 13)}</li>
                   <li>
                     <Link to="/Login">로그인 후 이용해 주세요</Link>
                   </li>
@@ -217,6 +217,9 @@ const StyledNav = styled.div`
     }
     .location-box {
       justify-content: center;
+    }
+    .show-today{
+      display : none;
     }
   }
 `;

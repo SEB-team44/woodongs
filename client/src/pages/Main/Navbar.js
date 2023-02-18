@@ -13,7 +13,7 @@ import Alert from "../Main/Alert";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
 import { useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
+import ListDividers from "../Main/divider";
 
 const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const { userInfo, setUserInfo } = useContext(UserInfo); //로그인 한 사용자 정보
@@ -26,6 +26,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const token = localStorage.getItem("access_token");
   const [alarm, setAlarm] = useState([]);
   const getlat = localStorage.getItem("latitude");
+  const [isVisible, setIsvisible] = useState(false);
 
   useEffect(() => {
     // http => ws 프로토콜 변환
@@ -89,6 +90,9 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const handleClick2 = (event) => {
     setAnchorEl2(anchorEl2 ? null : event.currentTarget);
   };
+  const handleListDividers = () => {
+    setIsvisible(!isVisible);
+  };
   const handleClose1 = () => {
     setAnchorEl1(null);
   };
@@ -145,7 +149,13 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                 />
               </Link>
             </section>
-            <button className="hidden-button ">-</button>
+            
+            <Button
+              className="hidden-button"
+              onClick={() => handleListDividers()}
+            >
+              {isVisible ? "X" : "menu"}
+            </Button>
             <ol className="tap-box responsive-hidden">
               <Link to="/EntireMain">
                 <li>전체 스터디</li>
@@ -323,11 +333,18 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
               )}
             </section>
           </nav>
+
+          {isVisible ? (
+            <div className="list-dividers">
+              <ListDividers />
+            </div>
+          ) : null}
         </header>
       </StyledNav>
     </>
   );
 };
+
 const StyledNav = styled.div`
   .header-container {
     height: 63.5px;
@@ -349,6 +366,10 @@ const StyledNav = styled.div`
 
   .hidden-button {
     display: none;
+  }
+  .list-dividers {
+    position: relative;
+    z-index: 1;
   }
   .tap-box {
     display: flex;
@@ -445,12 +466,13 @@ const StyledNav = styled.div`
   .jb-title:hover + .jb-text {
     opacity: 1;
   }
-  @media (max-width: 1132px) {
+
+  @media (width < 1132px) {
     .search-box {
       display: none;
     }
   }
-  @media (max-width: 857px) {
+  @media (width < 857px) {
     .hidden-button {
       display: block;
       width: 76px;
@@ -462,15 +484,23 @@ const StyledNav = styled.div`
       justify-content: space-between;
     }
   }
-  @media (max-width: 535px) {
+  @media (width > 857px) {
+    .list-dividers {
+      display: none;
+    }
+  }
+  @media (width < 535px) {
     .logo-hidden {
       display: none;
     }
   }
 
-  @media (max-width: 469px) {
+  @media (width < 469px) {
     .logo-hidden {
       display: none;
+    }
+    .submit-button {
+      size: small;
     }
   }
 `;
