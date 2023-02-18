@@ -5,12 +5,18 @@ import { UserLogin } from "../../UserContext";
 import Alert from "@mui/material/Alert";
 import { UserInfo } from "../../UserContext";
 import CircularProgress from "@mui/material/CircularProgress";
+import { axiosInstance } from "../utiles/axiosInstance";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const Notice = (props) => {
   const { userInfo, setUserInfo } = useContext(UserInfo);
+  console.log(userInfo, "useri")
   const { isLogin } = useContext(UserLogin);
-  const [location, setLocation] = useState("");
+  // const [location, setLocation] = useState("");
   const [isloading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   //현재시간
   const todayTime = () => {
@@ -25,23 +31,53 @@ const Notice = (props) => {
 
   const HandleMyloaction = () => {
     setIsLoading(() => true);
-    const handleSuccess = (pos) => {
-      const { latitude, longitude } = pos.coords;
-      setLocation({
-        latitude,
-        longitude,
-      });
 
-      console.log(userInfo);
-      setUserInfo({
-        ...userInfo,
-        latitude: latitude,
-        longitude: longitude,
-      });
+    const handleSuccess = (pos) => {
+      const reqOAuthPost = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          email: userInfo.email,
+          password: userInfo.pw
+          // "mock",
+        }),
+      };
+
+      const { latitude, longitude } = pos.coords;
+      localStorage.setItem("latitude", `${latitude}`);
+      localStorage.setItem("longitude", `${longitude}`);
+
+          reqOAuthPost.headers["Authorization"] =
+            localStorage.getItem("access_token");
+          reqOAuthPost.body = JSON.stringify({
+            latitude: latitude,
+            longitude: longitude,
+          });
+
+          fetch("https://api.woodongs.site/member/locate", reqOAuthPost).then(
+            (res) => {
+              fetch("https://api.woodongs.site/member/me", {
+                headers: reqOAuthPost.headers,
+              })
+                .then((res) => res.json())
+                .then((res) => {
+                  setUserInfo({ ...res });
+                  return navigate("/main");
+                })
+                .catch((error) => {
+                  alert(error);
+                });
+            }
+          );
+
       setTimeout(() => {
         setIsLoading(() => false);
       }, 300);
     };
+
     const handleError = (error) => {
       alert(error.message);
       setIsLoading(() => false);
@@ -104,17 +140,18 @@ const Notice = (props) => {
               <div className="saved-location">
                 <h3>{props.title}</h3>
               </div>
-
-              {isloading ? (
-                <CircularProgress size={20} sx={{ mt: 5, mb: 1 }} />
-              ) : (
-                <button
-                  onClick={() => HandleMyloaction()}
-                  className="my-location-btn"
-                >
-                  위치 정보 받기
-                </button>
-              )}
+              <div>
+                {isloading ? (
+                  <CircularProgress size={30} sx={{ mr: 6 }} />
+                ) : (
+                  <Button
+                    onClick={HandleMyloaction}
+                    className="my-location-btn"
+                  >
+                    위치 정보 받기
+                  </Button>
+                )}
+              </div>
             </div>
           </section>
         </nav>
@@ -218,8 +255,8 @@ const StyledNav = styled.div`
     .location-box {
       justify-content: center;
     }
-    .show-today{
-      display : none;
+    .show-today {
+      display: none;
     }
   }
 `;

@@ -173,7 +173,7 @@ export default function Login() {
                 })
                   .then((res) => res.json())
                   .then((res) => {
-                    setUserInfo({ ...res });
+                    setUserInfo({ ...res , pw: reqOAuthPost.body});
                   })
                   .then((res) => {
                     alert("로그인 성공");

@@ -63,7 +63,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
             alert("세션이 만료 되었습니다. 로그인을 다시 해주세요");
             window.location.replace("/login");
           }
-          setUserInfo({ ...res });
+          setUserInfo({ ...userInfo, ...res });
           return res;
         })
         .then(() => {
@@ -142,7 +142,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
         <header className="header-container">
           <nav className="nav-container">
             <section className="logo-box logo-hidden">
-              <Link to="/main">
+              <Link to="/EntireMain">
                 <img
                   className="logo-img"
                   src={require("../../../src/img/logo.png")}
@@ -161,9 +161,10 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                 <li>전체 스터디</li>
               </Link>
 
-              {isLogin ? (
+              {isLogin ? (    
                 userInfo.city ? (
                   <Link to="/main">
+                    
                     <li>내 주변 스터디</li>
                   </Link>
                 ) : (
@@ -467,12 +468,12 @@ const StyledNav = styled.div`
     opacity: 1;
   }
 
-  @media (width < 1132px) {
+  @media (max-width: 1132px) {
     .search-box {
       display: none;
     }
   }
-  @media (width < 857px) {
+  @media (max-width: 857px) {
     .hidden-button {
       display: block;
       width: 76px;
@@ -483,19 +484,20 @@ const StyledNav = styled.div`
     .nav-container {
       justify-content: space-between;
     }
-  }
-  @media (width > 857px) {
-    .list-dividers {
-      display: none;
-    }
-  }
-  @media (width < 535px) {
     .logo-hidden {
       display: none;
     }
   }
+  @media (min-width: 857px) {
+    .list-dividers {
+      display: none;
+    }
+  }
+  @media (max-width: 535px) {
 
-  @media (width < 469px) {
+  }
+
+  @media (max-width: 469px) {
     .logo-hidden {
       display: none;
     }
