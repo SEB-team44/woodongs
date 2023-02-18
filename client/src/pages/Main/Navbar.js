@@ -337,7 +337,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
 
           {isVisible ? (
             <div className="list-dividers">
-              <ListDividers />
+              <ListDividers city  />
             </div>
           ) : null}
         </header>
