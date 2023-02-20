@@ -184,7 +184,7 @@ const Recruit = () => {
           alert("신청을 성공하였습니다.");
         }
         if (res.status === 500) {
-          alert("스터디 허용 인원을 초과하였습니다.");
+          alert("다시 시도해 주세요.");
           isError(false);
         }
       })
@@ -254,25 +254,23 @@ const Recruit = () => {
                         >
                           <TiTrash />
                         </button>
-                        
-    
-                          <button
-                            onClick={() => navigate("/EditRecruit/" + `${id}`)}
-                            className="update-btn"
-                            disabled={
-                              card?.memberResponseDtos
-                                ?.slice(0, 1)
-                                .find((el) => el.memberId === userInfo.memberId)
-                                ? false
-                                : true
-                            }
-                          >
-                            {console.log(card?.memberResponseDtos?.slice(0, 1))}
-                            {/* <Link to={"/EditRecruit/" + `${id}`}> */}
-                            <TiPencil />
-                            {/* </Link> */}
-                          </button>
-                     
+
+                        <button
+                          onClick={() => navigate("/EditRecruit/" + `${id}`)}
+                          className="update-btn"
+                          disabled={
+                            card?.memberResponseDtos
+                              ?.slice(0, 1)
+                              .find((el) => el.memberId === userInfo.memberId)
+                              ? false
+                              : true
+                          }
+                        >
+                          {console.log(card?.memberResponseDtos?.slice(0, 1))}
+                          {/* <Link to={"/EditRecruit/" + `${id}`}> */}
+                          <TiPencil />
+                          {/* </Link> */}
+                        </button>
                       </div>
                       <h2>✔️ 모집현황</h2>
                       <p>
@@ -517,13 +515,11 @@ const StyledRecruit = styled.section`
   .input-button {
     height: 40px;
   }
-  @media (max-width : 1004px) {
-    .recruit-main-container{
-      width:97vw;
+  @media (max-width: 1004px) {
+    .recruit-main-container {
+      width: 97vw;
     }
-
   }
 `;
-
 
 export default Recruit;

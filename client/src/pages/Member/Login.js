@@ -74,10 +74,8 @@ export default function Login() {
   const { setUserInfo } = useContext(UserInfo);
   const [isLoading, setIsLoading] = useState(false);
 
-  //처음 랜더링 되면 위도, 경도를 받아옴//
   useEffect(() => {
     const setgetLocation = () => {
-      //위도 경도를 담을 변수
       let latitude = null;
       let longitude = null;
 
@@ -93,23 +91,22 @@ export default function Login() {
             longitude = pos.coords.longitude;
 
             if (typeof latitude === typeof 1 && typeof longitude === typeof 1) {
-              alert("현재 위치는 : " + latitude + "," + longitude + "입니다");
+              alert("위치 정보가 확인 되었습니다.");
               setLocation(latitude, longitude);
               setIsLoading(false);
             }
           },
           function (error) {
-            alert(
-              error, `현재 위치를 받아올 수 없습니다. 내 주변 스터디를 열람하려면 위치 엑세스를 허용 후, 새로고침 해주세요.`
-            );
-            if(latitude || longitude){
+            alert(`ERROR(${error.code}): ${error.message}`);
+
+            if (latitude || longitude) {
               localStorage.removeItem("latitude");
               localStorage.removeItem("longitude");
             }
             setIsLoading(false);
           }
         );
-      } 
+      }
     }
 
     function setLocation(latitude, longitude) {
@@ -161,8 +158,8 @@ export default function Login() {
               latitude: localStorage.getItem("latitude"),
               longitude: localStorage.getItem("longitude"),
             });
-            fetch("https://api.woodongs.site/member/locate", reqOAuthPost)
-              .then((res) => {
+            fetch("https://api.woodongs.site/member/locate", reqOAuthPost).then(
+              (res) => {
                 fetch("https://api.woodongs.site/member/me", {
                   headers: {
                     "Content-Type": "application/json",
@@ -173,22 +170,22 @@ export default function Login() {
                 })
                   .then((res) => res.json())
                   .then((res) => {
-                    setUserInfo({ ...res , pw: reqOAuthPost.body});
+                    setUserInfo({ ...res, pw: reqOAuthPost.body });
                   })
                   .then((res) => {
                     alert("로그인 성공");
                     setIslogin(true);
-                    if(localStorage.getItem("latitude")){
+                    if (localStorage.getItem("latitude")) {
                       return navigate("/main");
                     } else {
-                      return navigate("/EntireMain")
+                      return navigate("/EntireMain");
                     }
-                    
                   })
                   .catch((error) => {
                     alert("로그인 실패");
                   });
-              });
+              }
+            );
           }
         }
       })

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Initial from "./Initial";
+import Initial from "./pages/initial/Initial";
 import EntireMain from "./pages/Main/EntireMain";
 import Main from "./pages/Main/Main";
 import Login from "./pages/Member/Login";
