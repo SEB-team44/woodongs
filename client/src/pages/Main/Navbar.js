@@ -25,7 +25,6 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
   const [searchOption, setSearchOption] = useState("제목");
   const token = localStorage.getItem("access_token");
   const [alarm, setAlarm] = useState([]);
-  const getlat = localStorage.getItem("latitude");
   const [isVisible, setIsvisible] = useState(false);
 
   useEffect(() => {
@@ -149,7 +148,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                 />
               </Link>
             </section>
-            
+
             <Button
               className="hidden-button"
               onClick={() => handleListDividers()}
@@ -161,10 +160,9 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
                 <li>전체 스터디</li>
               </Link>
 
-              {isLogin ? (    
+              {isLogin ? (
                 userInfo.city ? (
                   <Link to="/main">
-                    
                     <li>내 주변 스터디</li>
                   </Link>
                 ) : (
@@ -337,7 +335,7 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
 
           {isVisible ? (
             <div className="list-dividers">
-              <ListDividers city  />
+              <ListDividers city />
             </div>
           ) : null}
         </header>
@@ -494,7 +492,6 @@ const StyledNav = styled.div`
     }
   }
   @media (max-width: 535px) {
-
   }
 
   @media (max-width: 469px) {

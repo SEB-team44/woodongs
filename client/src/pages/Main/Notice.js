@@ -12,7 +12,7 @@ import { Button } from "@mui/material";
 
 const Notice = (props) => {
   const { userInfo, setUserInfo } = useContext(UserInfo);
-  console.log(userInfo, "useri")
+  console.log(userInfo, "useri");
   const { isLogin } = useContext(UserLogin);
   // const [location, setLocation] = useState("");
   const [isloading, setIsLoading] = useState(false);
@@ -41,7 +41,7 @@ const Notice = (props) => {
         },
         body: JSON.stringify({
           email: userInfo.email,
-          password: userInfo.pw
+          password: userInfo.pw,
           // "mock",
         }),
       };
@@ -50,28 +50,28 @@ const Notice = (props) => {
       localStorage.setItem("latitude", `${latitude}`);
       localStorage.setItem("longitude", `${longitude}`);
 
-          reqOAuthPost.headers["Authorization"] =
-            localStorage.getItem("access_token");
-          reqOAuthPost.body = JSON.stringify({
-            latitude: latitude,
-            longitude: longitude,
-          });
+      reqOAuthPost.headers["Authorization"] =
+        localStorage.getItem("access_token");
+      reqOAuthPost.body = JSON.stringify({
+        latitude: latitude,
+        longitude: longitude,
+      });
 
-          fetch("https://api.woodongs.site/member/locate", reqOAuthPost).then(
-            (res) => {
-              fetch("https://api.woodongs.site/member/me", {
-                headers: reqOAuthPost.headers,
-              })
-                .then((res) => res.json())
-                .then((res) => {
-                  setUserInfo({ ...res });
-                  return navigate("/main");
-                })
-                .catch((error) => {
-                  alert(error);
-                });
-            }
-          );
+      fetch("https://api.woodongs.site/member/locate", reqOAuthPost).then(
+        (res) => {
+          fetch("https://api.woodongs.site/member/me", {
+            headers: reqOAuthPost.headers,
+          })
+            .then((res) => res.json())
+            .then((res) => {
+              setUserInfo({ ...res });
+              return navigate("/main");
+            })
+            .catch((error) => {
+              alert(error);
+            });
+        }
+      );
 
       setTimeout(() => {
         setIsLoading(() => false);
@@ -79,7 +79,7 @@ const Notice = (props) => {
     };
 
     const handleError = (error) => {
-      alert(error.message);
+      alert(`ERROR(${error.code}): ${error.message}`);
       setIsLoading(() => false);
     };
 
