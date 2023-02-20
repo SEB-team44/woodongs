@@ -26,8 +26,9 @@ const InitialStyled = styled.div`
     display: flex;
     flex-direction: column;
     width: 100vw;
-    height: 100vh;
+
     text-align: center;
+    transition: all .3s ease-in-out;
   }
 
   @media (min-width: 1200px) {

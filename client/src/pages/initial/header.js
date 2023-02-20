@@ -9,11 +9,13 @@ export const Header = () => {
       <article className="header-container">
         <section className="header-box">
           <h1 className="heading">
-            스터디 모임에 참여하기 위해 이동했던 시간이 아깝지 않으셨습니까?
-            우리 동네 스터디, Woodongs를 이용해 보세요!
+            스터디 참여를 위한 이동 시간이 아깝지 않으셨나요?
           </h1>
+          <h2 className="heading subtitle">
+          우리 동네 스터디, Woodongs를 이용해 보세요!
+          </h2>
           <h2 className="sub-heading">
-            반경 3km 주변의 스터디에 가입하고 스터디 채팅방을 이용하여 생산성을
+            반경 3km 주변의 스터디에 가입하고 채팅방을 이용하여 생산성을
             높혀보세요!
           </h2>
           <Link to={"/login"} className="link">
@@ -46,10 +48,14 @@ const HeaderStyled = styled.div`
     font-size: 32px;
     font-weight: 700;
     color: #484848;
-    margin-bottom: 22px;
+    margin-bottom: 10px;
     line-height: 1;
     margin-top: 30px;
     font: "Rodoto", sans-serif;
+  }
+  .subtitle{
+    margin-top : 0px;
+    margin-bottom: 35px;
   }
   .sub-heading {
     font-size: 26px;
@@ -63,11 +69,13 @@ const HeaderStyled = styled.div`
     width: 60%;
     padding-top: 20px;
     padding-bottom: 10%;
+    
   }
   .intro-img {
     width: 100%;
     height: 100%;
     border-radius: 20px;
+    border: 10px solid black;
   }
   @media (min-width: 1200px) {
     .initial-picture {
