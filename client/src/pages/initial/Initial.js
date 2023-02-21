@@ -1,15 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import { Header } from "./header";
+import { Intro } from "./Intro";
 import { Body } from "./body";
+import { introduce } from "../initial/intro_utile";
 const Initial = () => {
   return (
     <InitialStyled>
       <section className="initial-container">
         <main className="main-box">
-          <Header />
+          <Intro deliver={introduce} />
           <Body />
-          <article></article>
         </main>
       </section>
     </InitialStyled>
@@ -28,7 +28,7 @@ const InitialStyled = styled.div`
     width: 100vw;
 
     text-align: center;
-    transition: all .3s ease-in-out;
+    transition: all 0.3s ease-in-out;
   }
 
   @media (min-width: 1200px) {

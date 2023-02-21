@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { First_detailed } from "./first_detailed";
-import { Second_detailed } from "./second_detailed";
+import { Intro } from "./Intro";
+import { introduce_first, introduce_second } from "./intro_utile";
 export const Body = () => {
   return (
     <BodyStyled>
@@ -22,10 +22,10 @@ export const Body = () => {
         </article>
 
         <article className="detail-container">
-          <First_detailed />
-          <p id="comming">Cooming Soon</p>
-          <Second_detailed />
-          <p id="comming">Cooming Soon</p>
+          <Intro className="detail-first" deliver={introduce_first} />
+          <p id ="comming">comming soon</p>
+          <Intro className="detail-second" deliver={introduce_second} />
+          <p id ="comming">comming soon</p>
         </article>
       </main>
     </BodyStyled>
@@ -34,9 +34,8 @@ export const Body = () => {
 
 const BodyStyled = styled.div`
   #comming {
-    opacity: 400;
     font-size: 100px;
-    margin-top: -350px;
+    margin-top: -500px;
   }
 
   main {
@@ -83,7 +82,8 @@ const BodyStyled = styled.div`
   }
 
   .detail-container {
-    opacity: 0.1;
+    margin-top: 100px;
+    opacity: 0.2;
   }
 
   @media (max-width: 700px) {
