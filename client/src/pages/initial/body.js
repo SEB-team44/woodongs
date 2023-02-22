@@ -23,9 +23,7 @@ export const Body = () => {
 
         <article className="detail-container">
           <Intro className="detail-first" deliver={introduce_first} />
-          <p id ="comming">comming soon</p>
           <Intro className="detail-second" deliver={introduce_second} />
-          <p id ="comming">comming soon</p>
         </article>
       </main>
     </BodyStyled>
@@ -83,7 +81,6 @@ const BodyStyled = styled.div`
 
   .detail-container {
     margin-top: 100px;
-    opacity: 0.2;
   }
 
   @media (max-width: 700px) {

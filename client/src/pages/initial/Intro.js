@@ -2,10 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
-
+import { useEffect } from "react";
 export const Intro = (props) => {
   const { heading, subtitle, sub_heading, reverse, isButton, picture } =
     props.deliver;
+
+  useEffect(() => {
+    const h1_color = document.getElementById("colorVar1");
+    const h2_color = document.getElementById("colorVar2");
+    if (!subtitle) {
+      h1_color.style.color = "#484848";
+      h2_color.style.color = "#0049ee";
+    }
+  }, []);
 
   return (
     <HeaderStyled>
@@ -15,9 +24,13 @@ export const Intro = (props) => {
         }
       >
         <section className={reverse ? "header-box-reverse" : "header-box-row"}>
-          <h1 className="heading">{heading}</h1>
+          <h1 id="colorVar1" className="heading">
+            {heading}
+          </h1>
           <h2 className="heading subtitle">{subtitle}</h2>
-          <h2 className="sub-heading">{sub_heading}</h2>
+          <h2 id="colorVar2" className="sub-heading">
+            {sub_heading}
+          </h2>
           {isButton ? (
             <Link to={"/login"} className="link">
               <Button variant="contained">Get started!</Button>
@@ -60,7 +73,7 @@ const HeaderStyled = styled.div`
   .heading {
     font-size: 32px;
     font-weight: 700;
-    color: #484848;
+    color: #0049ee;
     margin-bottom: 10px;
     line-height: 1;
     margin-top: 30px;
@@ -69,10 +82,11 @@ const HeaderStyled = styled.div`
   .subtitle {
     margin-top: 0px;
     margin-bottom: 35px;
+    color: black;
   }
   .sub-heading {
     font-size: 26px;
-    color: #0049ee;
+    color: #484848;
     font-weight: 100;
     margin-bottom: 30px;
   }
@@ -84,7 +98,7 @@ const HeaderStyled = styled.div`
     padding-bottom: 10%;
   }
   .intro-img {
-    width: 100%;
+    width: 95%;
     height: 100%;
     border-radius: 20px;
     border: 10px solid black;

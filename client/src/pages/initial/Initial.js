@@ -21,12 +21,12 @@ const InitialStyled = styled.div`
     display: flex;
     flex-direction: column;
     text-align: center;
+    align-items:center;
   }
   .main-box {
     display: flex;
     flex-direction: column;
     width: 100vw;
-
     text-align: center;
     transition: all 0.3s ease-in-out;
   }
