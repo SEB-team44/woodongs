@@ -14,7 +14,7 @@ const introduce_first = {
   sub_heading:
     "마음에 드는 스터디가 있다면 스터디 신청을 통해 가입신청을 해보세요, 혹시라도 마음에 드는 스터디가 없다면 스터디 생성버튼을 통해 스터디를 생성할 수 있답니다!",
   isButton: false,
-  picture: "screen",
+  picture: "make_study",
   reverse: true
 }
 
@@ -24,7 +24,7 @@ const introduce_second = {
   sub_heading:
     "스터디에 가입하거나, 스터디 생성을 완료하면 채팅방이 생성됩니다! 원하는 채팅방을 클릭하여 팀원들과 소통해보세요!",
   isButton: false,
-  picture: "screen",
+  picture: "chatting",
   reverse: false
 }
 export {introduce , introduce_first, introduce_second}
