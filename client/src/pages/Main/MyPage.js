@@ -44,6 +44,7 @@ const MyPage = () => {
   };
 
   //사용자 정보가 바뀌면 get 받아오기
+  //useCallback 사용가능할듯 
   useEffect(() => {
     const getMemberInfo = async () => {
       fetch("https://api.woodongs.site/member/me", {

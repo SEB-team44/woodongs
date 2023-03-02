@@ -118,7 +118,6 @@ const MyGroup = () => {
     e.preventDefault();
     pubChatData();
     setSendContent(() => "");
-    // e.target.value = null;
   };
 
   useEffect(() => {
@@ -243,19 +242,19 @@ const MyGroup = () => {
               memberInfo.map((el) => {
                 return (
                   <>
-                  <div className="member">
-                    {" "}
-                    {!el.profileImageUrl ? (
-                      <img
-                        className="memberImg"
-                        src={require("../../../src/img/avatar.png")}
-                      />
-                    ) : (
-                      <div>
-                        <img className="memberImg" src={el.profileImageUrl} />
-                      </div>
-                    )}
-                    <div>{el.nickName}</div>
+                    <div className="member">
+                      {" "}
+                      {!el.profileImageUrl ? (
+                        <img
+                          className="memberImg"
+                          src={require("../../../src/img/avatar.png")}
+                        />
+                      ) : (
+                        <div>
+                          <img className="memberImg" src={el.profileImageUrl} />
+                        </div>
+                      )}
+                      <div>{el.nickName}</div>
                     </div>
                   </>
                 );
@@ -407,7 +406,7 @@ const MyGroupStyled = styled.div`
       width: 100px;
       padding: 0px;
       border-radius: 100%;
-      margin-right:30px;
+      margin-right: 30px;
       overflow: hidden;
     }
     .sidebar_container {
@@ -425,12 +424,11 @@ const MyGroupStyled = styled.div`
       margin-top: 30px;
       overflow: scroll;
     }
-    .member{
+    .member {
       margin-right: 30px;
       display: flex;
       flex-direction: column;
     }
-  }  
-  
+  }
 `;
 export default MyGroup;
