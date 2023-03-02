@@ -5,16 +5,12 @@ import { UserLogin } from "../../UserContext";
 import Alert from "@mui/material/Alert";
 import { UserInfo } from "../../UserContext";
 import CircularProgress from "@mui/material/CircularProgress";
-import { axiosInstance } from "../utiles/axiosInstance";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 
 const Notice = (props) => {
   const { userInfo, setUserInfo } = useContext(UserInfo);
-  console.log(userInfo, "useri");
   const { isLogin } = useContext(UserLogin);
-  // const [location, setLocation] = useState("");
   const [isloading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -79,7 +75,7 @@ const Notice = (props) => {
     };
 
     const handleError = (error) => {
-      alert(`ERROR(${error.code}): ${error.message}`);
+      alert(`${error.message} : 위치 엑세스를 허용해주세요`);
       setIsLoading(() => false);
     };
 

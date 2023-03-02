@@ -97,7 +97,7 @@ export default function Login() {
             }
           },
           function (error) {
-            alert(`ERROR(${error.code}): ${error.message}`);
+            alert(`${error.message}: 위치 엑세스를 허용해 주세요`);
 
             if (latitude || longitude) {
               localStorage.removeItem("latitude");
