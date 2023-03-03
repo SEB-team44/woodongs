@@ -265,6 +265,13 @@ const MyGroup = () => {
     </>
   );
 };
+
+
+
+
+
+
+
 const MyGroupStyled = styled.div`
   .my-group-container {
     align-items: center;

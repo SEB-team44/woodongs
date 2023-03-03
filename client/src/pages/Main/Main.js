@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Navbar from "./Navbar";
 import Notice from "./Notice";
-import { useState, useEffect, } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import Card from "@mui/material/Card";
@@ -15,79 +15,21 @@ import study2 from "../../img/study2.jpg";
 import study3 from "../../img/study3.jpg";
 import study4 from "../../img/study4.jpg";
 import study5 from "../../img/study5.jpg";
-
+import { axiosInstance } from "../utiles/axiosInstance";
+import { CircularProgress } from "@mui/material";
+import useCardList from "./hooks/useGetcardlist";
 
 
 const Main = () => {
-  const access_token = localStorage.getItem("access_token");
-  const getlat = localStorage.getItem("latitude");
-  const getlong = localStorage.getItem("longitude");
-  const [cardList, setCardList] = useState([]);
-  const [reRender, setRerender] = useState(false);
-  const { isLogin } = useContext(UserLogin);
-  const { userInfo } = useContext(UserInfo);
-  const [size, setSize] = useState(10);
-  const [cursor, setCursor] = useState(0);
-  const [isAvailable, setIsAvailable] = useState(true);
-
-  const myAround = true;
-  const header = {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-    credentials: "include",
-    Authorization: access_token,
-  };
-  
-
-  function getCardList() {
-    let reqOption = {
-      method: "GET",
-      headers: header,
-    };
-
-    let url;
-    if (cursor) {
-      url = `https://api.woodongs.site/study/around?size=5&cursorId=${cursor}`;
-    } else {
-      url = `https://api.woodongs.site/study/around?size=10`;
-    }
-    if (!isAvailable) {
-      return;
-    }
-    fetch(url, reqOption)
-      .then((res) => res.json())
-      .then((data) => {
-        return data;
-      })
-      .then((data) => {
-        setCardList([...cardList, ...data.data]);
-        if (data.sliceInfo.nextAvailable) {
-          setCursor(data.sliceInfo.lastIdx);
-        } else {
-          setIsAvailable(false);
-        }
-      });
-  }
-  useEffect(() => {
-    getCardList();
-  }, [reRender]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      const scrollTop = document.documentElement.scrollTop;
-      const clientHeight = document.documentElement.clientHeight;
-      if (scrollTop + clientHeight >= scrollHeight) {
-        getCardList();
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  });
+    
   //랜덤이미지?
   const images = [study1, study2, study3, study4, study5];
+  const getlat = localStorage.getItem("latitude");
+  const { isLogin } = useContext(UserLogin);
+  const { userInfo } = useContext(UserInfo);
+  const myAround = true;
+  const {cardList , isLoading } = useCardList()
+
 
   return (
     <>
@@ -148,6 +90,11 @@ const Main = () => {
                 <div> 주변에 스터디가 없습니다.</div>
               )}
             </main>
+            {isLoading ? (
+              <div className="circularProgress">
+                <CircularProgress size={50} sx={{ mt: 5, mb: 1 }} />
+              </div>
+            ) : null}
           </section>
           <section className="main-footer-container">
             <Footer />
@@ -240,6 +187,11 @@ const StyledMain = styled.div`
 
   .study-info-header {
     font-size: 1.5rem;
+  }
+  .circularProgress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 export default Main;
