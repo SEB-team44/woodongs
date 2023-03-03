@@ -14,84 +14,15 @@ import study3 from "../../img/study3.jpg";
 import study4 from "../../img/study4.jpg";
 import study5 from "../../img/study5.jpg";
 import CircularProgress from "@mui/material/CircularProgress";
-import { axiosInstance } from "../utiles/axiosInstance";
-
+import useCardList from "./hooks/useGetcardlist";
 const EntireMain = () => {
-  const access_token = localStorage.getItem("access_token");
-  const [cardList, setCardList] = useState([]);
-  const [reRender, setRerender] = useState(false);
-  const [size, setSize] = useState(10);
-  const [cursor, setCursor] = useState(0);
-  const [isAvailable, setIsAvailable] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const getlat = localStorage.getItem("latitude");
-
-
-  const getCardList = async () => {
-    let reqOption = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: access_token,
-      },
-    };
-
-    let url;
-
-    if (cursor) {
-      url = `5&cursorId=${cursor}`;
-    } else {
-      url = `10`;
-    }
-    if (!isAvailable) {
-      return;
-    } else {
-      try {
-        setIsLoading(true);
-        const response = await axiosInstance.get(
-          `/study?size=${url}`,
-          reqOption
-        );
-        // infinate scroll info
-        const { nextAvailable, lastIdx } = response.data.sliceInfo;
-
-        setTimeout(() => {
-          setCardList([...cardList, ...response.data.data]);
-          nextAvailable ? setCursor(lastIdx) : setIsAvailable(false);
-          setIsLoading(false);
-        }, 1000);
-      } catch (error) {
-        setIsLoading(false)
-        alert(error);
-      }
-    }
-  };
-
-
-  const handleScroll = () => {
-    const scrollHeight = document.documentElement.scrollHeight;
-    const scrollTop = document.documentElement.scrollTop;
-    const clientHeight = document.documentElement.clientHeight;
-    if (scrollTop + clientHeight >= scrollHeight) {
-      getCardList();
-    }
-  };
-
-
-  useEffect(() => {
-    getCardList();
-  }, [reRender]);
-
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  });
 
 
   //랜덤이미지?
   const images = [study1, study2, study3, study4, study5];
+  const {cardList , isLoading, setCardList} = useCardList()
+
+
   return (
     <>
       <StyledEntireMain>
@@ -101,8 +32,6 @@ const EntireMain = () => {
               currentLocation={"전체 스터디"}
               cardList={cardList}
               setCardList={setCardList}
-              setRerender={setRerender}
-              reRender={reRender}
             />
           </section>
           <section className="main-notice-container">
@@ -117,7 +46,7 @@ const EntireMain = () => {
           >
             <main className="cardlists-box">
               {cardList &&
-                cardList.map((el) => {
+                cardList?.map((el) => {
                   return (
                     <Card
                       key={el.studyId}
@@ -166,6 +95,15 @@ const EntireMain = () => {
     </>
   );
 };
+
+
+
+
+
+
+
+
+
 const StyledEntireMain = styled.div`
   .main-container {
     position: absolute;

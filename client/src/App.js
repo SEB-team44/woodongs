@@ -16,7 +16,7 @@ import MyGroup from "./pages/Group/MyGroup";
 import { UserLogin } from "./UserContext";
 import { UserInfo } from "./UserContext";
 import { IsChat } from "./UserContext";
-import Redirect from "./pages/oauth2/Redirect";
+import Redirect from "./pages/Member/Redirect";
 import Manage from "./pages/Recruit/Manage";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";

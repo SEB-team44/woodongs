@@ -14,6 +14,7 @@ import { UserInfo } from "../../UserContext";
 import LogOut from "../Member/Logout";
 
 import axios from "axios";
+import { axiosInstance } from "../utiles/axiosInstance";
 
 const MyPage = () => {
   const access_token = localStorage.getItem("access_token");
@@ -44,7 +45,7 @@ const MyPage = () => {
   };
 
   //사용자 정보가 바뀌면 get 받아오기
-  //useCallback 사용가능할듯 
+  //useCallback 사용가능할듯
   useEffect(() => {
     const getMemberInfo = async () => {
       fetch("https://api.woodongs.site/member/me", {
@@ -188,7 +189,6 @@ const MyPage = () => {
         return require("../../../src/img/avatar.png");
       }
     }
-
     const formData = new FormData();
     formData.append("images", e.target.files[0]);
     // 서버의 upload API 호출
@@ -211,7 +211,6 @@ const MyPage = () => {
       .catch((error) => {
         alert(error);
       });
-
     //화면에 프로필 사진 표시
     const reader = new FileReader();
     reader.onload = () => {
@@ -221,6 +220,7 @@ const MyPage = () => {
     };
     reader.readAsDataURL(e.target.files[0]);
   };
+
 
   return (
     <>
@@ -242,7 +242,7 @@ const MyPage = () => {
                   <div>
                     <input
                       type="file"
-                      accept="image/jpg,image/png,image/jpeg"
+                      accept="image/*"
                       name="profile_img"
                       onChange={(e) => onImgChange(e)}
                       ref={fileInput}
@@ -384,7 +384,7 @@ const MyPageStyled = styled.div`
     margin-bottom: 40px;
   }
   @media (max-width: 859px) {
-    .mypage_content{
+    .mypage_content {
       width: 90vw;
     }
   }

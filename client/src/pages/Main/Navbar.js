@@ -15,7 +15,7 @@ import StompJs from "stompjs";
 import { useEffect } from "react";
 import ListDividers from "../Main/divider";
 
-const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
+const Navbar = ({ myAround, cardList, setCardList }) => {
   const { userInfo, setUserInfo } = useContext(UserInfo); //로그인 한 사용자 정보
   const { isChat, setIsChat } = useContext(IsChat);
   const [anchorEl1, setAnchorEl1] = React.useState(null);
@@ -121,9 +121,6 @@ const Navbar = ({ myAround, cardList, setCardList, setRerender, reRender }) => {
     setCardList([...filtered]);
   };
 
-  const handleClearSubmit = () => {
-    setRerender(!reRender);
-  };
 
   const open1 = Boolean(anchorEl1);
   const id1 = open1 ? "simple-popper" : undefined;

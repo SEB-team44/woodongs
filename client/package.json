@@ -2,7 +2,7 @@
   "name": "seb39_main_044",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://api.woodongs.site/member",
+  "proxy": "https://api.woodongs.site/",
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
